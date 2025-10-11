@@ -45,15 +45,15 @@ export function ApiEndpoint(options: OptionalEndpointOptions = {}) {
   decorators.push(isPublic ? ApiPublic() : ApiBearerAuth());
 
   if (type) {
-    decorators.push(
-      ApiOkResponse({
-        type,
-        description,
-      }),
-    );
-
     if (isPaginated) {
       decorators.push(ApiPaginatedResponse(type));
+    } else {
+      decorators.push(
+        ApiOkResponse({
+          type,
+          description,
+        }),
+      );
     }
   }
 
@@ -99,12 +99,12 @@ function handleErrorResponse(
   return uniqueErrorStatusCodes;
 }
 
-function ApiPaginatedResponse<D extends Type<unknown>>(
-  data: D,
+function ApiPaginatedResponse<DataDto extends Type<unknown>>(
+  dataDto: DataDto,
 ): MethodDecorator {
   // ref: https://aalonso.dev/blog/2021/how-to-generate-generics-dtos-with-nestjsswagger-422g
   return applyDecorators(
-    ApiExtraModels(PaginatedDto, data),
+    ApiExtraModels(PaginatedDto, dataDto),
     ApiOkResponse({
       schema: {
         allOf: [
@@ -113,9 +113,10 @@ function ApiPaginatedResponse<D extends Type<unknown>>(
           },
           {
             properties: {
+              // override 'data' property of PaginatedDto
               data: {
                 type: 'array',
-                items: { $ref: getSchemaPath(data) },
+                items: { $ref: getSchemaPath(dataDto) },
               },
             },
           },

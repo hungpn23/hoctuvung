@@ -64,3 +64,11 @@ export class TokenPairDto {
   @ApiProperty()
   refreshToken: string;
 }
+
+@Exclude()
+export class ExchangeTokenDto {
+  @Expose()
+  @ApiProperty()
+  @StringValidator()
+  code: string;
+}

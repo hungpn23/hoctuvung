@@ -1,8 +1,17 @@
 import { User } from '@api/user/entities/user.entity';
 import { NullableProperty } from '@common/utils/nullable-property';
 import { SoftDeleteBaseEntity } from '@db/entities/soft-delete.base.entity';
-import { Entity, Enum, ManyToOne, type Opt, Property } from '@mikro-orm/core';
+import {
+  Collection,
+  Entity,
+  Enum,
+  ManyToOne,
+  OneToMany,
+  type Opt,
+  Property,
+} from '@mikro-orm/core';
 import { Visibility } from '../deck.enum';
+import { Card } from './card.entity';
 
 @Entity()
 export class Deck extends SoftDeleteBaseEntity {
@@ -20,4 +29,7 @@ export class Deck extends SoftDeleteBaseEntity {
 
   @ManyToOne(() => User)
   owner!: User;
+
+  @OneToMany(() => Card, (card) => card.deck)
+  cards = new Collection<Card, Deck>(this);
 }

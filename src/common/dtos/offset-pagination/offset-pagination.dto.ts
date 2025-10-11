@@ -1,35 +1,35 @@
 import { Order } from '@common/constants/order.enum';
 import {
+  EnumValidatorOptional,
   NumberValidatorOptional,
   OptionalStringValidator,
 } from '@common/decorators/validators.decorator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
-@Exclude()
 export class QueryDto {
-  @Expose()
-  @ApiPropertyOptional({ minimum: 1 })
+  @ApiPropertyOptional({ minimum: 1, default: 1 })
   @NumberValidatorOptional({ isInt: true, minimum: 1 })
   page: number = 1;
 
-  @Expose()
-  @ApiPropertyOptional({ minimum: 10 })
+  @ApiPropertyOptional({ minimum: 10, default: 10 })
   @NumberValidatorOptional({ isInt: true, minimum: 10 })
-  take: number = 10;
+  limit: number = 10;
 
-  @Expose()
-  @ApiPropertyOptional({ type: () => Order, default: Order.DESC })
-  @OptionalStringValidator()
+  @ApiPropertyOptional({
+    enum: Order,
+    enumName: 'Order',
+    default: Order.DESC,
+  })
+  @EnumValidatorOptional(Order)
   order: Order = Order.DESC;
 
-  @Expose()
   @ApiPropertyOptional()
   @OptionalStringValidator()
-  search?: string;
+  q?: string;
 
-  get skip() {
-    return this.page ? (this.page - 1) * this.take : 0;
+  get offset() {
+    return this.page ? (this.page - 1) * this.limit : 0;
   }
 }
 
@@ -37,7 +37,7 @@ export class QueryDto {
 export class MetadataDto {
   @Expose()
   @ApiProperty()
-  take: number;
+  limit: number;
 
   @Expose()
   @ApiProperty()
@@ -62,8 +62,9 @@ export class MetadataDto {
 
 @Exclude()
 export class PaginatedDto<T> {
+  // manually define swagger schema model at ApiPaginatedResponse decorator
+  @ApiProperty({ type: Array<object> }) // just for swagger ui purpose
   @Expose()
-  @ApiProperty({ type: Array<T> })
   data: T[];
 
   @Expose()

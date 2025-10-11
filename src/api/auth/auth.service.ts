@@ -71,7 +71,7 @@ export class AuthService {
   async googleLogin(code: string, res: Response) {
     const appHost = this.configService.get('app.host', { infer: true });
     const appPort = this.configService.get('app.port', { infer: true });
-    let params = new URLSearchParams({
+    const params = new URLSearchParams({
       code,
       client_id: this.configService.get('google.clientId', { infer: true }),
       client_secret: this.configService.get('google.clientSecret', {
@@ -98,33 +98,41 @@ export class AuthService {
       data.id_token,
     );
 
-    const found = await this.userRepository.findOne({ email });
-    if (found) {
-      const tokenPair = await this.createTokenPair(found);
-      const params = new URLSearchParams(tokenPair);
-
-      await this.em.flush();
-      return res.send('Login with Google successfully');
-      // return res.redirect(
-      //   `http://${appHost}:${appPort}/login?${params.toString()}`,
-      // );
+    let user = await this.userRepository.findOne({ email });
+    if (!user) {
+      user = this.userRepository.create({
+        username: generateFromEmail(email, 3),
+        email,
+        emailVerified: email_verified,
+        password: '',
+      });
     }
 
-    const newUser = this.userRepository.create({
-      username: generateFromEmail(email, 3),
-      email,
-      emailVerified: email_verified,
-      password: '',
-    });
+    const tokenPair = await this.createTokenPair(user);
+    const oneTimeCode = crypto.randomBytes(20).toString('hex');
 
-    const tokenPair = await this.createTokenPair(newUser);
-    params = new URLSearchParams(tokenPair).toString();
+    await this.cacheManager.set(
+      `one_time_code:${oneTimeCode}`,
+      tokenPair,
+      (60 * 1000) as Milliseconds,
+    );
 
     await this.em.flush();
-    return res.send('Login with Google successfully');
-    // return res.redirect(
-    //   `http://${appHost}:${appPort}/login?${params}`,
-    // );
+
+    return res.redirect(
+      `http://${appHost}:${appPort}/login/callback?code=${oneTimeCode}`,
+    );
+  }
+
+  async exchangeOneTimeCodeForTokens(code: string) {
+    const cacheKey = `one_time_code:${code}`;
+    const tokenPair = await this.cacheManager.get<TokenPairDto>(cacheKey);
+
+    if (!tokenPair) throw new UnauthorizedException('Invalid or expired code.');
+
+    await this.cacheManager.del(cacheKey);
+
+    return plainToInstance(TokenPairDto, tokenPair);
   }
 
   async register(dto: RegisterDto) {
@@ -181,7 +189,7 @@ export class AuthService {
     if (!session) throw new UnauthorizedException();
 
     if (session?.signature !== signature) {
-      this.logger.warn(
+      this.logger.debug(
         `Refresh token reuse detected for user ${userId}, revoking all sessions`,
       );
 

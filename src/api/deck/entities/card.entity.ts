@@ -1,9 +1,21 @@
 import { NullableProperty } from '@common/utils/nullable-property';
-import { BaseEntity } from '@db/entities/base.entity';
-import { Entity, Property } from '@mikro-orm/core';
+import {
+  Entity,
+  ManyToOne,
+  Opt,
+  PrimaryKey,
+  Property,
+  t,
+} from '@mikro-orm/core';
+import { UUID } from 'crypto';
+import { v4 } from 'uuid';
+import { Deck } from './deck.entity';
 
 @Entity()
-export class Card extends BaseEntity {
+export class Card {
+  @PrimaryKey({ type: t.uuid })
+  id: Opt<UUID> = v4() as UUID;
+
   @Property()
   question!: string;
 
@@ -12,4 +24,7 @@ export class Card extends BaseEntity {
 
   @NullableProperty()
   correctCount?: number;
+
+  @ManyToOne(() => Deck)
+  deck!: Deck;
 }

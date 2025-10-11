@@ -9,6 +9,7 @@ import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
 import type { Response } from 'express';
 import {
   ChangePasswordDto,
+  ExchangeTokenDto,
   LoginDto,
   RegisterDto,
   TokenPairDto,
@@ -29,6 +30,12 @@ export class AuthController {
   @Get('google/callback')
   async googleLogin(@Query('code') code: string, @Res() res: Response) {
     return await this.authService.googleLogin(code, res);
+  }
+
+  @ApiPublicEndpoint({ type: TokenPairDto })
+  @Post('google/exchange-token')
+  async exchangeCode(@Body() { code }: ExchangeTokenDto) {
+    return await this.authService.exchangeOneTimeCodeForTokens(code);
   }
 
   @ApiPublicEndpoint({ type: TokenPairDto })
@@ -65,7 +72,7 @@ export class AuthController {
     return await this.authService.changePassword(userId, dto);
   }
 
-  // TODO: auth api
+  // TODO auth api
   // @Post('forgot-password')
   // async forgotPassword() {
   //   return 'forgot-password';

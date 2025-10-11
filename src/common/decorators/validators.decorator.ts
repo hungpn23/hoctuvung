@@ -150,7 +150,7 @@ export function BooleanValidator(
   return applyDecorators(...decorators);
 }
 
-export function EnumValidator<T extends Record<string, unknown>>(
+export function EnumValidator<T extends object>(
   entity: T,
   options: CommonOptions = {},
 ): PropertyDecorator {
@@ -159,6 +159,13 @@ export function EnumValidator<T extends Record<string, unknown>>(
   decorators = handleCommonOptions(decorators, options);
 
   return applyDecorators(...decorators);
+}
+
+export function EnumValidatorOptional<T extends object>(
+  entity: T,
+  options: Omit<CommonOptions, 'required'> = {},
+) {
+  return EnumValidator(entity, { ...options, required: false });
 }
 
 export function ClassValidator<ClassName>(

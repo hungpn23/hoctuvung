@@ -31,10 +31,10 @@ async function bootstrap() {
 
   app.setGlobalPrefix(configService.get('app.apiPrefix', { infer: true }));
 
-  // app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalGuards(new AuthGuard(app.get(Reflector), app.get(AuthService)));
   app.useGlobalPipes(
     new ValidationPipe({
+      transform: true,
       whitelist: true,
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
       exceptionFactory: (errors: ValidationError[]) => {
