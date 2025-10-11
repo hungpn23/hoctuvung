@@ -137,9 +137,9 @@ export class AuthService {
 
   async register(dto: RegisterDto) {
     const { username, password, confirmPassword } = dto;
-    const found = await this.userRepository.findOne({ username });
+    const user = await this.userRepository.findOne({ username });
 
-    if (found) throw new BadRequestException('Username already exists');
+    if (user) throw new BadRequestException('Username already exists');
 
     if (password !== confirmPassword)
       throw new BadRequestException('Passwords do not match');
@@ -177,14 +177,16 @@ export class AuthService {
       (exp! * 1000 - Date.now()) as Milliseconds,
     );
 
-    const found = await this.sessionRepository.findOne(sessionId);
-    if (!found) throw new BadRequestException();
+    const session = await this.sessionRepository.findOne(sessionId);
+    if (!session) throw new BadRequestException();
 
-    return await this.em.removeAndFlush(found);
+    return await this.em.removeAndFlush(session);
   }
 
   async refreshToken({ sessionId, signature, userId }: RefreshTokenPayload) {
-    const session = await this.sessionRepository.findOne(sessionId);
+    const session = await this.sessionRepository.findOne(sessionId, {
+      populate: ['user'],
+    });
 
     if (!session) throw new UnauthorizedException();
 
@@ -205,7 +207,7 @@ export class AuthService {
     const jwtPayload: JwtPayload = {
       userId: session.user.id,
       sessionId,
-      role: await session.user.loadProperty('role'),
+      role: session.user.getProperty('role'),
     };
 
     const refreshTokenPayload = {

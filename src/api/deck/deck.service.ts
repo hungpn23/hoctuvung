@@ -13,7 +13,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import _ from 'lodash';
 import { Visibility } from './deck.enum';
 import { CardDto } from './dtos/card.dto';
 import {
@@ -64,11 +63,11 @@ export class DeckService {
   async create(userId: UUID, dto: CreateDeckDto) {
     const { cards: cardDtos, ...deckDto } = dto;
 
-    const found = await this.deckRepository.findOne({
+    const deck = await this.deckRepository.findOne({
       name: deckDto.name,
       owner: { id: userId },
     });
-    if (found) {
+    if (deck) {
       throw new BadRequestException(
         `Deck with name "${deckDto.name}" already exists.`,
       );
@@ -100,28 +99,20 @@ export class DeckService {
   async update(deckId: UUID, userId: UUID, dto: UpdateDeckDto) {
     const deck = await this.deckRepository.findOne(
       { id: deckId, owner: userId, isDeleted: false },
-      { populate: ['cards:ref', 'owner'] },
+      { populate: ['cards'] },
     );
 
     if (!deck)
       throw new NotFoundException(`Deck with id "${deckId}" not found.`);
 
-    const { cards: cardDtos, ...deckDto } = dto;
-
-    // 1. cleanup
-    const updateData: UpdateDeckDto = _.omitBy(deckDto, (value) =>
-      _.isNil(value),
-    );
-
-    // 2. handle visibility & passcode
-    if (updateData.visibility) {
-      switch (updateData.visibility) {
+    if (dto.visibility) {
+      switch (dto.visibility) {
         case Visibility.PUBLIC:
         case Visibility.PRIVATE:
-          deck.passcode = '';
+          dto.passcode = '';
           break;
         case Visibility.PROTECTED:
-          if (!updateData.passcode)
+          if (!dto.passcode)
             throw new BadRequestException(
               'Passcode is required for protected visibility.',
             );
@@ -129,12 +120,11 @@ export class DeckService {
       }
     }
 
-    // 3. handle cards
-    if (cardDtos) {
+    if (dto.cards) {
       const cardMap = new Map(deck.cards.getItems().map((c) => [c.id, c]));
       const results: Card[] = [];
 
-      for (const cardDto of cardDtos) {
+      for (const cardDto of dto.cards) {
         if (cardDto.id && cardMap.has(cardDto.id)) {
           const existingCard = cardMap.get(cardDto.id)!;
           this.cardRepository.assign(existingCard, cardDto);
@@ -148,14 +138,19 @@ export class DeckService {
 
       this.em.remove(cardMap.values());
 
-      updateData.cards = results;
+      dto.cards = results;
     }
 
-    // 4. assign & flush
-    this.deckRepository.assign(deck, {
-      ...updateData,
-      updatedBy: userId,
-    });
+    this.deckRepository.assign(
+      deck,
+      {
+        ...dto,
+        updatedBy: userId,
+      },
+      {
+        ignoreUndefined: true,
+      },
+    );
 
     await this.em.flush();
 
