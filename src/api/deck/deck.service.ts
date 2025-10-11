@@ -6,10 +6,22 @@ import { createMetadata } from '@common/dtos/offset-pagination/utils';
 import { UUID } from '@common/types/branded.type';
 import { EntityManager, EntityRepository, FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+import _ from 'lodash';
+import { Visibility } from './deck.enum';
 import { CardDto } from './dtos/card.dto';
-import { CreateDeckDto, DeckDto, DeckWithCardsDto } from './dtos/deck.dto';
+import {
+  CreateDeckDto,
+  DeckDto,
+  DeckWithCardsDto,
+  UpdateDeckDto,
+} from './dtos/deck.dto';
 import { Card } from './entities/card.entity';
 import { Deck } from './entities/deck.entity';
 
@@ -65,6 +77,7 @@ export class DeckService {
     const newDeck = this.deckRepository.create({
       ...deckDto,
       owner: userId,
+      createdBy: userId,
     });
 
     const newCards = cardDtos.map((cardDto) => {
@@ -82,5 +95,92 @@ export class DeckService {
       ...newDeck,
       cards: plainToInstance(CardDto, newDeck.cards.getItems()),
     });
+  }
+
+  async update(deckId: UUID, userId: UUID, dto: UpdateDeckDto) {
+    const deck = await this.deckRepository.findOne(
+      { id: deckId, owner: userId, isDeleted: false },
+      { populate: ['cards:ref', 'owner'] },
+    );
+
+    if (!deck)
+      throw new NotFoundException(`Deck with id "${deckId}" not found.`);
+
+    const { cards: cardDtos, ...deckDto } = dto;
+
+    // 1. cleanup
+    const updateData: UpdateDeckDto = _.omitBy(deckDto, (value) =>
+      _.isNil(value),
+    );
+
+    // 2. handle visibility & passcode
+    if (updateData.visibility) {
+      switch (updateData.visibility) {
+        case Visibility.PUBLIC:
+        case Visibility.PRIVATE:
+          deck.passcode = '';
+          break;
+        case Visibility.PROTECTED:
+          if (!updateData.passcode)
+            throw new BadRequestException(
+              'Passcode is required for protected visibility.',
+            );
+          break;
+      }
+    }
+
+    // 3. handle cards
+    if (cardDtos) {
+      const cardMap = new Map(deck.cards.getItems().map((c) => [c.id, c]));
+      const results: Card[] = [];
+
+      for (const cardDto of cardDtos) {
+        if (cardDto.id && cardMap.has(cardDto.id)) {
+          const existingCard = cardMap.get(cardDto.id)!;
+          this.cardRepository.assign(existingCard, cardDto);
+          results.push(existingCard);
+          cardMap.delete(cardDto.id);
+        } else {
+          const newCard = this.cardRepository.create({ ...cardDto, deck });
+          results.push(newCard);
+        }
+      }
+
+      this.em.remove(cardMap.values());
+
+      updateData.cards = results;
+    }
+
+    // 4. assign & flush
+    this.deckRepository.assign(deck, {
+      ...updateData,
+      updatedBy: userId,
+    });
+
+    await this.em.flush();
+
+    return plainToInstance(DeckWithCardsDto, {
+      ...deck,
+      cards: plainToInstance(CardDto, deck.cards.getItems()),
+    });
+  }
+
+  async delete(userId: UUID, deckId: UUID) {
+    const deck = await this.deckRepository.findOne({
+      id: deckId,
+      owner: userId,
+      isDeleted: false,
+    });
+
+    if (!deck)
+      throw new NotFoundException(`Deck with id "${deckId}" not found.`);
+
+    this.deckRepository.assign(deck, {
+      isDeleted: true,
+      deletedAt: new Date(),
+      deletedBy: userId,
+    });
+
+    return await this.em.flush();
   }
 }

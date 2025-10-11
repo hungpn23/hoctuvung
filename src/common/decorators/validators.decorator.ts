@@ -65,7 +65,7 @@ export function StringValidator(
   return applyDecorators(...decorators);
 }
 
-export function OptionalStringValidator(
+export function StringValidatorOptional(
   options: Omit<StringOptions, 'required'> = {},
 ) {
   return StringValidator({ ...options, required: false });
@@ -168,8 +168,8 @@ export function EnumValidatorOptional<T extends object>(
   return EnumValidator(entity, { ...options, required: false });
 }
 
-export function ClassValidator<ClassName>(
-  className: ClassConstructor<ClassName>,
+export function ClassValidator<T>(
+  className: ClassConstructor<T>,
   options: CommonOptions = {},
 ): PropertyDecorator {
   let decorators = [
@@ -180,6 +180,13 @@ export function ClassValidator<ClassName>(
   decorators = handleCommonOptions(decorators, options);
 
   return applyDecorators(...decorators);
+}
+
+export function ClassValidatorOptional<T>(
+  className: ClassConstructor<T>,
+  options: Omit<CommonOptions, 'required'> = {},
+) {
+  return ClassValidator(className, { ...options, required: false });
 }
 
 // *******

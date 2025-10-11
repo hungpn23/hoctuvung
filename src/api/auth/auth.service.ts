@@ -205,7 +205,7 @@ export class AuthService {
     const jwtPayload: JwtPayload = {
       userId: session.user.id,
       sessionId,
-      role: session.user.role,
+      role: await session.user.loadProperty('role'),
     };
 
     const refreshTokenPayload = {

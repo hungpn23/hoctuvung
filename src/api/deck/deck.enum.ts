@@ -1,5 +1,5 @@
 export enum Visibility {
-  PUBLIC,
-  PROTECTED,
-  PRIVATE,
+  PUBLIC = 'public',
+  PROTECTED = 'protected',
+  PRIVATE = 'private',
 }

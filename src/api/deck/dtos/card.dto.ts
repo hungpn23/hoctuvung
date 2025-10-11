@@ -1,7 +1,10 @@
-import { StringValidator } from '@common/decorators/validators.decorator';
+import {
+  StringValidator,
+  StringValidatorOptional,
+} from '@common/decorators/validators.decorator';
+import type { UUID } from '@common/types/branded.type';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import type { UUID } from 'crypto';
 
 export class CreateCardDto {
   @ApiProperty()
@@ -11,6 +14,14 @@ export class CreateCardDto {
   @ApiProperty()
   @StringValidator({ minLength: 3 })
   answer: string;
+}
+
+export class UpdateCardDto extends CreateCardDto {
+  @ApiPropertyOptional({
+    description: 'Leave this field blank if add a new card',
+  })
+  @StringValidatorOptional()
+  id?: UUID;
 }
 
 @Exclude()

@@ -2,7 +2,7 @@ import { Order } from '@common/constants/order.enum';
 import {
   EnumValidatorOptional,
   NumberValidatorOptional,
-  OptionalStringValidator,
+  StringValidatorOptional,
 } from '@common/decorators/validators.decorator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
@@ -25,7 +25,7 @@ export class QueryDto {
   order: Order = Order.DESC;
 
   @ApiPropertyOptional()
-  @OptionalStringValidator()
+  @StringValidatorOptional()
   q?: string;
 
   get offset() {

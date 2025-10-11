@@ -7,8 +7,9 @@ import {
   Enum,
   ManyToOne,
   OneToMany,
-  type Opt,
   Property,
+  type Opt,
+  type Ref,
 } from '@mikro-orm/core';
 import { Visibility } from '../deck.enum';
 import { Card } from './card.entity';
@@ -27,8 +28,8 @@ export class Deck extends SoftDeleteBaseEntity {
   @Property()
   passcode: Opt<string> = '';
 
-  @ManyToOne(() => User)
-  owner!: User;
+  @ManyToOne(() => User, { ref: true })
+  owner!: Ref<User>;
 
   @OneToMany(() => Card, (card) => card.deck)
   cards = new Collection<Card, Deck>(this);

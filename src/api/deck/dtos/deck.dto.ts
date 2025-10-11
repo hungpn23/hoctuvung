@@ -1,15 +1,17 @@
 import {
   ClassValidator,
+  ClassValidatorOptional,
   EnumValidator,
-  OptionalStringValidator,
+  EnumValidatorOptional,
   StringValidator,
+  StringValidatorOptional,
 } from '@common/decorators/validators.decorator';
 import type { UUID } from '@common/types/branded.type';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, OmitType } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { ArrayMinSize, ValidateIf } from 'class-validator';
 import { Visibility } from '../deck.enum';
-import { CardDto, CreateCardDto } from './card.dto';
+import { CardDto, CreateCardDto, UpdateCardDto } from './card.dto';
 
 export class CreateDeckDto {
   @ApiProperty()
@@ -17,7 +19,7 @@ export class CreateDeckDto {
   name: string;
 
   @ApiPropertyOptional()
-  @OptionalStringValidator()
+  @StringValidatorOptional()
   description?: string;
 
   @ApiProperty({ enum: Visibility })
@@ -28,7 +30,6 @@ export class CreateDeckDto {
     description:
       'Required if visibility is PROTECTED. Must be 4-20 characters.',
   })
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   @ValidateIf((o) => o.visibility === Visibility.PROTECTED)
   @StringValidator({ minLength: 4, maxLength: 20 })
   passcode?: string;
@@ -39,14 +40,22 @@ export class CreateDeckDto {
   cards: CreateCardDto[];
 }
 
-export class UpdateDeckDto {
+export class UpdateDeckDto extends OmitType(CreateDeckDto, [
+  'name',
+  'visibility',
+  'cards',
+]) {
   @ApiPropertyOptional()
-  @OptionalStringValidator()
+  @StringValidatorOptional({ minLength: 3 })
   name?: string;
 
-  @ApiPropertyOptional()
-  @OptionalStringValidator()
-  description?: string;
+  @ApiPropertyOptional({ enum: Visibility })
+  @EnumValidatorOptional(Visibility)
+  visibility?: Visibility;
+
+  @ApiPropertyOptional({ type: () => [UpdateCardDto] })
+  @ClassValidatorOptional(UpdateCardDto, { each: true })
+  cards?: UpdateCardDto[];
 }
 
 @Exclude()

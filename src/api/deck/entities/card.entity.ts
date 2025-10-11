@@ -1,3 +1,4 @@
+import { UUID } from '@common/types/branded.type';
 import { NullableProperty } from '@common/utils/nullable-property';
 import {
   Entity,
@@ -6,8 +7,8 @@ import {
   PrimaryKey,
   Property,
   t,
+  type Ref,
 } from '@mikro-orm/core';
-import { UUID } from 'crypto';
 import { v4 } from 'uuid';
 import { Deck } from './deck.entity';
 
@@ -25,6 +26,6 @@ export class Card {
   @NullableProperty()
   correctCount?: number;
 
-  @ManyToOne(() => Deck)
-  deck!: Deck;
+  @ManyToOne(() => Deck, { ref: true })
+  deck!: Ref<Deck>;
 }
