@@ -4,13 +4,16 @@ import {
   MikroOrmOptionsFactory,
 } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { Injectable } from '@nestjs/common';
+import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MikroOrmConfigService
   implements MikroOrmOptionsFactory<PostgreSqlDriver>
 {
+  private readonly logger = new Logger('MikroORM');
+
   constructor(private readonly configService: ConfigService<AllConfig, true>) {}
 
   createMikroOrmOptions(): MikroOrmModuleOptions<PostgreSqlDriver> {
@@ -21,8 +24,12 @@ export class MikroOrmConfigService
       user: this.configService.get('database.user', { infer: true }),
       password: this.configService.get('database.password', { infer: true }),
       dbName: this.configService.get('database.dbName', { infer: true }),
+      autoLoadEntities: true, // automatically load entities which is used in .forFeature()
 
-      autoLoadEntities: true, // automatically load entities which is used in forFeature
+      // for development
+      debug: true,
+      highlighter: new SqlHighlighter(),
+      logger: (msg) => this.logger.debug(msg),
     };
   }
 }

@@ -26,14 +26,13 @@ export class DeckService {
   ) {}
 
   async getMany(userId: UUID, query: QueryDto) {
-    console.log('🚀 ~ DeckService ~ getMany ~ userId:', userId);
-    console.log('🚀 ~ DeckService ~ getMany ~ query:', query);
     const where: FilterQuery<Deck> = {
       owner: userId,
       isDeleted: false,
     };
 
-    if (query.q?.trim() !== '') where.name = { $ilike: `%${query.q}%` };
+    if (query.q && query.q.trim() !== '')
+      where.name = { $ilike: `%${query.q}%` };
 
     const [decks, totalRecords] = await this.deckRepository.findAndCount(
       where,
@@ -44,7 +43,6 @@ export class DeckService {
       },
     );
 
-    console.log('🚀 ~ DeckService ~ getMany ~ decks:', decks); // []
     return plainToInstance(PaginatedDto<DeckDto>, {
       data: plainToInstance(DeckDto, decks),
       metadata: createMetadata(totalRecords, query),
