@@ -14,16 +14,16 @@ export type RedisConfig = {
 
 export class RedisEnvVariables {
   @StringValidator()
-  REDIS_HOST: string;
+  REDIS_HOST!: string;
 
   @PortValidator()
-  REDIS_PORT: number;
+  REDIS_PORT!: number;
 
   @StringValidator()
-  REDIS_USERNAME: string;
+  REDIS_USERNAME!: string;
 
   @StringValidator()
-  REDIS_PASSWORD: string;
+  REDIS_PASSWORD!: string;
 }
 
 export default registerAs<RedisConfig>('redis', () => {

@@ -37,19 +37,19 @@ export class QueryDto {
 export class MetadataDto {
   @Expose()
   @ApiProperty()
-  limit: number;
+  limit!: number;
 
   @Expose()
   @ApiProperty()
-  totalRecords: number;
+  totalRecords!: number;
 
   @Expose()
   @ApiProperty()
-  totalPages: number;
+  totalPages!: number;
 
   @Expose()
   @ApiProperty()
-  currentPage: number;
+  currentPage!: number;
 
   @Expose()
   @ApiPropertyOptional()
@@ -65,9 +65,9 @@ export class PaginatedDto<T> {
   // manually define swagger schema model at ApiPaginatedResponse decorator
   @ApiProperty({ type: Array<object> }) // just for swagger ui purpose
   @Expose()
-  data: T[];
+  data!: T[];
 
   @Expose()
   @ApiProperty({ type: MetadataDto })
-  metadata: MetadataDto;
+  metadata!: MetadataDto;
 }

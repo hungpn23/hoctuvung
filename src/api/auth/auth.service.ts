@@ -144,10 +144,7 @@ export class AuthService {
     if (password !== confirmPassword)
       throw new BadRequestException('Passwords do not match');
 
-    const newUser = this.userRepository.create({
-      username,
-      password: await argon2.hash(password),
-    });
+    const newUser = this.userRepository.create({ username, password });
 
     const tokenPair = await this.createTokenPair(newUser);
 
@@ -261,9 +258,7 @@ export class AuthService {
         'New password must be different from current password',
       );
 
-    this.userRepository.assign(user, {
-      password: await argon2.hash(newPassword),
-    });
+    this.userRepository.assign(user, { password: newPassword });
 
     return await this.em.flush();
   }
@@ -303,12 +298,17 @@ export class AuthService {
         }),
       });
     } catch (_) {
-      const { sessionId } =
-        this.jwtService.decode<RefreshTokenPayload>(refreshToken);
+      const payload = this.jwtService.decode<RefreshTokenPayload | null>(
+        refreshToken,
+      );
 
-      const expiredSession = await this.sessionRepository.findOne(sessionId);
-      if (expiredSession) {
-        await this.em.removeAndFlush(expiredSession);
+      if (payload?.sessionId) {
+        const expiredSession = await this.sessionRepository.findOne(
+          payload.sessionId,
+        );
+        if (expiredSession) {
+          await this.em.removeAndFlush(expiredSession);
+        }
       }
 
       throw new UnauthorizedException('Session expired');

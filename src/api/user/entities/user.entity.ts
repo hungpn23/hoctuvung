@@ -4,6 +4,8 @@ import { HiddenProperty } from '@common/utils/hidden-property';
 import { NullableProperty } from '@common/utils/nullable-property';
 import { BaseEntity } from '@db/entities/base.entity';
 import {
+  BeforeCreate,
+  BeforeUpdate,
   Collection,
   Entity,
   Enum,
@@ -12,6 +14,7 @@ import {
   type Hidden,
   type Opt,
 } from '@mikro-orm/core';
+import argon2 from 'argon2';
 import { Session } from './session.entity';
 
 @Entity()
@@ -34,9 +37,15 @@ export class User extends BaseEntity {
   @Enum(() => UserRole)
   role: Opt<UserRole> = UserRole.USER;
 
-  @OneToMany(() => Session, (session) => session.user)
+  @OneToMany(() => Session, 'user', { orphanRemoval: true })
   sessions = new Collection<Session, User>(this);
 
-  @OneToMany(() => Deck, (deck) => deck.owner)
+  @OneToMany(() => Deck, 'owner', { orphanRemoval: true })
   decks = new Collection<Deck, User>(this);
+
+  @BeforeCreate()
+  @BeforeUpdate()
+  async hashPassword() {
+    if (this.password) this.password = await argon2.hash(this.password);
+  }
 }

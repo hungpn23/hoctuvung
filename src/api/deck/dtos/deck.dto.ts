@@ -16,7 +16,7 @@ import { CardDto, CreateCardDto, UpdateCardDto } from './card.dto';
 export class CreateDeckDto {
   @ApiProperty()
   @StringValidator({ minLength: 3 })
-  name: string;
+  name!: string;
 
   @ApiPropertyOptional()
   @StringValidatorOptional()
@@ -24,7 +24,7 @@ export class CreateDeckDto {
 
   @ApiProperty({ enum: Visibility })
   @EnumValidator(Visibility)
-  visibility: Visibility;
+  visibility!: Visibility;
 
   @ApiPropertyOptional({
     description:
@@ -37,7 +37,7 @@ export class CreateDeckDto {
   @ApiProperty({ type: () => [CreateCardDto], minItems: 4 })
   @ArrayMinSize(4)
   @ClassValidator(CreateCardDto, { each: true })
-  cards: CreateCardDto[];
+  cards!: CreateCardDto[];
 }
 
 export class UpdateDeckDto extends OmitType(CreateDeckDto, [
@@ -62,11 +62,15 @@ export class UpdateDeckDto extends OmitType(CreateDeckDto, [
 export class DeckDto {
   @Expose()
   @ApiProperty()
-  id: UUID;
+  id!: UUID;
 
   @Expose()
   @ApiProperty()
-  name: string;
+  name!: string;
+
+  @Expose()
+  @ApiProperty()
+  slug!: string;
 
   @Expose()
   @ApiPropertyOptional()
@@ -74,12 +78,12 @@ export class DeckDto {
 
   @Expose()
   @ApiProperty({ enum: Visibility })
-  visibility: Visibility;
+  visibility!: Visibility;
 }
 
 @Exclude()
 export class DeckWithCardsDto extends DeckDto {
   @Expose()
   @ApiProperty({ type: () => [CardDto] })
-  cards: CardDto[];
+  cards!: CardDto[];
 }

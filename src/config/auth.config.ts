@@ -12,16 +12,16 @@ export type AuthConfig = {
 
 export class AuthEnvVariables {
   @StringValidator()
-  AUTH_JWT_SECRET: string;
+  AUTH_JWT_SECRET!: string;
 
   @StringValidator()
-  AUTH_JWT_EXPIRES_IN: ms.StringValue;
+  AUTH_JWT_EXPIRES_IN!: ms.StringValue;
 
   @StringValidator()
-  AUTH_REFRESH_TOKEN_SECRET: string;
+  AUTH_REFRESH_TOKEN_SECRET!: string;
 
   @StringValidator()
-  AUTH_REFRESH_TOKEN_EXPIRES_IN: ms.StringValue;
+  AUTH_REFRESH_TOKEN_EXPIRES_IN!: ms.StringValue;
 }
 
 export default registerAs<AuthConfig>('auth', () => {

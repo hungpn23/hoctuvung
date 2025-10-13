@@ -10,13 +10,13 @@ export type GoogleConfig = {
 
 export class GoogleEnvVariables {
   @StringValidator()
-  GOOGLE_CLIENT_ID: string;
+  GOOGLE_CLIENT_ID!: string;
 
   @StringValidator()
-  GOOGLE_CLIENT_SECRET: string;
+  GOOGLE_CLIENT_SECRET!: string;
 
   @StringValidator()
-  GOOGLE_REDIRECT_URI: string;
+  GOOGLE_REDIRECT_URI!: string;
 }
 
 export default registerAs<GoogleConfig>('google', () => {

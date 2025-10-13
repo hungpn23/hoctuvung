@@ -15,19 +15,19 @@ export type DatabaseConfig = {
 
 export class DatabaseEnvVariables {
   @StringValidator()
-  DATABASE_HOST: string;
+  DATABASE_HOST!: string;
 
   @PortValidator()
-  DATABASE_PORT: number;
+  DATABASE_PORT!: number;
 
   @StringValidator()
-  DATABASE_USER: string;
+  DATABASE_USER!: string;
 
   @StringValidator()
-  DATABASE_PASSWORD: string;
+  DATABASE_PASSWORD!: string;
 
   @StringValidator()
-  DATABASE_DB_NAME: string;
+  DATABASE_DB_NAME!: string;
 }
 
 export default registerAs<DatabaseConfig>('database', () => {

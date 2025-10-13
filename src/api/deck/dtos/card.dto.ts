@@ -9,11 +9,11 @@ import { Exclude, Expose } from 'class-transformer';
 export class CreateCardDto {
   @ApiProperty()
   @StringValidator({ minLength: 3 })
-  question: string;
+  question!: string;
 
   @ApiProperty()
   @StringValidator({ minLength: 3 })
-  answer: string;
+  answer!: string;
 }
 
 export class UpdateCardDto extends CreateCardDto {
@@ -28,15 +28,15 @@ export class UpdateCardDto extends CreateCardDto {
 export class CardDto {
   @Expose()
   @ApiProperty()
-  id: UUID;
+  id!: UUID;
 
   @Expose()
   @ApiProperty()
-  question: string;
+  question!: string;
 
   @Expose()
   @ApiProperty()
-  answer: string;
+  answer!: string;
 
   @Expose()
   @ApiPropertyOptional()

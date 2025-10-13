@@ -17,16 +17,16 @@ export type AppConfig = {
 
 export class AppEnvVariables {
   @EnumValidator(Environment)
-  NODE_ENV: Environment;
+  NODE_ENV!: Environment;
 
   @UrlValidator({ require_tld: false }) // to allow localhost
-  APP_HOST: string;
+  APP_HOST!: string;
 
   @PortValidator()
-  APP_PORT: number;
+  APP_PORT!: number;
 
   @StringValidator()
-  API_PREFIX: string;
+  API_PREFIX!: string;
 }
 
 export default registerAs<AppConfig>('app', () => {

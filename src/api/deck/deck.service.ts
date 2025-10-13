@@ -65,6 +65,7 @@ export class DeckService {
 
     const deck = await this.deckRepository.findOne({
       name: deckDto.name,
+      isDeleted: false,
       owner: { id: userId },
     });
     if (deck) {
@@ -79,14 +80,12 @@ export class DeckService {
       createdBy: userId,
     });
 
-    const newCards = cardDtos.map((cardDto) => {
-      return this.cardRepository.create({
+    cardDtos.forEach((cardDto) => {
+      this.cardRepository.create({
         ...cardDto,
         deck: newDeck,
       });
     });
-
-    newDeck.cards.add(newCards);
 
     await this.em.flush();
 
@@ -105,6 +104,20 @@ export class DeckService {
     if (!deck)
       throw new NotFoundException(`Deck with id "${deckId}" not found.`);
 
+    if (dto.name && dto.name !== deck.name) {
+      const existingDeck = await this.deckRepository.findOne({
+        name: dto.name,
+        owner: userId,
+        isDeleted: false,
+        id: { $ne: deckId }, // Quan trọng: loại trừ chính deck đang update
+      });
+
+      if (existingDeck)
+        throw new BadRequestException(
+          `Deck with name "${dto.name}" already exists.`,
+        );
+    }
+
     if (dto.visibility) {
       switch (dto.visibility) {
         case Visibility.PUBLIC:
@@ -122,23 +135,23 @@ export class DeckService {
 
     if (dto.cards) {
       const cardMap = new Map(deck.cards.getItems().map((c) => [c.id, c]));
-      const results: Card[] = [];
+      const newOrUpdatedCards: Card[] = [];
 
       for (const cardDto of dto.cards) {
         if (cardDto.id && cardMap.has(cardDto.id)) {
           const existingCard = cardMap.get(cardDto.id)!;
           this.cardRepository.assign(existingCard, cardDto);
-          results.push(existingCard);
+          newOrUpdatedCards.push(existingCard);
           cardMap.delete(cardDto.id);
         } else {
           const newCard = this.cardRepository.create({ ...cardDto, deck });
-          results.push(newCard);
+          newOrUpdatedCards.push(newCard);
         }
       }
 
       this.em.remove(cardMap.values());
 
-      dto.cards = results;
+      dto.cards = newOrUpdatedCards;
     }
 
     this.deckRepository.assign(

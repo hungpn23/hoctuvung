@@ -8,7 +8,7 @@ export type ImageKitConfig = {
 
 export class ImageKitEnvVariables {
   @StringValidator()
-  IMAGEKIT_PRIVATE_KEY: string;
+  IMAGEKIT_PRIVATE_KEY!: string;
 }
 
 export default registerAs<ImageKitConfig>('imagekit', () => {

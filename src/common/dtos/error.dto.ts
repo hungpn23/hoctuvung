@@ -5,15 +5,15 @@ import { Exclude, Expose } from 'class-transformer';
 export class ErrorDto {
   @Expose()
   @ApiProperty()
-  timestamp: string;
+  timestamp!: string;
 
   @Expose()
   @ApiProperty()
-  statusCode: number;
+  statusCode!: number;
 
   @Expose()
   @ApiProperty()
-  message: string;
+  message!: string;
 
   @Expose()
   @ApiPropertyOptional({ type: () => [ErrorDetailDto] })
@@ -24,13 +24,13 @@ export class ErrorDto {
 export class ErrorDetailDto {
   @Expose()
   @ApiProperty()
-  property: string;
+  property!: string;
 
   @Expose()
   @ApiProperty()
-  constraintName: string;
+  constraintName!: string;
 
   @Expose()
   @ApiProperty()
-  message: string;
+  message!: string;
 }

@@ -10,12 +10,12 @@ export class LoginDto {
   @Expose()
   @ApiProperty({ minLength: 6, maxLength: 20 })
   @StringValidator({ minLength: 6, maxLength: 20 })
-  username: string;
+  username!: string;
 
   @Expose()
   @ApiProperty()
   @PasswordValidator()
-  password: string;
+  password!: string;
 }
 
 @Exclude()
@@ -23,17 +23,17 @@ export class RegisterDto {
   @Expose()
   @ApiProperty({ minLength: 6, maxLength: 20 })
   @StringValidator({ minLength: 6, maxLength: 20 })
-  username: string;
+  username!: string;
 
   @Expose()
   @ApiProperty()
   @PasswordValidator()
-  password: string;
+  password!: string;
 
   @Expose()
   @ApiProperty()
   @PasswordValidator()
-  confirmPassword: string;
+  confirmPassword!: string;
 }
 
 @Exclude()
@@ -41,28 +41,28 @@ export class ChangePasswordDto {
   @Expose()
   @ApiProperty()
   @PasswordValidator()
-  oldPassword: string;
+  oldPassword!: string;
 
   @Expose()
   @ApiProperty()
   @PasswordValidator()
-  newPassword: string;
+  newPassword!: string;
 
   @Expose()
   @ApiProperty()
   @PasswordValidator()
-  confirmPassword: string;
+  confirmPassword!: string;
 }
 
 @Exclude()
 export class TokenPairDto {
   @Expose()
   @ApiProperty()
-  accessToken: string;
+  accessToken!: string;
 
   @Expose()
   @ApiProperty()
-  refreshToken: string;
+  refreshToken!: string;
 }
 
 @Exclude()
@@ -70,5 +70,5 @@ export class ExchangeTokenDto {
   @Expose()
   @ApiProperty()
   @StringValidator()
-  code: string;
+  code!: string;
 }

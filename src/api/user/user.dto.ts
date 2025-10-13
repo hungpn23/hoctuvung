@@ -7,11 +7,11 @@ import { Exclude, Expose } from 'class-transformer';
 export class UserDto {
   @Expose()
   @ApiProperty()
-  id: UUID;
+  id!: UUID;
 
   @Expose()
   @ApiProperty()
-  username: string;
+  username!: string;
 
   @Expose()
   @ApiPropertyOptional()
@@ -19,7 +19,7 @@ export class UserDto {
 
   @Expose()
   @ApiProperty()
-  emailVerified: boolean;
+  emailVerified!: boolean;
 
   @Expose()
   @ApiPropertyOptional()
@@ -27,11 +27,11 @@ export class UserDto {
 
   @Expose()
   @ApiProperty()
-  role: UserRole;
+  role!: UserRole;
 
   @Expose()
   @ApiProperty()
-  createdAt: Date;
+  createdAt!: Date;
 
   @Expose()
   @ApiPropertyOptional()
@@ -42,5 +42,5 @@ export class UserDto {
 export class UploadAvatarDto {
   @Expose()
   @ApiProperty()
-  status: string;
+  status!: string;
 }
