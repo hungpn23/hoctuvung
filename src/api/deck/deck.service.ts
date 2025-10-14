@@ -243,12 +243,14 @@ export class DeckService {
       unseen: 0,
     };
 
-    for (const card of cards) {
-      const count = card.correctCount;
+    const today = new Date();
 
-      if (count === null || count === undefined) {
+    for (const card of cards) {
+      const nextReviewAt = card.nextReviewAt;
+
+      if (nextReviewAt === null || nextReviewAt === undefined) {
         stats.unseen++;
-      } else if (count >= 3) {
+      } else if (nextReviewAt > today) {
         stats.known++;
       } else {
         stats.learning++;

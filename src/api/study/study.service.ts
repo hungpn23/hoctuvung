@@ -15,7 +15,10 @@ import {
 import type { Cache } from 'cache-manager';
 import { plainToInstance } from 'class-transformer';
 import { StudySessionDto, SubmitReviewDto } from './dtos/study.dto';
-import { MAX_NEW_CARDS_PER_SESSION, TOTAL_SESSION_LIMIT } from './study.const';
+import {
+  MAX_REVIEW_CARDS_PER_SESSION,
+  TOTAL_SESSION_LIMIT,
+} from './study.const';
 import { StudySessionState } from './study.type';
 
 @Injectable()
@@ -36,24 +39,24 @@ export class StudyService {
     });
     if (!deck) throw new NotFoundException('Deck not found.');
 
-    const newCards = await this.cardRepository.find(
+    const reviewCards = await this.cardRepository.find(
       {
         deck: deckId,
-        nextReviewAt: null,
+        nextReviewAt: { $lte: new Date() },
       },
-      { limit: MAX_NEW_CARDS_PER_SESSION },
+      { limit: MAX_REVIEW_CARDS_PER_SESSION },
     );
-    const remainingLimit = TOTAL_SESSION_LIMIT - newCards.length;
 
-    let reviewCards: Card[] = [];
+    const newCardsLimit = TOTAL_SESSION_LIMIT - reviewCards.length;
 
-    if (remainingLimit > 0) {
-      reviewCards = await this.cardRepository.find(
+    let newCards: Card[] = [];
+    if (newCardsLimit > 0) {
+      newCards = await this.cardRepository.find(
         {
           deck: deckId,
-          nextReviewAt: { $lte: new Date() },
+          nextReviewAt: null,
         },
-        { limit: remainingLimit },
+        { limit: newCardsLimit },
       );
     }
 
@@ -140,10 +143,10 @@ export class StudyService {
 
   private async _updateCardInDb(card: Card) {
     const cardRef = this.cardRepository.getReference(card.id);
-
     const daysToAdd =
       card.correctCount > 0 ? Math.pow(2, card.correctCount - 1) : 0;
     const nextReviewAt = new Date();
+
     if (daysToAdd > 0) nextReviewAt.setDate(nextReviewAt.getDate() + daysToAdd);
 
     this.cardRepository.assign(cardRef, {

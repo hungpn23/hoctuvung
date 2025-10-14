@@ -40,5 +40,13 @@ export class CardDto {
 
   @Expose()
   @ApiPropertyOptional()
+  nextReviewAt?: Date;
+
+  @Expose()
+  @ApiPropertyOptional()
   correctCount?: number;
+
+  @Expose()
+  @ApiPropertyOptional()
+  incorrectCount?: number;
 }

@@ -1,72 +1,238 @@
+// src/db/seeders/database.seeder.ts
 import { Visibility } from '@api/deck/deck.enum';
 import { Card } from '@api/deck/entities/card.entity';
 import { Deck } from '@api/deck/entities/deck.entity';
 import { User } from '@api/user/entities/user.entity';
-import { UserRole } from '@common/constants/role.enum';
-import { faker } from '@faker-js/faker';
 import { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 
-/**
- * Database's main seeder.
- * MikroORM will automatically call flush() after the run() method is completed.
- */
+// Danh sách 200 từ vựng tiếng Anh cơ bản
+const basicEnglishVocabulary = [
+  { question: 'Ability', answer: 'Khả năng, năng lực' },
+  { question: 'Able', answer: 'Có thể, có khả năng' },
+  { question: 'About', answer: 'Về, khoảng' },
+  { question: 'Above', answer: 'Ở trên' },
+  { question: 'Accept', answer: 'Chấp nhận' },
+  { question: 'According', answer: 'Theo như' },
+  { question: 'Account', answer: 'Tài khoản' },
+  { question: 'Across', answer: 'Băng qua, ngang qua' },
+  { question: 'Act', answer: 'Hành động, diễn' },
+  { question: 'Action', answer: 'Hành động' },
+  { question: 'Activity', answer: 'Hoạt động' },
+  { question: 'Actually', answer: 'Thực ra, quả thật' },
+  { question: 'Add', answer: 'Thêm vào' },
+  { question: 'Address', answer: 'Địa chỉ' },
+  { question: 'Administration', answer: 'Sự quản lý, chính quyền' },
+  { question: 'Admit', answer: 'Thừa nhận' },
+  { question: 'Adult', answer: 'Người lớn, trưởng thành' },
+  { question: 'Affect', answer: 'Ảnh hưởng đến' },
+  { question: 'After', answer: 'Sau, sau khi' },
+  { question: 'Again', answer: 'Lại, lần nữa' },
+  { question: 'Against', answer: 'Chống lại, ngược lại' },
+  { question: 'Age', answer: 'Tuổi' },
+  { question: 'Agency', answer: 'Đại lý, cơ quan' },
+  { question: 'Agent', answer: 'Đại lý, người đại diện' },
+  { question: 'Ago', answer: 'Cách đây' },
+  { question: 'Agree', answer: 'Đồng ý' },
+  { question: 'Agreement', answer: 'Sự đồng ý, hợp đồng' },
+  { question: 'Ahead', answer: 'Về phía trước' },
+  { question: 'Air', answer: 'Không khí' },
+  { question: 'All', answer: 'Tất cả' },
+  { question: 'Allow', answer: 'Cho phép' },
+  { question: 'Almost', answer: 'Hầu như, gần như' },
+  { question: 'Alone', answer: 'Một mình' },
+  { question: 'Along', answer: 'Dọc theo' },
+  { question: 'Already', answer: 'Đã, rồi' },
+  { question: 'Also', answer: 'Cũng, cũng vậy' },
+  { question: 'Although', answer: 'Mặc dù' },
+  { question: 'Always', answer: 'Luôn luôn' },
+  { question: 'American', answer: 'Người Mỹ, thuộc về nước Mỹ' },
+  { question: 'Among', answer: 'Trong số, giữa' },
+  { question: 'Amount', answer: 'Số lượng' },
+  { question: 'Analysis', answer: 'Sự phân tích' },
+  { question: 'And', answer: 'Và' },
+  { question: 'Animal', answer: 'Động vật' },
+  { question: 'Another', answer: 'Khác' },
+  { question: 'Answer', answer: 'Câu trả lời' },
+  { question: 'Any', answer: 'Bất kỳ' },
+  { question: 'Anyone', answer: 'Bất kỳ ai' },
+  { question: 'Anything', answer: 'Bất cứ điều gì' },
+  { question: 'Appear', answer: 'Xuất hiện' },
+  { question: 'Apply', answer: 'Áp dụng, nộp đơn' },
+  { question: 'Approach', answer: 'Tiếp cận' },
+  { question: 'Area', answer: 'Khu vực' },
+  { question: 'Argue', answer: 'Tranh luận' },
+  { question: 'Arm', answer: 'Cánh tay' },
+  { question: 'Around', answer: 'Xung quanh' },
+  { question: 'Arrive', answer: 'Đến nơi' },
+  { question: 'Art', answer: 'Nghệ thuật' },
+  { question: 'Article', answer: 'Bài báo, điều khoản' },
+  { question: 'Artist', answer: 'Nghệ sĩ' },
+  { question: 'As', answer: 'Như, là' },
+  { question: 'Ask', answer: 'Hỏi' },
+  { question: 'Assume', answer: 'Cho rằng, giả sử' },
+  { question: 'At', answer: 'Tại, ở' },
+  { question: 'Attack', answer: 'Tấn công' },
+  { question: 'Attention', answer: 'Sự chú ý' },
+  { question: 'Attorney', answer: 'Luật sư' },
+  { question: 'Audience', answer: 'Khán giả' },
+  { question: 'Author', answer: 'Tác giả' },
+  { question: 'Authority', answer: 'Quyền lực, chính quyền' },
+  { question: 'Available', answer: 'Có sẵn' },
+  { question: 'Avoid', answer: 'Tránh' },
+  { question: 'Away', answer: 'Đi xa, ra xa' },
+  { question: 'Baby', answer: 'Em bé' },
+  { question: 'Back', answer: 'Lưng, phía sau' },
+  { question: 'Bad', answer: 'Tệ, xấu' },
+  { question: 'Bag', answer: 'Cái túi' },
+  { question: 'Ball', answer: 'Quả bóng' },
+  { question: 'Bank', answer: 'Ngân hàng' },
+  { question: 'Bar', answer: 'Quán bar, thanh (sắt)' },
+  { question: 'Base', answer: 'Cơ sở, nền tảng' },
+  { question: 'Be', answer: 'Thì, là, ở' },
+  { question: 'Beat', answer: 'Đánh, nhịp đập' },
+  { question: 'Beautiful', answer: 'Xinh đẹp' },
+  { question: 'Because', answer: 'Bởi vì' },
+  { question: 'Become', answer: 'Trở thành' },
+  { question: 'Bed', answer: 'Cái giường' },
+  { question: 'Before', answer: 'Trước, trước khi' },
+  { question: 'Begin', answer: 'Bắt đầu' },
+  { question: 'Behavior', answer: 'Hành vi' },
+  { question: 'Behind', answer: 'Phía sau' },
+  { question: 'Believe', answer: 'Tin tưởng' },
+  { question: 'Benefit', answer: 'Lợi ích' },
+  { question: 'Best', answer: 'Tốt nhất' },
+  { question: 'Better', answer: 'Tốt hơn' },
+  { question: 'Between', answer: 'Ở giữa' },
+  { question: 'Beyond', answer: 'Vượt ra ngoài' },
+  { question: 'Big', answer: 'To, lớn' },
+  { question: 'Bill', answer: 'Hóa đơn' },
+  { question: 'Billion', answer: 'Tỷ' },
+  { question: 'Bit', answer: 'Một chút, mảnh' },
+  { question: 'Black', answer: 'Màu đen' },
+  { question: 'Blood', answer: 'Máu' },
+  { question: 'Blue', answer: 'Màu xanh da trời' },
+  { question: 'Board', answer: 'Cái bảng' },
+  { question: 'Body', answer: 'Cơ thể' },
+  { question: 'Book', answer: 'Quyển sách' },
+  { question: 'Born', answer: 'Được sinh ra' },
+  { question: 'Both', answer: 'Cả hai' },
+  { question: 'Box', answer: 'Cái hộp' },
+  { question: 'Boy', answer: 'Cậu bé' },
+  { question: 'Break', answer: 'Làm vỡ, nghỉ giải lao' },
+  { question: 'Bring', answer: 'Mang đến' },
+  { question: 'Brother', answer: 'Anh/em trai' },
+  { question: 'Budget', answer: 'Ngân sách' },
+  { question: 'Build', answer: 'Xây dựng' },
+  { question: 'Building', answer: 'Tòa nhà' },
+  { question: 'Business', answer: 'Kinh doanh' },
+  { question: 'But', answer: 'Nhưng' },
+  { question: 'Buy', answer: 'Mua' },
+  { question: 'By', answer: 'Bởi, bằng' },
+  { question: 'Call', answer: 'Gọi điện' },
+  { question: 'Camera', answer: 'Máy ảnh' },
+  { question: 'Campaign', answer: 'Chiến dịch' },
+  { question: 'Can', answer: 'Có thể' },
+  { question: 'Cancer', answer: 'Bệnh ung thư' },
+  { question: 'Candidate', answer: 'Ứng cử viên' },
+  { question: 'Capital', answer: 'Thủ đô, vốn' },
+  { question: 'Car', answer: 'Xe hơi' },
+  { question: 'Card', answer: 'Thẻ, thiệp' },
+  { question: 'Care', answer: 'Chăm sóc' },
+  { question: 'Career', answer: 'Sự nghiệp' },
+  { question: 'Carry', answer: 'Mang, vác' },
+  { question: 'Case', answer: 'Trường hợp, vụ án' },
+  { question: 'Catch', answer: 'Bắt, chụp' },
+  { question: 'Cause', answer: 'Nguyên nhân' },
+  { question: 'Cell', answer: 'Tế bào' },
+  { question: 'Center', answer: 'Trung tâm' },
+  { question: 'Central', answer: 'Thuộc trung tâm' },
+  { question: 'Century', answer: 'Thế kỷ' },
+  { question: 'Certain', answer: 'Chắc chắn' },
+  { question: 'Certainly', answer: 'Chắc chắn, dĩ nhiên' },
+  { question: 'Chair', answer: 'Cái ghế' },
+  { question: 'Challenge', answer: 'Thử thách' },
+  { question: 'Chance', answer: 'Cơ hội' },
+  { question: 'Change', answer: 'Thay đổi' },
+  { question: 'Character', answer: 'Nhân vật, tính cách' },
+  { question: 'Charge', answer: 'Phí, sạc điện' },
+  { question: 'Check', answer: 'Kiểm tra' },
+  { question: 'Child', answer: 'Đứa trẻ' },
+  { question: 'Choice', answer: 'Sự lựa chọn' },
+  { question: 'Choose', answer: 'Lựa chọn' },
+  { question: 'Church', answer: 'Nhà thờ' },
+  { question: 'City', answer: 'Thành phố' },
+  { question: 'Claim', answer: 'Đòi hỏi, tuyên bố' },
+  { question: 'Class', answer: 'Lớp học' },
+  { question: 'Clear', answer: 'Rõ ràng' },
+  { question: 'Clearly', answer: 'Một cách rõ ràng' },
+  { question: 'Close', answer: 'Đóng, gần' },
+  { question: 'Coach', answer: 'Huấn luyện viên' },
+  { question: 'Cold', answer: 'Lạnh' },
+  { question: 'Collection', answer: 'Bộ sưu tập' },
+  { question: 'College', answer: 'Trường cao đẳng' },
+  { question: 'Color', answer: 'Màu sắc' },
+  { question: 'Come', answer: 'Đến' },
+  { question: 'Commercial', answer: 'Thương mại' },
+  { question: 'Common', answer: 'Chung, phổ biến' },
+  { question: 'Community', answer: 'Cộng đồng' },
+  { question: 'Company', answer: 'Công ty' },
+  { question: 'Compare', answer: 'So sánh' },
+  { question: 'Computer', answer: 'Máy tính' },
+  { question: 'Concern', answer: 'Mối quan tâm, lo lắng' },
+  { question: 'Condition', answer: 'Điều kiện' },
+  { question: 'Conference', answer: 'Hội nghị' },
+  { question: 'Congress', answer: 'Quốc hội' },
+  { question: 'Consider', answer: 'Cân nhắc, xem xét' },
+  { question: 'Consumer', answer: 'Người tiêu dùng' },
+  { question: 'Contain', answer: 'Chứa đựng' },
+  { question: 'Continue', answer: 'Tiếp tục' },
+  { question: 'Control', answer: 'Kiểm soát' },
+  { question: 'Cost', answer: 'Chi phí, giá' },
+  { question: 'Could', answer: 'Có thể (quá khứ của can)' },
+  { question: 'Country', answer: 'Đất nước' },
+  { question: 'Couple', answer: 'Cặp, đôi' },
+  { question: 'Course', answer: 'Khóa học' },
+  { question: 'Court', answer: 'Tòa án, sân (thể thao)' },
+  { question: 'Cover', answer: 'Bao phủ, che' },
+  { question: 'Create', answer: 'Tạo ra' },
+  { question: 'Crime', answer: 'Tội ác' },
+  { question: 'Cultural', answer: 'Thuộc về văn hóa' },
+  { question: 'Culture', answer: 'Văn hóa' },
+  { question: 'Cup', answer: 'Cái cốc, tách' },
+  { question: 'Current', answer: 'Hiện tại' },
+  { question: 'Customer', answer: 'Khách hàng' },
+  { question: 'Cut', answer: 'Cắt' },
+];
+
 export class DatabaseSeeder extends Seeder {
   run(em: EntityManager) {
     console.time('🌱 Seeding database');
+    console.log(basicEnglishVocabulary.length);
 
-    em.create(User, {
+    const adminUser = em.create(User, {
       username: 'admin01',
       email: 'admin01@example.com',
       password: 'Password@123',
       emailVerified: true,
-      avatarUrl: faker.image.avatar(),
-      role: UserRole.ADMIN,
     });
 
-    for (let i = 0; i < 10; i++) {
-      const username =
-        faker.internet
-          .username()
-          .toLowerCase()
-          .replace(/[^a-z0-9]/g, '') + i;
-      const user = em.create(User, {
-        username,
-        email: `${username}@example.com`,
-        password: 'Password@123',
-        avatarUrl: faker.image.avatar(),
-        role: i === 0 ? UserRole.ADMIN : UserRole.USER,
+    const deck = em.create(Deck, {
+      owner: adminUser,
+      name: '200 Basic English Words',
+      description:
+        'A collection of 200 fundamental English vocabulary words for beginners.',
+      visibility: Visibility.PUBLIC,
+    });
+
+    for (const vocab of basicEnglishVocabulary) {
+      em.create(Card, {
+        deck: deck,
+        question: vocab.question,
+        answer: vocab.answer,
       });
-
-      const deckCount = faker.number.int({ min: 1, max: 5 });
-      for (let j = 0; j < deckCount; j++) {
-        const deckVisibility = faker.helpers.arrayElement([
-          Visibility.PUBLIC,
-          Visibility.PRIVATE,
-          Visibility.PROTECTED,
-        ]);
-
-        const deck = em.create(Deck, {
-          owner: user,
-          name: faker.lorem.words({ min: 2, max: 5 }),
-          description: faker.lorem.sentence(),
-          visibility: deckVisibility,
-          passcode:
-            deckVisibility === Visibility.PROTECTED
-              ? faker.string.alphanumeric(4)
-              : '',
-        });
-
-        const cardCount = faker.number.int({ min: 10, max: 100 });
-        for (let k = 0; k < cardCount; k++) {
-          em.create(Card, {
-            deck: deck,
-            question: faker.lorem.words({ min: 3, max: 8 }),
-            answer: faker.lorem.words({ min: 5, max: 15 }),
-          });
-        }
-      }
     }
+
     console.timeEnd('🌱 Seeding database');
   }
 }
