@@ -58,6 +58,14 @@ export class UpdateDeckDto extends OmitType(CreateDeckDto, [
   cards?: UpdateCardDto[];
 }
 
+export class CloneDeckDto {
+  @ApiPropertyOptional({
+    description: 'Bắt buộc nếu deck có visibility là PROTECTED.',
+  })
+  @StringValidatorOptional()
+  passcode?: string;
+}
+
 @Exclude()
 export class DeckDto {
   @Expose()

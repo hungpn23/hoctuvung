@@ -15,6 +15,7 @@ import {
 } from '@nestjs/common';
 import { DeckService } from './deck.service';
 import {
+  CloneDeckDto,
   CreateDeckDto,
   DeckDto,
   DeckWithCardsDto,
@@ -57,5 +58,15 @@ export class DeckController {
   @Delete(':id')
   async delete(@Payload() { userId }: JwtPayload, @Param('id') deckId: UUID) {
     return await this.deckService.delete(userId, deckId);
+  }
+
+  @ApiEndpoint({ type: DeckWithCardsDto })
+  @Post(':id/clone')
+  async clone(
+    @Payload() { userId }: JwtPayload,
+    @Param('id') deckId: UUID,
+    @Body() dto: CloneDeckDto,
+  ) {
+    return await this.deckService.clone(userId, deckId, dto);
   }
 }

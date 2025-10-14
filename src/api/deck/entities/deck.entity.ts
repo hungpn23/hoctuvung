@@ -36,6 +36,12 @@ export class Deck extends SoftDeleteBaseEntity {
   @Property()
   passcode: Opt<string> = '';
 
+  @Property({ default: 0 })
+  cloneCount: Opt<number> = 0;
+
+  @ManyToOne(() => Deck, { ref: true, nullable: true })
+  clonedFrom?: Ref<Deck>;
+
   @ManyToOne(() => User, { ref: true })
   owner!: Ref<User>;
 

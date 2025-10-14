@@ -16,6 +16,7 @@ import { plainToInstance } from 'class-transformer';
 import { Visibility } from './deck.enum';
 import { CardDto } from './dtos/card.dto';
 import {
+  CloneDeckDto,
   CreateDeckDto,
   DeckDto,
   DeckStatsDto,
@@ -233,6 +234,67 @@ export class DeckService {
     });
 
     return await this.em.flush();
+  }
+
+  async clone(userId: UUID, deckId: UUID, dto: CloneDeckDto) {
+    const originalDeck = await this.deckRepository.findOne(
+      { id: deckId, isDeleted: false },
+      { populate: ['cards', 'owner'] },
+    );
+
+    if (!originalDeck)
+      throw new NotFoundException(`Không tìm thấy deck với id "${deckId}".`);
+
+    if (originalDeck.owner.id === userId)
+      throw new BadRequestException('Bạn không thể clone deck của chính mình.');
+
+    if (originalDeck.visibility === Visibility.PRIVATE)
+      throw new BadRequestException('Bạn không thể clone deck riêng-tư.');
+
+    if (originalDeck.visibility === Visibility.PROTECTED)
+      if (!dto.passcode || dto.passcode !== originalDeck.passcode)
+        throw new BadRequestException('Passcode không hợp-lệ.');
+
+    const newDeckName = `${originalDeck.name} (Clone)`;
+    const existingClonedDeck = await this.deckRepository.findOne({
+      name: newDeckName,
+      owner: { id: userId },
+      isDeleted: false,
+    });
+
+    if (existingClonedDeck)
+      throw new BadRequestException(
+        `Bạn đã clone deck này với tên "${newDeckName}".`,
+      );
+
+    const newDeck = this.deckRepository.create({
+      name: newDeckName,
+      description: originalDeck.description,
+      visibility: Visibility.PRIVATE,
+      owner: userId,
+      createdBy: originalDeck.owner.id,
+      clonedFrom: originalDeck.id,
+    });
+
+    originalDeck.cards.getItems().forEach((card) => {
+      this.cardRepository.create({
+        deck: newDeck,
+        question: card.question,
+        answer: card.answer,
+      });
+    });
+
+    originalDeck.cloneCount++;
+
+    await this.em.flush();
+
+    const cards = newDeck.cards.getItems();
+
+    return plainToInstance(DeckWithCardsDto, {
+      ...newDeck,
+      cards: plainToInstance(CardDto, cards),
+      stats: this._calculateDeckStats(cards),
+    });
   }
 
   private _calculateDeckStats(cards: Card[]): DeckStatsDto {

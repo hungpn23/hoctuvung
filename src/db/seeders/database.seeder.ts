@@ -223,6 +223,7 @@ export class DatabaseSeeder extends Seeder {
       description:
         'A collection of 200 fundamental English vocabulary words for beginners.',
       visibility: Visibility.PUBLIC,
+      createdBy: adminUser.id,
     });
 
     for (const vocab of basicEnglishVocabulary) {
