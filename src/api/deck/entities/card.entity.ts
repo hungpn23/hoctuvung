@@ -23,8 +23,14 @@ export class Card {
   @Property()
   answer!: string;
 
+  @Property()
+  correctCount: Opt<number> = 0;
+
+  @Property()
+  incorrectCount: Opt<number> = 0;
+
   @NullableProperty()
-  correctCount?: number;
+  nextReviewAt?: Date;
 
   @ManyToOne(() => Deck, { ref: true })
   deck!: Ref<Deck>;

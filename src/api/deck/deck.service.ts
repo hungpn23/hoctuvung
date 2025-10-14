@@ -18,6 +18,7 @@ import { CardDto } from './dtos/card.dto';
 import {
   CreateDeckDto,
   DeckDto,
+  DeckStatsDto,
   DeckWithCardsDto,
   UpdateDeckDto,
 } from './dtos/deck.dto';
@@ -29,16 +30,52 @@ export class DeckService {
   private readonly logger = new Logger(DeckService.name);
 
   constructor(
+    private readonly em: EntityManager,
     @InjectRepository(Deck)
     private readonly deckRepository: EntityRepository<Deck>,
     @InjectRepository(Card)
     private readonly cardRepository: EntityRepository<Card>,
-    private readonly em: EntityManager,
   ) {}
+
+  async getOne(deckId: UUID, userId: UUID) {
+    const deck = await this.deckRepository.findOne(
+      {
+        id: deckId,
+        $or: [
+          { owner: userId },
+          { visibility: { $in: [Visibility.PUBLIC, Visibility.PROTECTED] } },
+        ],
+        isDeleted: false,
+      },
+      {
+        populate: ['cards'],
+      },
+    );
+
+    if (!deck) {
+      throw new NotFoundException(`Deck with id "${deckId}" not found.`);
+    }
+
+    this.logger.debug(
+      '🚀 ~ DeckService ~ getOne ~ deck:',
+      deck.cards.length === deck.cards.count(),
+    );
+
+    const cards = deck.cards.getItems();
+
+    return plainToInstance(DeckWithCardsDto, {
+      ...deck,
+      cards: plainToInstance(CardDto, cards),
+      stats: this._calculateDeckStats(cards),
+    });
+  }
 
   async getMany(userId: UUID, query: QueryDto) {
     const where: FilterQuery<Deck> = {
-      owner: userId,
+      $or: [
+        { owner: userId },
+        { visibility: { $in: [Visibility.PUBLIC, Visibility.PROTECTED] } },
+      ],
       isDeleted: false,
     };
 
@@ -89,9 +126,12 @@ export class DeckService {
 
     await this.em.flush();
 
+    const cards = newDeck.cards.getItems();
+
     return plainToInstance(DeckWithCardsDto, {
       ...newDeck,
-      cards: plainToInstance(CardDto, newDeck.cards.getItems()),
+      cards: plainToInstance(CardDto, cards),
+      stats: this._calculateDeckStats(cards),
     });
   }
 
@@ -167,9 +207,12 @@ export class DeckService {
 
     await this.em.flush();
 
+    const cards = deck.cards.getItems();
+
     return plainToInstance(DeckWithCardsDto, {
       ...deck,
-      cards: plainToInstance(CardDto, deck.cards.getItems()),
+      cards: plainToInstance(CardDto, cards),
+      stats: this._calculateDeckStats(cards),
     });
   }
 
@@ -190,5 +233,28 @@ export class DeckService {
     });
 
     return await this.em.flush();
+  }
+
+  private _calculateDeckStats(cards: Card[]): DeckStatsDto {
+    const stats: DeckStatsDto = {
+      total: cards.length,
+      known: 0,
+      learning: 0,
+      unseen: 0,
+    };
+
+    for (const card of cards) {
+      const count = card.correctCount;
+
+      if (count === null || count === undefined) {
+        stats.unseen++;
+      } else if (count >= 3) {
+        stats.known++;
+      } else {
+        stats.learning++;
+      }
+    }
+
+    return stats;
   }
 }

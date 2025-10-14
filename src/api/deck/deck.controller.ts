@@ -14,11 +14,22 @@ import {
   Query,
 } from '@nestjs/common';
 import { DeckService } from './deck.service';
-import { CreateDeckDto, DeckDto, UpdateDeckDto } from './dtos/deck.dto';
+import {
+  CreateDeckDto,
+  DeckDto,
+  DeckWithCardsDto,
+  UpdateDeckDto,
+} from './dtos/deck.dto';
 
 @Controller('decks')
 export class DeckController {
   constructor(private readonly deckService: DeckService) {}
+
+  @ApiEndpoint({ type: DeckWithCardsDto })
+  @Get(':id')
+  async getOne(@Payload() { userId }: JwtPayload, @Param('id') deckId: UUID) {
+    return await this.deckService.getOne(deckId, userId);
+  }
 
   @ApiEndpoint({ type: DeckDto, isPaginated: true })
   @Get()

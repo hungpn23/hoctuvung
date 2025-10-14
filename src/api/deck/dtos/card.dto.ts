@@ -18,7 +18,7 @@ export class CreateCardDto {
 
 export class UpdateCardDto extends CreateCardDto {
   @ApiPropertyOptional({
-    description: 'Leave this field blank if add a new card',
+    description: 'Leave this field blank if add a new card.',
   })
   @StringValidatorOptional()
   id?: UUID;

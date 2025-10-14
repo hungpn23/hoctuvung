@@ -1,0 +1,2 @@
+export const TOTAL_SESSION_LIMIT = 100;
+export const MAX_NEW_CARDS_PER_SESSION = 50;

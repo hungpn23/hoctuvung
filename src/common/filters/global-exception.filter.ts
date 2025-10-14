@@ -24,17 +24,17 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     if (exception instanceof UnprocessableEntityException) {
       // this exception is thrown from main.ts (ValidationPipe)
-      error = this.handleUnprocessableEntityException(exception);
+      error = this._handleUnprocessableEntityException(exception);
     } else if (exception instanceof HttpException) {
-      error = this.handleHttpException(exception);
+      error = this._handleHttpException(exception);
     } else {
-      error = this.handleError(exception);
+      error = this._handleError(exception);
     }
 
     response.status(error.statusCode).json(error);
   }
 
-  private handleUnprocessableEntityException(
+  private _handleUnprocessableEntityException(
     exception: UnprocessableEntityException,
   ) {
     const response = exception.getResponse() as { message: ValidationError[] };
@@ -44,13 +44,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
       statusCode,
       message: 'Validation failed',
-      details: this.handleValidationErrors(response.message),
+      details: this._handleValidationErrors(response.message),
     };
 
     return errorResponse as ErrorDto;
   }
 
-  private handleHttpException(exception: HttpException) {
+  private _handleHttpException(exception: HttpException) {
     return {
       timestamp: new Date().toISOString(),
       statusCode: exception.getStatus(),
@@ -58,7 +58,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     } as ErrorDto;
   }
 
-  private handleError(error: unknown) {
+  private _handleError(error: unknown) {
     const err = error instanceof Error ? error : new Error(String(error));
 
     return {
@@ -69,15 +69,15 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   }
 
   // ref: https://www.yasint.dev/flatten-error-constraints
-  private handleValidationErrors(errors: ValidationError[]) {
+  private _handleValidationErrors(errors: ValidationError[]) {
     const results: ErrorDetailDto[] = [];
     for (const error of errors) {
-      this.flattenError(error, results);
+      this._flattenError(error, results);
     }
     return results;
   }
 
-  private flattenError(
+  private _flattenError(
     error: ValidationError,
     results: ErrorDetailDto[],
     parentPath?: string,
@@ -100,7 +100,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     if (error.children && error.children.length > 0) {
       for (const child of error.children) {
-        this.flattenError(child, results, propertyPath);
+        this._flattenError(child, results, propertyPath);
       }
     }
   }

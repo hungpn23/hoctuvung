@@ -82,8 +82,31 @@ export class DeckDto {
 }
 
 @Exclude()
+export class DeckStatsDto {
+  @Expose()
+  @ApiProperty()
+  total!: number;
+
+  @Expose()
+  @ApiProperty()
+  known!: number;
+
+  @Expose()
+  @ApiProperty()
+  learning!: number;
+
+  @Expose()
+  @ApiProperty()
+  unseen!: number;
+}
+
+@Exclude()
 export class DeckWithCardsDto extends DeckDto {
   @Expose()
-  @ApiProperty({ type: () => [CardDto] })
+  @ApiProperty({ type: [CardDto] })
   cards!: CardDto[];
+
+  @Expose()
+  @ApiProperty({ type: DeckStatsDto })
+  stats!: DeckStatsDto;
 }

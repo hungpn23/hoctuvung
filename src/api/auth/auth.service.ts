@@ -199,7 +199,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const newSignature = this.createSignature();
+    const newSignature = this._createSignature();
 
     const jwtPayload: JwtPayload = {
       userId: session.user.id,
@@ -323,7 +323,7 @@ export class AuthService {
       { infer: true },
     );
 
-    const signature = this.createSignature();
+    const signature = this._createSignature();
 
     const newSession = this.sessionRepository.create({
       signature,
@@ -361,7 +361,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  private createSignature() {
+  private _createSignature() {
     return crypto.randomBytes(16).toString('hex');
   }
 }

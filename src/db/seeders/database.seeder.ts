@@ -16,9 +16,9 @@ export class DatabaseSeeder extends Seeder {
     console.time('🌱 Seeding database');
 
     em.create(User, {
-      username: 'admin',
-      email: 'admin@admin.com',
-      password: 'password',
+      username: 'admin01',
+      email: 'admin01@example.com',
+      password: 'Password@123',
       emailVerified: true,
       avatarUrl: faker.image.avatar(),
       role: UserRole.ADMIN,
@@ -33,7 +33,7 @@ export class DatabaseSeeder extends Seeder {
       const user = em.create(User, {
         username,
         email: `${username}@example.com`,
-        password: 'password',
+        password: 'Password@123',
         avatarUrl: faker.image.avatar(),
         role: i === 0 ? UserRole.ADMIN : UserRole.USER,
       });

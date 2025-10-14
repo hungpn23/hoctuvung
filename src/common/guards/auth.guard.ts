@@ -26,19 +26,19 @@ export class AuthGuard implements CanActivate {
       [context.getClass(), context.getHandler()],
     );
     if (hasRefreshTokenDecorator) {
-      const refreshToken = this.extractTokenFromHeader(request);
+      const refreshToken = this._extractTokenFromHeader(request);
       request.user = await this.authService.verifyRefreshToken(refreshToken);
 
       return true;
     }
 
-    const accessToken = this.extractTokenFromHeader(request);
+    const accessToken = this._extractTokenFromHeader(request);
     request.user = await this.authService.verifyAccessToken(accessToken);
 
     return true;
   }
 
-  private extractTokenFromHeader(request: ExpressRequest) {
+  private _extractTokenFromHeader(request: ExpressRequest) {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : '';
   }
