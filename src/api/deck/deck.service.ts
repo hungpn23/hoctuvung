@@ -243,17 +243,17 @@ export class DeckService {
     );
 
     if (!originalDeck)
-      throw new NotFoundException(`Không tìm thấy deck với id "${deckId}".`);
+      throw new NotFoundException(`Deck with id "${deckId}" not found.`);
 
     if (originalDeck.owner.id === userId)
-      throw new BadRequestException('Bạn không thể clone deck của chính mình.');
+      throw new BadRequestException('You cannot clone your own deck.');
 
     if (originalDeck.visibility === Visibility.PRIVATE)
-      throw new BadRequestException('Bạn không thể clone deck riêng-tư.');
+      throw new BadRequestException('You cannot clone a private deck.');
 
     if (originalDeck.visibility === Visibility.PROTECTED)
       if (!dto.passcode || dto.passcode !== originalDeck.passcode)
-        throw new BadRequestException('Passcode không hợp-lệ.');
+        throw new BadRequestException('Invalid passcode.');
 
     const newDeckName = `${originalDeck.name} (Clone)`;
     const existingClonedDeck = await this.deckRepository.findOne({
@@ -264,7 +264,7 @@ export class DeckService {
 
     if (existingClonedDeck)
       throw new BadRequestException(
-        `Bạn đã clone deck này với tên "${newDeckName}".`,
+        `You have already cloned this deck as "${newDeckName}". Please rename it before cloning again.`,
       );
 
     const newDeck = this.deckRepository.create({
