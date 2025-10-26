@@ -1,4 +1,5 @@
 import { ApiModule } from '@api/api.module';
+import { AppController } from '@app.controller';
 import { BackgroundModule } from '@background/background.module';
 import { AllConfig } from '@config';
 import appConfig from '@config/app.config';
@@ -79,5 +80,6 @@ const envFilePath =
 
     ApiModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

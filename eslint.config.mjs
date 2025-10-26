@@ -12,6 +12,7 @@ export default defineConfig(
       'lint-staged.config.mjs',
       'jest.config.mjs',
       'commitlint.config.mjs',
+      'prettier.config.mjs'
     ],
   },
   eslint.configs.recommended,
