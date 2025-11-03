@@ -58,7 +58,7 @@ export class AuthController {
 
   @RefreshToken()
   @ApiEndpoint({ type: TokenPairDto })
-  @Post('refresh-token')
+  @Post('refresh')
   async refreshToken(@Payload() payload: RefreshTokenPayload) {
     return await this.authService.refreshToken(payload);
   }

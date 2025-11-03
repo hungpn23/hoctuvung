@@ -46,6 +46,8 @@ export class User extends BaseEntity {
   @BeforeCreate()
   @BeforeUpdate()
   async hashPassword() {
-    if (this.password) this.password = await argon2.hash(this.password);
+    if (this.password && !this.password.startsWith('$argon2')) {
+      this.password = await argon2.hash(this.password);
+    }
   }
 }

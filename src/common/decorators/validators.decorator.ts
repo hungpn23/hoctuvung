@@ -207,7 +207,7 @@ function IsPassword(options?: ValidationOptions): PropertyDecorator {
           );
         },
         defaultMessage() {
-          return `$property must contain at least 8 characters, including uppercase, lowercase, number, and special character`;
+          return `$property must contain at least 8 characters, including uppercase, lowercase, number, and special characters`;
         },
       },
     });

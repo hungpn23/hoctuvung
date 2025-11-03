@@ -18,10 +18,10 @@ export class Card {
   id: Opt<UUID> = v4() as UUID;
 
   @Property()
-  question!: string;
+  term!: string;
 
   @Property()
-  answer!: string;
+  definition!: string;
 
   @Property()
   correctCount: Opt<number> = 0;

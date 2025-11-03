@@ -279,8 +279,8 @@ export class DeckService {
     originalDeck.cards.getItems().forEach((card) => {
       this.cardRepository.create({
         deck: newDeck,
-        question: card.question,
-        answer: card.answer,
+        term: card.term,
+        definition: card.definition,
       });
     });
 
