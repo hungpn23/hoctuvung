@@ -5,6 +5,7 @@ import {
 import type { UUID } from '@common/types/branded.type';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
+import { CardStatus } from '../deck.enum';
 
 export class CreateCardDto {
   @ApiProperty()
@@ -39,14 +40,6 @@ export class CardDto {
   definition!: string;
 
   @Expose()
-  @ApiPropertyOptional()
-  nextReviewAt?: Date;
-
-  @Expose()
-  @ApiPropertyOptional()
-  correctCount?: number;
-
-  @Expose()
-  @ApiPropertyOptional()
-  incorrectCount?: number;
+  @ApiProperty()
+  status!: CardStatus;
 }

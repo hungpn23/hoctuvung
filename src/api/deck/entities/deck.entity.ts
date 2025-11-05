@@ -39,6 +39,9 @@ export class Deck extends SoftDeleteBaseEntity {
   @Property({ default: 0 })
   cloneCount: Opt<number> = 0;
 
+  @NullableProperty()
+  openedAt?: Date;
+
   @ManyToOne(() => Deck, { ref: true, nullable: true })
   clonedFrom?: Ref<Deck>;
 

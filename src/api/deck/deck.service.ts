@@ -1,7 +1,4 @@
-import {
-  PaginatedDto,
-  QueryDto,
-} from '@common/dtos/offset-pagination/offset-pagination.dto';
+import { PaginatedDto } from '@common/dtos/offset-pagination/offset-pagination.dto';
 import { createMetadata } from '@common/dtos/offset-pagination/utils';
 import { UUID } from '@common/types/branded.type';
 import { EntityManager, EntityRepository, FilterQuery } from '@mikro-orm/core';
@@ -13,12 +10,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { Visibility } from './deck.enum';
+import { CardStatus, Visibility } from './deck.enum';
 import { CardDto } from './dtos/card.dto';
 import {
   CloneDeckDto,
   CreateDeckDto,
   DeckDto,
+  DeckQueryDto,
   DeckStatsDto,
   DeckWithCardsDto,
   UpdateDeckDto,
@@ -42,10 +40,7 @@ export class DeckService {
     const deck = await this.deckRepository.findOne(
       {
         id: deckId,
-        $or: [
-          { owner: userId },
-          { visibility: { $in: [Visibility.PUBLIC, Visibility.PROTECTED] } },
-        ],
+        owner: userId,
         isDeleted: false,
       },
       {
@@ -57,38 +52,67 @@ export class DeckService {
       throw new NotFoundException(`Deck with id "${deckId}" not found.`);
     }
 
-    this.logger.debug(
-      '🚀 ~ DeckService ~ getOne ~ deck:',
-      deck.cards.length === deck.cards.count(),
-    );
+    this.deckRepository.assign(deck, { openedAt: new Date() });
+    await this.em.flush();
 
-    const cards = deck.cards.getItems();
+    const cardsWithStatus = deck.cards.getItems().map((card) =>
+      plainToInstance(CardDto, {
+        ...card,
+        status: this._calculateCardStatus(card),
+      }),
+    );
 
     return plainToInstance(DeckWithCardsDto, {
       ...deck,
-      cards: plainToInstance(CardDto, cards),
-      stats: this._calculateDeckStats(cards),
+      cards: cardsWithStatus,
+      stats: this._calculateDeckStats(cardsWithStatus),
     });
   }
 
-  async getMany(userId: UUID, query: QueryDto) {
+  async getMany(userId: UUID, query: DeckQueryDto) {
+    const { limit, offset, search, orderBy, order } = query;
+
     const where: FilterQuery<Deck> = {
-      $or: [
-        { owner: userId },
-        { visibility: { $in: [Visibility.PUBLIC, Visibility.PROTECTED] } },
-      ],
+      owner: userId,
       isDeleted: false,
     };
 
-    if (query.q && query.q.trim() !== '')
-      where.name = { $ilike: `%${query.q}%` };
+    if (search && search.trim() !== '') where.name = { $ilike: `%${search}%` };
 
     const [decks, totalRecords] = await this.deckRepository.findAndCount(
       where,
       {
-        offset: query.offset,
-        limit: query.limit,
-        orderBy: { createdAt: query.order },
+        limit,
+        offset,
+        orderBy: { [orderBy]: order },
+      },
+    );
+
+    return plainToInstance(PaginatedDto<DeckDto>, {
+      data: plainToInstance(DeckDto, decks),
+      metadata: createMetadata(totalRecords, query),
+    });
+  }
+
+  async getSharedMany(userId: UUID, query: DeckQueryDto) {
+    const { limit, offset, search, orderBy, order } = query;
+
+    const where: FilterQuery<Deck> = {
+      owner: { $ne: userId },
+      visibility: { $in: [Visibility.PUBLIC, Visibility.PROTECTED] },
+      isDeleted: false,
+    };
+
+    if (search && search.trim() !== '') {
+      where.name = { $ilike: `%${search}%` };
+    }
+
+    const [decks, totalRecords] = await this.deckRepository.findAndCount(
+      where,
+      {
+        limit,
+        offset,
+        orderBy: { [orderBy]: order },
       },
     );
 
@@ -127,12 +151,17 @@ export class DeckService {
 
     await this.em.flush();
 
-    const cards = newDeck.cards.getItems();
+    const cardsWithStatus = newDeck.cards.getItems().map((card) =>
+      plainToInstance(CardDto, {
+        ...card,
+        status: this._calculateCardStatus(card),
+      }),
+    );
 
     return plainToInstance(DeckWithCardsDto, {
       ...newDeck,
-      cards: plainToInstance(CardDto, cards),
-      stats: this._calculateDeckStats(cards),
+      cards: cardsWithStatus,
+      stats: this._calculateDeckStats(cardsWithStatus),
     });
   }
 
@@ -208,12 +237,17 @@ export class DeckService {
 
     await this.em.flush();
 
-    const cards = deck.cards.getItems();
+    const cardsWithStatus = deck.cards.getItems().map((card) =>
+      plainToInstance(CardDto, {
+        ...card,
+        status: this._calculateCardStatus(card),
+      }),
+    );
 
     return plainToInstance(DeckWithCardsDto, {
       ...deck,
-      cards: plainToInstance(CardDto, cards),
-      stats: this._calculateDeckStats(cards),
+      cards: cardsWithStatus,
+      stats: this._calculateDeckStats(cardsWithStatus),
     });
   }
 
@@ -288,16 +322,21 @@ export class DeckService {
 
     await this.em.flush();
 
-    const cards = newDeck.cards.getItems();
+    const cardsWithStatus = newDeck.cards.getItems().map((card) =>
+      plainToInstance(CardDto, {
+        ...card,
+        status: this._calculateCardStatus(card),
+      }),
+    );
 
     return plainToInstance(DeckWithCardsDto, {
       ...newDeck,
-      cards: plainToInstance(CardDto, cards),
-      stats: this._calculateDeckStats(cards),
+      cards: cardsWithStatus,
+      stats: this._calculateDeckStats(cardsWithStatus),
     });
   }
 
-  private _calculateDeckStats(cards: Card[]): DeckStatsDto {
+  private _calculateDeckStats(cards: CardDto[]): DeckStatsDto {
     const stats: DeckStatsDto = {
       total: cards.length,
       known: 0,
@@ -305,20 +344,32 @@ export class DeckService {
       unseen: 0,
     };
 
-    const today = new Date();
-
     for (const card of cards) {
-      const nextReviewAt = card.nextReviewAt;
-
-      if (nextReviewAt === null || nextReviewAt === undefined) {
-        stats.unseen++;
-      } else if (nextReviewAt > today) {
-        stats.known++;
-      } else {
-        stats.learning++;
+      switch (card.status) {
+        case CardStatus.KNOWN:
+          stats.known++;
+          break;
+        case CardStatus.LEARNING:
+          stats.learning++;
+          break;
+        case CardStatus.NEW:
+          stats.unseen++;
+          break;
       }
     }
 
     return stats;
+  }
+
+  private _calculateCardStatus(card: Card): CardStatus {
+    const today = new Date();
+
+    if (card.nextReviewAt === null || card.nextReviewAt === undefined) {
+      return CardStatus.NEW;
+    } else if (card.nextReviewAt > today) {
+      return CardStatus.KNOWN;
+    } else {
+      return CardStatus.LEARNING;
+    }
   }
 }

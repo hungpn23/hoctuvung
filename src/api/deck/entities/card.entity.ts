@@ -26,9 +26,6 @@ export class Card {
   @Property()
   correctCount: Opt<number> = 0;
 
-  @Property()
-  incorrectCount: Opt<number> = 0;
-
   @NullableProperty()
   nextReviewAt?: Date;
 

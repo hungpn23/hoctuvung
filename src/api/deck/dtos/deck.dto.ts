@@ -1,3 +1,4 @@
+import { DeckOrderBy } from '@common/constants/order.enum';
 import {
   ClassValidator,
   ClassValidatorOptional,
@@ -6,6 +7,7 @@ import {
   StringValidator,
   StringValidatorOptional,
 } from '@common/decorators/validators.decorator';
+import { QueryDto } from '@common/dtos/offset-pagination/offset-pagination.dto';
 import type { UUID } from '@common/types/branded.type';
 import { ApiProperty, ApiPropertyOptional, OmitType } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
@@ -30,7 +32,7 @@ export class CreateDeckDto {
     description:
       'Required if visibility is PROTECTED. Must be 4-20 characters.',
   })
-  @ValidateIf((o) => o.visibility === Visibility.PROTECTED)
+  @ValidateIf((o) => (o as CreateDeckDto).visibility === Visibility.PROTECTED)
   @StringValidator({ minLength: 4, maxLength: 20 })
   passcode?: string;
 
@@ -66,6 +68,15 @@ export class CloneDeckDto {
   passcode?: string;
 }
 
+export class DeckQueryDto extends QueryDto {
+  @ApiPropertyOptional({
+    enum: DeckOrderBy,
+    default: DeckOrderBy.OPENED_AT,
+  })
+  @EnumValidatorOptional(DeckOrderBy)
+  orderBy: DeckOrderBy = DeckOrderBy.OPENED_AT;
+}
+
 @Exclude()
 export class DeckDto {
   @Expose()
@@ -87,6 +98,10 @@ export class DeckDto {
   @Expose()
   @ApiProperty({ enum: Visibility })
   visibility!: Visibility;
+
+  @Expose()
+  @ApiPropertyOptional()
+  openedAt?: Date;
 }
 
 @Exclude()

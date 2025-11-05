@@ -217,6 +217,24 @@ export class DatabaseSeeder extends Seeder {
       emailVerified: true,
     });
 
+    for (let i = 1; i <= 20; i++) {
+      const deck = em.create(Deck, {
+        owner: adminUser,
+        name: faker.lorem.words(3),
+        description: faker.lorem.sentence(),
+        visibility: Visibility.PUBLIC,
+        createdBy: adminUser.id,
+      });
+
+      for (let i = 1; i <= 20; i++) {
+        em.create(Card, {
+          deck: deck,
+          term: faker.lorem.words(3),
+          definition: faker.lorem.words(5),
+        });
+      }
+    }
+
     const deck = em.create(Deck, {
       owner: adminUser,
       name: '200 Basic English Words',
@@ -224,16 +242,6 @@ export class DatabaseSeeder extends Seeder {
         'A collection of 200 fundamental English vocabulary words for beginners.',
       visibility: Visibility.PUBLIC,
       createdBy: adminUser.id,
-    });
-
-    new Array(20).forEach(() => {
-      em.create(Deck, {
-        owner: adminUser,
-        name: faker.lorem.words(3),
-        description: faker.lorem.sentence(),
-        visibility: Visibility.PUBLIC,
-        createdBy: adminUser.id,
-      });
     });
 
     for (const vocab of basicEnglishVocabulary) {

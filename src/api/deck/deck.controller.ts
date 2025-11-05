@@ -1,6 +1,5 @@
 import { ApiEndpoint } from '@common/decorators/api-endpoint.decorator';
 import { Payload } from '@common/decorators/jwt-payload.decorator';
-import { QueryDto } from '@common/dtos/offset-pagination/offset-pagination.dto';
 import type { JwtPayload } from '@common/types/auth.type';
 import type { UUID } from '@common/types/branded.type';
 import {
@@ -18,6 +17,7 @@ import {
   CloneDeckDto,
   CreateDeckDto,
   DeckDto,
+  DeckQueryDto,
   DeckWithCardsDto,
   UpdateDeckDto,
 } from './dtos/deck.dto';
@@ -34,7 +34,10 @@ export class DeckController {
 
   @ApiEndpoint({ type: DeckDto, isPaginated: true })
   @Get()
-  async getMany(@Payload() { userId }: JwtPayload, @Query() query: QueryDto) {
+  async getMany(
+    @Payload() { userId }: JwtPayload,
+    @Query() query: DeckQueryDto,
+  ) {
     return await this.deckService.getMany(userId, query);
   }
 

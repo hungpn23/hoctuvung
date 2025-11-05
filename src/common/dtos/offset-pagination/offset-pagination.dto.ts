@@ -1,9 +1,9 @@
-import { Order } from '@common/constants/order.enum';
 import {
   EnumValidatorOptional,
   NumberValidatorOptional,
   StringValidatorOptional,
 } from '@common/decorators/validators.decorator';
+import { QueryOrder } from '@mikro-orm/core';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
@@ -17,16 +17,15 @@ export class QueryDto {
   limit: number = 10;
 
   @ApiPropertyOptional({
-    enum: Order,
-    enumName: 'Order',
-    default: Order.DESC,
+    enum: QueryOrder,
+    default: QueryOrder.DESC_NULLS_LAST,
   })
-  @EnumValidatorOptional(Order)
-  order: Order = Order.DESC;
+  @EnumValidatorOptional(QueryOrder)
+  order: QueryOrder = QueryOrder.DESC_NULLS_LAST;
 
   @ApiPropertyOptional()
   @StringValidatorOptional()
-  q?: string;
+  search?: string;
 
   get offset() {
     return this.page ? (this.page - 1) * this.limit : 0;

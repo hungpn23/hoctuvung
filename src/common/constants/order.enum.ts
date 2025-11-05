@@ -1,4 +1,6 @@
-export enum Order {
-  ASC = 'asc',
-  DESC = 'desc',
+export enum DeckOrderBy {
+  CREATED_AT = 'createdAt',
+  UPDATED_AT = 'updatedAt',
+  OPENED_AT = 'openedAt',
+  NAME = 'name',
 }
