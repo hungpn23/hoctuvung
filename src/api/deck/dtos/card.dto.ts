@@ -1,6 +1,6 @@
 import { StringValidator } from '@common/decorators/validators.decorator';
 import type { UUID } from '@common/types/branded.type';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { CardStatus } from '../deck.enum';
 
@@ -35,6 +35,19 @@ export class CardDto {
   definition!: string;
 
   @Expose()
+  @ApiPropertyOptional()
+  nextReviewAt?: Date;
+}
+
+@Exclude()
+export class PreviewCardDto extends CardDto {
+  @Expose()
   @ApiProperty()
   status!: CardStatus;
+}
+
+export class CardStateDto extends CardDto {
+  @Expose()
+  @ApiProperty()
+  correctCount!: number;
 }

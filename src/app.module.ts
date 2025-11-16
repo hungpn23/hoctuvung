@@ -52,9 +52,9 @@ const envFilePath =
         const password = configService.get('redis.password', { infer: true });
 
         return {
-          stores: new KeyvRedis({
-            url: `redis://${username}:${password}@${host}:${port}`,
-          }),
+          stores: new KeyvRedis(
+            `redis://${username}:${password}@${host}:${port}`,
+          ),
         };
       },
 

@@ -1,4 +1,4 @@
-import { CardDto } from '@api/deck/dtos/card.dto';
+import { CardStateDto } from '@api/deck/dtos/card.dto';
 import {
   BooleanValidator,
   StringValidator,
@@ -6,7 +6,6 @@ import {
 import type { UUID } from '@common/types/branded.type';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import type { StudySessionState } from '../study.type';
 
 export class SubmitReviewDto {
   @ApiProperty()
@@ -23,18 +22,37 @@ export class SubmitReviewDto {
 }
 
 @Exclude()
+export class StudySessionStateDto {
+  @Expose()
+  @ApiPropertyOptional({ type: CardStateDto })
+  currentCard?: CardStateDto;
+
+  @Expose()
+  @ApiProperty({ type: [CardStateDto] })
+  cardsToReview!: CardStateDto[];
+
+  @Expose()
+  @ApiProperty({ type: [CardStateDto] })
+  correctCards!: CardStateDto[];
+
+  @Expose()
+  @ApiProperty({ type: [CardStateDto] })
+  incorrectCards!: CardStateDto[];
+
+  @Expose()
+  @ApiProperty()
+  totalCount!: number;
+}
+
+@Exclude()
 export class StudySessionDto {
   @Expose()
   @ApiProperty()
   sessionId!: string;
 
   @Expose()
-  @ApiPropertyOptional({ type: CardDto })
-  currentCard?: CardDto;
-
-  @Expose()
   @ApiProperty()
-  state!: StudySessionState;
+  state!: StudySessionStateDto;
 
   @Expose()
   @ApiProperty()

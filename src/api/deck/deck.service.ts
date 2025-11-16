@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { CardStatus, Visibility } from './deck.enum';
-import { CardDto } from './dtos/card.dto';
+import { PreviewCardDto } from './dtos/card.dto';
 import {
   CloneDeckDto,
   CreateDeckDto,
@@ -64,7 +64,7 @@ export class DeckService {
     await this.em.flush();
 
     const cardsWithStatus = deck.cards.getItems().map((card) =>
-      plainToInstance(CardDto, {
+      plainToInstance(PreviewCardDto, {
         ...card,
         status: this._calculateCardStatus(card),
       }),
@@ -313,7 +313,7 @@ export class DeckService {
     await this.em.flush();
 
     const cardsWithStatus = newDeck.cards.getItems().map((card) =>
-      plainToInstance(CardDto, {
+      plainToInstance(PreviewCardDto, {
         ...card,
         status: this._calculateCardStatus(card),
       }),
@@ -326,7 +326,7 @@ export class DeckService {
     });
   }
 
-  private _calculateDeckStats(cards: CardDto[]): DeckStatsDto {
+  private _calculateDeckStats(cards: PreviewCardDto[]): DeckStatsDto {
     const stats: DeckStatsDto = {
       total: cards.length,
       known: 0,
