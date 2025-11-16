@@ -1,28 +1,23 @@
-import {
-  StringValidator,
-  StringValidatorOptional,
-} from '@common/decorators/validators.decorator';
+import { StringValidator } from '@common/decorators/validators.decorator';
 import type { UUID } from '@common/types/branded.type';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { CardStatus } from '../deck.enum';
 
 export class CreateCardDto {
   @ApiProperty()
-  @StringValidator({ minLength: 3 })
+  @StringValidator()
   term!: string;
 
   @ApiProperty()
-  @StringValidator({ minLength: 3 })
+  @StringValidator()
   definition!: string;
 }
 
 export class UpdateCardDto extends CreateCardDto {
-  @ApiPropertyOptional({
-    description: 'Leave this field blank if add a new card.',
-  })
-  @StringValidatorOptional()
-  id?: UUID;
+  @ApiProperty()
+  @StringValidator()
+  id!: UUID;
 }
 
 @Exclude()

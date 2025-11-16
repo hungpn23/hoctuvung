@@ -6,6 +6,7 @@ import {
 import type { UUID } from '@common/types/branded.type';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
+import type { StudySessionState } from '../study.type';
 
 export class SubmitReviewDto {
   @ApiProperty()
@@ -25,7 +26,7 @@ export class SubmitReviewDto {
 export class StudySessionDto {
   @Expose()
   @ApiProperty()
-  sessionId!: UUID;
+  sessionId!: string;
 
   @Expose()
   @ApiPropertyOptional({ type: CardDto })
@@ -33,7 +34,7 @@ export class StudySessionDto {
 
   @Expose()
   @ApiProperty()
-  totalCount!: number;
+  state!: StudySessionState;
 
   @Expose()
   @ApiProperty()

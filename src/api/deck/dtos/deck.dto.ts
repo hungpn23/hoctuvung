@@ -9,7 +9,12 @@ import {
 } from '@common/decorators/validators.decorator';
 import { QueryDto } from '@common/dtos/offset-pagination/offset-pagination.dto';
 import type { UUID } from '@common/types/branded.type';
-import { ApiProperty, ApiPropertyOptional, OmitType } from '@nestjs/swagger';
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+  OmitType,
+  PickType,
+} from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { ArrayMinSize, ValidateIf } from 'class-validator';
 import { Visibility } from '../deck.enum';
@@ -133,3 +138,6 @@ export class DeckWithCardsDto extends DeckDto {
   @ApiProperty({ type: DeckStatsDto })
   stats!: DeckStatsDto;
 }
+
+@Exclude()
+export class CreateDeckResDto extends PickType(DeckDto, ['id', 'slug']) {}

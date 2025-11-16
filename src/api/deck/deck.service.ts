@@ -1,7 +1,12 @@
 import { PaginatedDto } from '@common/dtos/offset-pagination/offset-pagination.dto';
 import { createMetadata } from '@common/dtos/offset-pagination/utils';
 import { UUID } from '@common/types/branded.type';
-import { EntityManager, EntityRepository, FilterQuery } from '@mikro-orm/core';
+import {
+  EntityManager,
+  EntityRepository,
+  FilterQuery,
+  QueryOrder,
+} from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   BadRequestException,
@@ -15,6 +20,7 @@ import { CardDto } from './dtos/card.dto';
 import {
   CloneDeckDto,
   CreateDeckDto,
+  CreateDeckResDto,
   DeckDto,
   DeckQueryDto,
   DeckStatsDto,
@@ -45,6 +51,7 @@ export class DeckService {
       },
       {
         populate: ['cards'],
+        orderBy: { cards: { term: QueryOrder.ASC_NULLS_LAST } },
       },
     );
 
@@ -53,6 +60,7 @@ export class DeckService {
     }
 
     this.deckRepository.assign(deck, { openedAt: new Date() });
+
     await this.em.flush();
 
     const cardsWithStatus = deck.cards.getItems().map((card) =>
@@ -151,17 +159,9 @@ export class DeckService {
 
     await this.em.flush();
 
-    const cardsWithStatus = newDeck.cards.getItems().map((card) =>
-      plainToInstance(CardDto, {
-        ...card,
-        status: this._calculateCardStatus(card),
-      }),
-    );
-
-    return plainToInstance(DeckWithCardsDto, {
-      ...newDeck,
-      cards: cardsWithStatus,
-      stats: this._calculateDeckStats(cardsWithStatus),
+    return plainToInstance(CreateDeckResDto, {
+      id: newDeck.id,
+      slug: newDeck.slug,
     });
   }
 
@@ -179,7 +179,6 @@ export class DeckService {
         name: dto.name,
         owner: userId,
         isDeleted: false,
-        id: { $ne: deckId }, // Quan trọng: loại trừ chính deck đang update
       });
 
       if (existingDeck)
@@ -209,16 +208,20 @@ export class DeckService {
 
       for (const cardDto of dto.cards) {
         if (cardDto.id && cardMap.has(cardDto.id)) {
+          // update existing card
           const existingCard = cardMap.get(cardDto.id)!;
           this.cardRepository.assign(existingCard, cardDto);
           newOrUpdatedCards.push(existingCard);
           cardMap.delete(cardDto.id);
         } else {
-          const newCard = this.cardRepository.create({ ...cardDto, deck });
+          // add new card
+          const { id: _tempId, ...cardData } = cardDto;
+          const newCard = this.cardRepository.create({ ...cardData, deck });
           newOrUpdatedCards.push(newCard);
         }
       }
 
+      // remove cards remaining
       this.em.remove(cardMap.values());
 
       dto.cards = newOrUpdatedCards;
@@ -231,24 +234,11 @@ export class DeckService {
         updatedBy: userId,
       },
       {
-        ignoreUndefined: true,
+        ignoreUndefined: true, // ignore undefined fields to avoid overwriting
       },
     );
 
-    await this.em.flush();
-
-    const cardsWithStatus = deck.cards.getItems().map((card) =>
-      plainToInstance(CardDto, {
-        ...card,
-        status: this._calculateCardStatus(card),
-      }),
-    );
-
-    return plainToInstance(DeckWithCardsDto, {
-      ...deck,
-      cards: cardsWithStatus,
-      stats: this._calculateDeckStats(cardsWithStatus),
-    });
+    return await this.em.flush();
   }
 
   async delete(userId: UUID, deckId: UUID) {

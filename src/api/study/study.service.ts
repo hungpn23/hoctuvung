@@ -81,40 +81,28 @@ export class StudyService {
     userId: UUID,
     { sessionId, cardId, wasCorrect }: SubmitReviewDto,
   ) {
-    this._verifySessionOwnership(userId, sessionId);
+    const sessionState = await this._verifySession(userId, sessionId);
 
-    const sessionState =
-      await this.cacheManager.get<StudySessionState>(sessionId);
-    if (!sessionState)
-      throw new NotFoundException('Study session not found or expired.');
+    const cardToReview = sessionState.reviewPile.shift();
 
-    const cardIndex = sessionState.reviewPile.findIndex((c) => c.id === cardId);
-    if (cardIndex === -1)
-      throw new BadRequestException('Card not in the current review pile.');
-
-    const [cardToReview] = sessionState.reviewPile.splice(cardIndex, 1);
+    if (cardToReview?.id !== cardId)
+      throw new BadRequestException('No card to review.');
 
     if (wasCorrect) {
       cardToReview.correctCount++;
-      await this._updateCardInDb(cardToReview);
     } else {
       cardToReview.correctCount = 0;
       sessionState.failedPile.push(cardToReview);
     }
 
+    await this._updateCardInDb(cardToReview);
     await this.cacheManager.set(sessionId, sessionState, 3600 * 1000);
 
     return await this._getNextCard(userId, sessionId);
   }
 
   private async _getNextCard(userId: UUID, sessionId: string) {
-    this._verifySessionOwnership(userId, sessionId);
-
-    const sessionState =
-      await this.cacheManager.get<StudySessionState>(sessionId);
-    if (!sessionState) {
-      throw new NotFoundException('Study session not found or expired.');
-    }
+    const sessionState = await this._verifySession(userId, sessionId);
 
     if (
       sessionState.reviewPile.length === 0 &&
@@ -135,10 +123,10 @@ export class StudyService {
       currentCard: currentCard
         ? plainToInstance(CardDto, currentCard)
         : undefined,
-      totalCount: sessionState.totalCount,
+      state: sessionState,
       remainingCount,
       isCompleted: remainingCount === 0,
-    });
+    } satisfies StudySessionDto);
   }
 
   private async _updateCardInDb(card: Card) {
@@ -157,26 +145,31 @@ export class StudyService {
     await this.em.flush();
   }
 
-  private _verifySessionOwnership(userId: UUID, sessionId: string) {
+  private async _verifySession(userId: UUID, sessionId: string) {
     if (!sessionId.startsWith(`study_session_id:${userId}:`))
       throw new ForbiddenException(
         'You do not have permission to access this study session.',
       );
+
+    const sessionState =
+      await this.cacheManager.get<StudySessionState>(sessionId);
+
+    if (!sessionState) {
+      throw new NotFoundException('Study session not found or expired.');
+    }
+
+    return sessionState;
   }
 
   private _shuffleCards(cards: Card[]): Card[] {
-    // Tạo một bản sao của mảng để tránh thay đổi mảng gốc (good practice)
-    const array = [...cards];
+    const array = structuredClone(cards);
     let currentIndex = array.length;
     let randomIndex;
 
-    // Lặp qua mảng từ cuối về đầu
     while (currentIndex !== 0) {
-      // Chọn một phần tử ngẫu nhiên còn lại
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
 
-      // Hoán đổi nó với phần tử hiện tại
       [array[currentIndex], array[randomIndex]] = [
         array[randomIndex],
         array[currentIndex],

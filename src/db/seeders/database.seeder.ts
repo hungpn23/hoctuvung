@@ -3,7 +3,6 @@ import { Visibility } from '@api/deck/deck.enum';
 import { Card } from '@api/deck/entities/card.entity';
 import { Deck } from '@api/deck/entities/deck.entity';
 import { User } from '@api/user/entities/user.entity';
-import { faker } from '@faker-js/faker';
 import { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 
@@ -217,23 +216,23 @@ export class DatabaseSeeder extends Seeder {
       emailVerified: true,
     });
 
-    for (let i = 1; i <= 20; i++) {
-      const deck = em.create(Deck, {
-        owner: adminUser,
-        name: faker.lorem.words(3),
-        description: faker.lorem.sentence(),
-        visibility: Visibility.PUBLIC,
-        createdBy: adminUser.id,
-      });
+    // for (let i = 1; i <= 20; i++) {
+    //   const deck = em.create(Deck, {
+    //     owner: adminUser,
+    //     name: faker.lorem.words(3),
+    //     description: faker.lorem.sentence(),
+    //     visibility: Visibility.PUBLIC,
+    //     createdBy: adminUser.id,
+    //   });
 
-      for (let i = 1; i <= 20; i++) {
-        em.create(Card, {
-          deck: deck,
-          term: faker.lorem.words(3),
-          definition: faker.lorem.words(5),
-        });
-      }
-    }
+    //   for (let i = 1; i <= 20; i++) {
+    //     em.create(Card, {
+    //       deck: deck,
+    //       term: faker.lorem.words(3),
+    //       definition: faker.lorem.words(5),
+    //     });
+    //   }
+    // }
 
     const deck = em.create(Deck, {
       owner: adminUser,
@@ -244,7 +243,7 @@ export class DatabaseSeeder extends Seeder {
       createdBy: adminUser.id,
     });
 
-    for (const vocab of basicEnglishVocabulary) {
+    for (const vocab of basicEnglishVocabulary.slice(0, 20)) {
       em.create(Card, {
         deck: deck,
         term: vocab.term,

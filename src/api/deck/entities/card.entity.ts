@@ -17,10 +17,10 @@ export class Card {
   @PrimaryKey({ type: t.uuid })
   id: Opt<UUID> = v4() as UUID;
 
-  @Property()
+  @Property({ type: t.text })
   term!: string;
 
-  @Property()
+  @Property({ type: t.text })
   definition!: string;
 
   @Property()
