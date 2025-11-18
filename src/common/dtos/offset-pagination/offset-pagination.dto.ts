@@ -62,7 +62,7 @@ export class MetadataDto {
 @Exclude()
 export class PaginatedDto<T> {
   // manually define swagger schema model at ApiPaginatedResponse decorator
-  @ApiProperty({ type: Array<object> }) // just for swagger ui purpose
+  @ApiProperty({ type: [Object] }) // just for swagger ui purpose
   @Expose()
   data!: T[];
 

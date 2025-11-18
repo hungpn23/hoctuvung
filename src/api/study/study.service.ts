@@ -1,4 +1,4 @@
-import { CardStateDto } from '@api/deck/dtos/card.dto';
+import { CardDto } from '@api/deck/dtos/card.dto';
 import { Card } from '@api/deck/entities/card.entity';
 import { Deck } from '@api/deck/entities/deck.entity';
 import { UUID } from '@common/types/branded.type';
@@ -32,12 +32,16 @@ export class StudyService {
 
   constructor(
     private readonly em: EntityManager,
+
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+
     @InjectRepository(Card)
     private readonly cardRepository: EntityRepository<Card>,
     @InjectRepository(Deck)
     private readonly deckRepository: EntityRepository<Deck>,
   ) {}
+
+  // async saveAnswers(userId: UUID, cardId: UUID, wasCorrect: boolean) {}
 
   async startSession(userId: UUID, deckId: UUID): Promise<StudySessionDto> {
     const sessionId = `study_session_id:${userId}:${deckId}`;
@@ -79,7 +83,7 @@ export class StudyService {
       throw new BadRequestException('No cards to study in this deck.');
 
     const cardsToReview = plainToInstance(
-      CardStateDto,
+      CardDto,
       sessionCards.map((c) => ({
         id: c.id,
         term: c.term,
@@ -132,16 +136,6 @@ export class StudyService {
     return await this._getNextCard(sessionId, state);
   }
 
-  private _calculateNextReviewAt(correctCount: number) {
-    const baseDaysToAdd = correctCount > 0 ? Math.pow(2, correctCount - 1) : 0;
-    const daysToAdd = Math.min(baseDaysToAdd, 365);
-    const nextReviewAt = new Date();
-
-    if (daysToAdd > 0) nextReviewAt.setDate(nextReviewAt.getDate() + daysToAdd);
-
-    return nextReviewAt;
-  }
-
   private async _getNextCard(sessionId: string, state: StudySessionStateDto) {
     const { cardsToReview, correctCards, incorrectCards } = state;
     const remainingCount = state.totalCount - correctCards.length;
@@ -181,6 +175,16 @@ export class StudyService {
       remainingCount,
       isCompleted: false,
     });
+  }
+
+  private _calculateNextReviewAt(correctCount: number) {
+    const baseDaysToAdd = correctCount > 0 ? Math.pow(2, correctCount - 1) : 0;
+    const daysToAdd = Math.min(baseDaysToAdd, 365);
+    const nextReviewAt = new Date();
+
+    if (daysToAdd > 0) nextReviewAt.setDate(nextReviewAt.getDate() + daysToAdd);
+
+    return nextReviewAt;
   }
 
   // for shuffle button

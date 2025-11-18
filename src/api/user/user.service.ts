@@ -19,8 +19,8 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: EntityRepository<User>,
 
-    @InjectQueue(QueueName.IMAGE_UPLOAD)
-    private readonly imageUploadQueue: Queue<ImageUploadData, void, JobName>,
+    @InjectQueue(QueueName.IMAGE)
+    private readonly imageQueue: Queue<ImageUploadData, void, JobName>,
   ) {}
 
   async getMe(userId: UUID) {
@@ -29,7 +29,7 @@ export class UserService {
   }
 
   async uploadAvatar(userId: UUID, file: Express.Multer.File) {
-    await this.imageUploadQueue.add(JobName.UPLOAD_USER_AVATAR, {
+    await this.imageQueue.add(JobName.UPLOAD_USER_AVATAR, {
       userId,
       filePath: file.path,
       fileName: file.filename,

@@ -9,7 +9,7 @@ import { ImageJobConsumer } from './image-job.consumer';
 @Module({
   imports: [
     BullModule.registerQueue({
-      name: QueueName.IMAGE_UPLOAD,
+      name: QueueName.IMAGE,
     }),
     ImageKitModule,
     MikroOrmModule.forFeature([User]),

@@ -35,19 +35,14 @@ export class CardDto {
   definition!: string;
 
   @Expose()
+  @ApiProperty()
+  correctCount!: number;
+
+  @Expose()
   @ApiPropertyOptional()
   nextReviewAt?: Date;
-}
 
-@Exclude()
-export class PreviewCardDto extends CardDto {
   @Expose()
   @ApiProperty()
   status!: CardStatus;
-}
-
-export class CardStateDto extends CardDto {
-  @Expose()
-  @ApiProperty()
-  correctCount!: number;
 }

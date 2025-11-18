@@ -25,7 +25,7 @@ export class Deck extends SoftDeleteBaseEntity {
   name!: string;
 
   @Property()
-  slug!: Opt<string>;
+  slug?: string;
 
   @NullableProperty()
   description?: string;
@@ -54,9 +54,6 @@ export class Deck extends SoftDeleteBaseEntity {
   @BeforeCreate()
   @BeforeUpdate()
   generateSlug() {
-    if (this.name) {
-      const newSlug = slugify(this.name, { lower: true, strict: true });
-      if (this.slug !== newSlug) this.slug = newSlug;
-    }
+    this.slug = slugify(this.name, { lower: true, strict: true });
   }
 }

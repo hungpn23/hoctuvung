@@ -108,7 +108,7 @@ export class AuthService {
       });
     }
 
-    const tokenPair = await this.createTokenPair(user);
+    const tokenPair = await this._createTokenPair(user);
     const oneTimeCode = crypto.randomBytes(20).toString('hex');
 
     await this.cacheManager.set(
@@ -140,13 +140,11 @@ export class AuthService {
     const user = await this.userRepository.findOne({ username });
 
     if (user) throw new BadRequestException('Username already exists');
-
     if (password !== confirmPassword)
       throw new BadRequestException('Passwords do not match');
 
     const newUser = this.userRepository.create({ username, password });
-
-    const tokenPair = await this.createTokenPair(newUser);
+    const tokenPair = await this._createTokenPair(newUser);
 
     await this.em.flush();
 
@@ -154,12 +152,13 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
-    const user = await this.userRepository.findOne({ username: dto.username });
+    const { username, password } = dto;
+    const user = await this.userRepository.findOne({ username });
 
-    const isValid = user && (await argon2.verify(user.password, dto.password));
+    const isValid = user && (await argon2.verify(user.password, password));
     if (!isValid) throw new BadRequestException('Invalid credentials');
 
-    const tokenPair = await this.createTokenPair(user);
+    const tokenPair = await this._createTokenPair(user);
 
     await this.em.flush();
 
@@ -174,10 +173,10 @@ export class AuthService {
       (exp! * 1000 - Date.now()) as Milliseconds,
     );
 
-    const session = await this.sessionRepository.findOne(sessionId);
-    if (!session) throw new BadRequestException();
+    const sessionRef = this.sessionRepository.getReference(sessionId);
+    if (!sessionRef) throw new BadRequestException();
 
-    return await this.em.removeAndFlush(session);
+    await this.em.removeAndFlush(sessionRef);
   }
 
   async refreshToken({ sessionId, signature, userId }: RefreshTokenPayload) {
@@ -187,15 +186,12 @@ export class AuthService {
 
     if (!session) throw new UnauthorizedException();
 
-    if (session?.signature !== signature) {
+    if (session.signature !== signature) {
       this.logger.debug(
         `Refresh token reuse detected for user ${userId}, revoking all sessions`,
       );
 
-      const sessions = await this.sessionRepository.find({
-        user: { id: userId },
-      });
-      await this.em.removeAndFlush(sessions);
+      await this.sessionRepository.nativeDelete({ user: userId });
       throw new UnauthorizedException();
     }
 
@@ -204,7 +200,7 @@ export class AuthService {
     const jwtPayload: JwtPayload = {
       userId: session.user.id,
       sessionId,
-      role: session.user.getProperty('role'),
+      role: session.user.$.role,
     };
 
     const refreshTokenPayload = {
@@ -260,7 +256,7 @@ export class AuthService {
 
     this.userRepository.assign(user, { password: newPassword });
 
-    return await this.em.flush();
+    await this.em.flush();
   }
 
   async verifyAccessToken(accessToken: string) {
@@ -317,7 +313,7 @@ export class AuthService {
     return payload;
   }
 
-  private async createTokenPair(user: User) {
+  private async _createTokenPair(user: User) {
     const refreshTokenExpiresIn = this.configService.get(
       'auth.refreshTokenExpiresIn',
       { infer: true },
@@ -327,7 +323,7 @@ export class AuthService {
 
     const newSession = this.sessionRepository.create({
       signature,
-      user,
+      user: user.id,
       expiresAt: new Date(Date.now() + ms(refreshTokenExpiresIn)),
     });
 

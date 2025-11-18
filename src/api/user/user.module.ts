@@ -9,7 +9,7 @@ import { UserService } from './user.service';
 @Module({
   imports: [
     MikroOrmModule.forFeature([User]),
-    BullModule.registerQueue({ name: QueueName.IMAGE_UPLOAD }),
+    BullModule.registerQueue({ name: QueueName.IMAGE }),
   ],
   controllers: [UserController],
   providers: [UserService],

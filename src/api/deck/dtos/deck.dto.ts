@@ -18,7 +18,7 @@ import {
 import { Exclude, Expose } from 'class-transformer';
 import { ArrayMinSize, ValidateIf } from 'class-validator';
 import { Visibility } from '../deck.enum';
-import { CreateCardDto, PreviewCardDto, UpdateCardDto } from './card.dto';
+import { CardDto, CreateCardDto, UpdateCardDto } from './card.dto';
 
 export class CreateDeckDto {
   @ApiProperty()
@@ -60,7 +60,7 @@ export class UpdateDeckDto extends OmitType(CreateDeckDto, [
   @EnumValidatorOptional(Visibility)
   visibility?: Visibility;
 
-  @ApiPropertyOptional({ type: () => [UpdateCardDto] })
+  @ApiPropertyOptional({ type: [UpdateCardDto] })
   @ClassValidatorOptional(UpdateCardDto, { each: true })
   cards?: UpdateCardDto[];
 }
@@ -125,14 +125,14 @@ export class DeckStatsDto {
 
   @Expose()
   @ApiProperty()
-  unseen!: number;
+  new!: number;
 }
 
 @Exclude()
 export class DeckWithCardsDto extends DeckDto {
   @Expose()
-  @ApiProperty({ type: [PreviewCardDto] })
-  cards!: PreviewCardDto[];
+  @ApiProperty({ type: [CardDto] })
+  cards!: CardDto[];
 
   @Expose()
   @ApiProperty({ type: DeckStatsDto })

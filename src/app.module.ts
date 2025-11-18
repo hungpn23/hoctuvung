@@ -9,6 +9,7 @@ import googleConfig from '@config/google.config';
 import imagekitConfig from '@config/imagekit.config';
 import redisConfig from '@config/redis.config';
 import { MikroOrmConfigService } from '@db/mikro-orm.config.service';
+import { ImageKitModule } from '@imagekit/imagekit.module';
 import KeyvRedis from '@keyv/redis';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { BullModule } from '@nestjs/bullmq';
@@ -76,8 +77,8 @@ const envFilePath =
       },
     }),
 
+    ImageKitModule,
     BackgroundModule,
-
     ApiModule,
   ],
   controllers: [AppController],

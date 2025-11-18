@@ -1,4 +1,4 @@
-import { CardStateDto } from '@api/deck/dtos/card.dto';
+import { CardDto } from '@api/deck/dtos/card.dto';
 import {
   BooleanValidator,
   StringValidator,
@@ -24,20 +24,20 @@ export class SubmitReviewDto {
 @Exclude()
 export class StudySessionStateDto {
   @Expose()
-  @ApiPropertyOptional({ type: CardStateDto })
-  currentCard?: CardStateDto;
+  @ApiPropertyOptional({ type: CardDto })
+  currentCard?: CardDto;
 
   @Expose()
-  @ApiProperty({ type: [CardStateDto] })
-  cardsToReview!: CardStateDto[];
+  @ApiProperty({ type: [CardDto] })
+  cardsToReview!: CardDto[];
 
   @Expose()
-  @ApiProperty({ type: [CardStateDto] })
-  correctCards!: CardStateDto[];
+  @ApiProperty({ type: [CardDto] })
+  correctCards!: CardDto[];
 
   @Expose()
-  @ApiProperty({ type: [CardStateDto] })
-  incorrectCards!: CardStateDto[];
+  @ApiProperty({ type: [CardDto] })
+  incorrectCards!: CardDto[];
 
   @Expose()
   @ApiProperty()

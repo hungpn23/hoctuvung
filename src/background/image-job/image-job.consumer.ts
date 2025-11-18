@@ -1,23 +1,24 @@
 import { User } from '@api/user/entities/user.entity';
 import { JobName } from '@common/constants/job-name.enum';
+import { IMAGEKIT_CLIENT } from '@common/constants/provider-token';
 import { QueueName } from '@common/constants/queue-name.enum';
-import { ImageKitService } from '@imagekit/imagekit.service';
+import ImageKit from '@imagekit/nodejs';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
-import { Logger } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import fs from 'fs';
 import { ImageUploadData } from './image-job.type';
 
-@Processor(QueueName.IMAGE_UPLOAD)
+@Processor(QueueName.IMAGE)
 export class ImageJobConsumer extends WorkerHost {
   private readonly logger = new Logger(ImageJobConsumer.name);
   private readonly forkedEm: EntityManager;
   private readonly userRepository: EntityRepository<User>;
 
   constructor(
-    private readonly imageKitService: ImageKitService,
     private readonly em: EntityManager,
+    @Inject(IMAGEKIT_CLIENT) private readonly imagekitClient: ImageKit,
   ) {
     super();
     this.forkedEm = this.em.fork();
@@ -31,7 +32,7 @@ export class ImageJobConsumer extends WorkerHost {
 
     try {
       if (job.name === JobName.UPLOAD_USER_AVATAR) {
-        const uploadResult = await this.imageKitService.upload({
+        const uploadResult = await this.imagekitClient.files.upload({
           file: fs.createReadStream(filePath),
           fileName,
           folder: 'avatars',

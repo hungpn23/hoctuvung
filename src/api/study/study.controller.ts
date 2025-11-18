@@ -10,6 +10,12 @@ import { StudyService } from './study.service';
 export class StudyController {
   constructor(private readonly studyService: StudyService) {}
 
+  @ApiEndpoint()
+  @Post('handle-answer')
+  async handleAnswer() {
+    // return await this.studyService.handleAnswer();
+  }
+
   @ApiEndpoint({ type: StudySessionDto })
   @Post('start-session/:deckId')
   async startSession(

@@ -15,8 +15,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { CardStatus, Visibility } from './deck.enum';
-import { PreviewCardDto } from './dtos/card.dto';
+import { Visibility } from './deck.enum';
+import { CardDto } from './dtos/card.dto';
 import {
   CloneDeckDto,
   CreateDeckDto,
@@ -63,17 +63,14 @@ export class DeckService {
 
     await this.em.flush();
 
-    const cardsWithStatus = deck.cards.getItems().map((card) =>
-      plainToInstance(PreviewCardDto, {
-        ...card,
-        status: this._calculateCardStatus(card),
-      }),
-    );
+    const cards = deck.cards
+      .getItems()
+      .map((card) => plainToInstance(CardDto, card));
 
     return plainToInstance(DeckWithCardsDto, {
       ...deck,
-      cards: cardsWithStatus,
-      stats: this._calculateDeckStats(cardsWithStatus),
+      cards,
+      stats: this._calculateDeckStats(cards),
     });
   }
 
@@ -136,7 +133,7 @@ export class DeckService {
     const deck = await this.deckRepository.findOne({
       name: deckDto.name,
       isDeleted: false,
-      owner: { id: userId },
+      owner: userId,
     });
     if (deck) {
       throw new BadRequestException(
@@ -150,12 +147,12 @@ export class DeckService {
       createdBy: userId,
     });
 
-    cardDtos.forEach((cardDto) => {
+    cardDtos.forEach((c) =>
       this.cardRepository.create({
-        ...cardDto,
-        deck: newDeck,
-      });
-    });
+        ...c,
+        deck: newDeck.id,
+      }),
+    );
 
     await this.em.flush();
 
@@ -238,7 +235,7 @@ export class DeckService {
       },
     );
 
-    return await this.em.flush();
+    await this.em.flush();
   }
 
   async delete(userId: UUID, deckId: UUID) {
@@ -257,13 +254,13 @@ export class DeckService {
       deletedBy: userId,
     });
 
-    return await this.em.flush();
+    await this.em.flush();
   }
 
   async clone(userId: UUID, deckId: UUID, dto: CloneDeckDto) {
     const originalDeck = await this.deckRepository.findOne(
       { id: deckId, isDeleted: false },
-      { populate: ['cards', 'owner'] },
+      { populate: ['cards'] },
     );
 
     if (!originalDeck)
@@ -300,66 +297,39 @@ export class DeckService {
       clonedFrom: originalDeck.id,
     });
 
-    originalDeck.cards.getItems().forEach((card) => {
+    originalDeck.cards.getItems().forEach((card) =>
       this.cardRepository.create({
-        deck: newDeck,
+        deck: newDeck.id,
         term: card.term,
         definition: card.definition,
-      });
-    });
+      }),
+    );
 
     originalDeck.cloneCount++;
 
     await this.em.flush();
 
-    const cardsWithStatus = newDeck.cards.getItems().map((card) =>
-      plainToInstance(PreviewCardDto, {
-        ...card,
-        status: this._calculateCardStatus(card),
-      }),
-    );
+    const cards = newDeck.cards
+      .getItems()
+      .map((card) => plainToInstance(CardDto, card));
 
     return plainToInstance(DeckWithCardsDto, {
       ...newDeck,
-      cards: cardsWithStatus,
-      stats: this._calculateDeckStats(cardsWithStatus),
+      cards,
+      stats: this._calculateDeckStats(cards),
     });
   }
 
-  private _calculateDeckStats(cards: PreviewCardDto[]): DeckStatsDto {
+  private _calculateDeckStats(cards: CardDto[]): DeckStatsDto {
     const stats: DeckStatsDto = {
       total: cards.length,
       known: 0,
       learning: 0,
-      unseen: 0,
+      new: 0,
     };
 
-    for (const card of cards) {
-      switch (card.status) {
-        case CardStatus.KNOWN:
-          stats.known++;
-          break;
-        case CardStatus.LEARNING:
-          stats.learning++;
-          break;
-        case CardStatus.NEW:
-          stats.unseen++;
-          break;
-      }
-    }
+    cards.forEach((c) => stats[c.status]++);
 
     return stats;
-  }
-
-  private _calculateCardStatus(card: Card): CardStatus {
-    const today = new Date();
-
-    if (card.nextReviewAt === null || card.nextReviewAt === undefined) {
-      return CardStatus.NEW;
-    } else if (card.nextReviewAt > today) {
-      return CardStatus.KNOWN;
-    } else {
-      return CardStatus.LEARNING;
-    }
   }
 }
