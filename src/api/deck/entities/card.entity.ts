@@ -31,7 +31,7 @@ export class Card {
   correctCount: Opt<number> = 0;
 
   @NullableProperty()
-  nextReviewAt?: Date;
+  nextReviewDate?: Date;
 
   @Enum(() => CardStatus)
   status?: CardStatus;
@@ -44,9 +44,9 @@ export class Card {
   calculateStatus() {
     const today = new Date();
 
-    if (!this.nextReviewAt) {
+    if (!this.nextReviewDate) {
       this.status = CardStatus.NEW;
-    } else if (this.nextReviewAt > today) {
+    } else if (this.nextReviewDate > today) {
       this.status = CardStatus.KNOWN;
     } else {
       this.status = CardStatus.LEARNING;

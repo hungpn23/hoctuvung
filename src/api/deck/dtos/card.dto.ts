@@ -40,7 +40,7 @@ export class CardDto {
 
   @Expose()
   @ApiPropertyOptional()
-  nextReviewAt?: Date;
+  nextReviewDate?: Date;
 
   @Expose()
   @ApiProperty()

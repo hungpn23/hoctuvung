@@ -60,7 +60,7 @@ export class StudyService {
     const reviewCards = await this.cardRepository.find(
       {
         deck: deckId,
-        nextReviewAt: { $lte: new Date() },
+        nextReviewDate: { $lte: new Date() },
       },
       { limit: MAX_REVIEW_CARDS_PER_SESSION },
     );
@@ -72,7 +72,7 @@ export class StudyService {
       newCards = await this.cardRepository.find(
         {
           deck: deckId,
-          nextReviewAt: null,
+          nextReviewDate: null,
         },
         { limit: newCardsLimit },
       );
@@ -89,7 +89,7 @@ export class StudyService {
         term: c.term,
         definition: c.definition,
         correctCount: c.correctCount,
-        nextReviewAt: c.nextReviewAt,
+        nextReviewDate: c.nextReviewDate,
       })),
     );
 
@@ -129,7 +129,7 @@ export class StudyService {
       state.incorrectCards.push(cardToReview);
     }
 
-    cardToReview.nextReviewAt = this._calculateNextReviewAt(
+    cardToReview.nextReviewDate = this._calculatenextReviewDate(
       cardToReview.correctCount,
     );
 
@@ -149,7 +149,7 @@ export class StudyService {
 
         this.cardRepository.assign(cardRef, {
           correctCount: c.correctCount,
-          nextReviewAt: c.nextReviewAt,
+          nextReviewDate: c.nextReviewDate,
         });
       }
 
@@ -177,14 +177,15 @@ export class StudyService {
     });
   }
 
-  private _calculateNextReviewAt(correctCount: number) {
+  private _calculatenextReviewDate(correctCount: number) {
     const baseDaysToAdd = correctCount > 0 ? Math.pow(2, correctCount - 1) : 0;
     const daysToAdd = Math.min(baseDaysToAdd, 365);
-    const nextReviewAt = new Date();
+    const nextReviewDate = new Date();
 
-    if (daysToAdd > 0) nextReviewAt.setDate(nextReviewAt.getDate() + daysToAdd);
+    if (daysToAdd > 0)
+      nextReviewDate.setDate(nextReviewDate.getDate() + daysToAdd);
 
-    return nextReviewAt;
+    return nextReviewDate;
   }
 
   // for shuffle button
