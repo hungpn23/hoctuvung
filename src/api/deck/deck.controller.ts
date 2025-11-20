@@ -72,4 +72,13 @@ export class DeckController {
   ) {
     return await this.deckService.clone(userId, deckId, dto);
   }
+
+  @ApiEndpoint()
+  @Post('refresh/:deckId')
+  async refresh(
+    @Payload() { userId }: JwtPayload,
+    @Param('deckId') deckId: UUID,
+  ) {
+    return await this.deckService.refresh(userId, deckId);
+  }
 }

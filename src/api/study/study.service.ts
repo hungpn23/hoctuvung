@@ -41,8 +41,6 @@ export class StudyService {
     private readonly deckRepository: EntityRepository<Deck>,
   ) {}
 
-  // async saveAnswers(userId: UUID, cardId: UUID, wasCorrect: boolean) {}
-
   async startSession(userId: UUID, deckId: UUID): Promise<StudySessionDto> {
     const sessionId = `study_session_id:${userId}:${deckId}`;
 

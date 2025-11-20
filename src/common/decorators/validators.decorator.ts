@@ -2,6 +2,7 @@ import { applyDecorators } from '@nestjs/common';
 import { ClassConstructor, Type } from 'class-transformer';
 import {
   IsBoolean,
+  IsDate,
   IsDefined,
   IsEmail,
   IsEnum,
@@ -187,6 +188,22 @@ export function ClassValidatorOptional<T>(
   options: Omit<CommonOptions, 'required'> = {},
 ) {
   return ClassValidator(className, { ...options, required: false });
+}
+
+export function DateValidator(options: CommonOptions = {}): PropertyDecorator {
+  const { each } = options;
+
+  let decorators = [Type(() => Date), IsDate({ each })];
+
+  decorators = handleCommonOptions(decorators, options);
+
+  return applyDecorators(...decorators);
+}
+
+export function DateValidatorOptional(
+  options: Omit<CommonOptions, 'required'> = {},
+): PropertyDecorator {
+  return DateValidator({ ...options, required: false });
 }
 
 // *******

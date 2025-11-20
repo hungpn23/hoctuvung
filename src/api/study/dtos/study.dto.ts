@@ -1,6 +1,7 @@
-import { CardDto } from '@api/deck/dtos/card.dto';
+import { CardAnswerDto, CardDto } from '@api/deck/dtos/card.dto';
 import {
   BooleanValidator,
+  ClassValidator,
   StringValidator,
 } from '@common/decorators/validators.decorator';
 import type { UUID } from '@common/types/branded.type';
@@ -19,6 +20,12 @@ export class SubmitReviewDto {
   @ApiProperty()
   @BooleanValidator()
   wasCorrect!: boolean;
+}
+
+export class SaveAnswersDto {
+  @ApiProperty()
+  @ClassValidator(CardAnswerDto, { each: true })
+  answers!: CardAnswerDto[];
 }
 
 @Exclude()

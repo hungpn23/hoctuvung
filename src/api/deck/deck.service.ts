@@ -320,6 +320,28 @@ export class DeckService {
     });
   }
 
+  async refresh(userId: UUID, deckId: UUID) {
+    const deck = await this.deckRepository.findOne({
+      id: deckId,
+      owner: userId,
+      isDeleted: false,
+    });
+
+    if (!deck)
+      throw new NotFoundException(`Deck with ID "${deckId}" not found.`);
+
+    const cards = await this.cardRepository.find({ deck: deckId });
+
+    for (const c of cards) {
+      this.cardRepository.assign(c, {
+        correctCount: 0,
+        nextReviewDate: undefined,
+      });
+    }
+
+    await this.em.flush();
+  }
+
   private _calculateDeckStats(cards: CardDto[]): DeckStatsDto {
     const stats: DeckStatsDto = {
       total: cards.length,
