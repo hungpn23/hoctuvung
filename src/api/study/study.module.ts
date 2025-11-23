@@ -6,7 +6,6 @@ import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 import { StudyController } from './study.controller';
 import { StudyService } from './study.service';
-import { StudyServiceV2 } from './study.service-v2';
 
 @Module({
   imports: [
@@ -19,6 +18,6 @@ import { StudyServiceV2 } from './study.service-v2';
     }),
   ],
   controllers: [StudyController],
-  providers: [StudyService, StudyServiceV2],
+  providers: [StudyService],
 })
 export class StudyModule {}

@@ -28,10 +28,10 @@ export class Card {
   definition!: string;
 
   @Property()
-  correctCount: Opt<number> = 0;
+  streak: Opt<number> = 0;
 
   @NullableProperty()
-  nextReviewDate?: Date;
+  reviewDate?: Date;
 
   @Enum(() => CardStatus)
   status?: CardStatus;
@@ -44,9 +44,9 @@ export class Card {
   calculateStatus() {
     const today = new Date();
 
-    if (!this.nextReviewDate) {
+    if (!this.reviewDate) {
       this.status = CardStatus.NEW;
-    } else if (this.nextReviewDate > today) {
+    } else if (this.reviewDate > today) {
       this.status = CardStatus.KNOWN;
     } else {
       this.status = CardStatus.LEARNING;

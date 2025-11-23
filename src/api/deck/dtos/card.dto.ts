@@ -31,11 +31,11 @@ export class CardAnswerDto {
 
   @ApiProperty()
   @NumberValidator()
-  correctCount!: number;
+  streak!: number;
 
   @ApiPropertyOptional()
   @DateValidatorOptional()
-  nextReviewDate?: Date;
+  reviewDate?: Date;
 }
 
 @Exclude()
@@ -54,11 +54,11 @@ export class CardDto {
 
   @Expose()
   @ApiProperty()
-  correctCount!: number;
+  streak!: number;
 
   @Expose()
   @ApiPropertyOptional()
-  nextReviewDate?: Date;
+  reviewDate?: Date;
 
   @Expose()
   @ApiProperty()

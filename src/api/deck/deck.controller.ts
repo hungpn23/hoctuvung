@@ -74,11 +74,11 @@ export class DeckController {
   }
 
   @ApiEndpoint()
-  @Post('refresh/:deckId')
-  async refresh(
+  @Post('restart/:deckId')
+  async restart(
     @Payload() { userId }: JwtPayload,
     @Param('deckId') deckId: UUID,
   ) {
-    return await this.deckService.refresh(userId, deckId);
+    return await this.deckService.restart(userId, deckId);
   }
 }

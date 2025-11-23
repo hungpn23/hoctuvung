@@ -320,7 +320,7 @@ export class DeckService {
     });
   }
 
-  async refresh(userId: UUID, deckId: UUID) {
+  async restart(userId: UUID, deckId: UUID) {
     const deck = await this.deckRepository.findOne({
       id: deckId,
       owner: userId,
@@ -334,8 +334,8 @@ export class DeckService {
 
     for (const c of cards) {
       this.cardRepository.assign(c, {
-        correctCount: 0,
-        nextReviewDate: undefined,
+        streak: 0,
+        reviewDate: undefined,
       });
     }
 
