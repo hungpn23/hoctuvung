@@ -1,98 +1,101 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Project: hoctuvung
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+**hoctuvung** is a NestJS-based backend application designed for vocabulary learning. It utilizes a robust stack including PostgreSQL (via MikroORM) for data persistence, Redis for caching and queues, and ImageKit for media management.
 
-## Description
+## Architecture & Tech Stack
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Core Framework
 
-## Project setup
+- **Framework:** NestJS
+- **Language:** TypeScript
+- **Package Manager:** pnpm
 
-```bash
-$ pnpm install
-```
+### Data Layer
 
-## Compile and run the project
+- **Database:** PostgreSQL
+- **ORM:** MikroORM
+  - **Config:** `src/db/mikro-orm.config.ts`
+  - **Entities:** `src/**/*.entity.ts`
+  - **Migrations:** Auto-schema update enabled in `main.ts`
+- **Seeding:** `@mikro-orm/seeder`
 
-```bash
-# development
-$ pnpm run start
+### Caching & Queues
 
-# watch mode
-$ pnpm run start:dev
+- **Redis:** Used for both caching and message queues.
+- **Queues:** BullMQ (background jobs handled in `src/background`).
+- **Caching:** `@nestjs/cache-manager` with `KeyvRedis`.
 
-# production mode
-$ pnpm run start:prod
-```
+### External Services
 
-## Run tests
+- **Image Processing:** ImageKit (`@imagekit/nodejs`).
+- **Authentication:** Google OAuth, JWT (`@nestjs/jwt`, `argon2` for password hashing).
 
-```bash
-# unit tests
-$ pnpm run test
+### API Structure
 
-# e2e tests
-$ pnpm run test:e2e
+- **Prefix:** Configurable (default: `/api`).
+- **Documentation:** Swagger UI available at `/api/docs` (assuming prefix is `api`).
+- **Validation:** Global `ValidationPipe` (transform & whitelist enabled).
+- **Global Guards:** `AuthGuard` applied globally.
+- **Modules:**
+  - `src/api`: Core business logic (Auth, Deck, Study, User).
+  - `src/background`: Background job consumers.
+  - `src/common`: Shared constants, decorators, filters, guards, pipes.
+  - `src/config`: Environment configuration.
 
-# test coverage
-$ pnpm run test:cov
-```
+## Development Workflow
 
-## Deployment
+### Prerequisites
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- Node.js
+- Docker & Docker Compose (for DB and Redis)
+- pnpm
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Setup & Installation
 
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
-```
+1.  **Install dependencies:**
+    ```bash
+    pnpm install
+    ```
+2.  **Environment Configuration:**
+    - Copy `.env.example` to `.env.local`.
+    - Fill in the required environment variables (DB credentials, Redis, Google Auth, ImageKit).
+3.  **Start Infrastructure:**
+    ```bash
+    docker compose -f compose.local.yml --env-file .env.local up -d
+    ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Running the Application
 
-## Resources
+- **Development (Watch Mode):**
+  ```bash
+  pnpm run start:dev
+  ```
+- **Production:**
+  ```bash
+  pnpm run start:prod
+  ```
 
-Check out a few resources that may come in handy when working with NestJS:
+### Testing
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- **Unit Tests:** `pnpm run test`
+- **E2E Tests:** `pnpm run test:e2e`
+- **Coverage:** `pnpm run test:cov`
 
-## Support
+### Code Quality & Standards
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- **Linting:** `pnpm run lint` (ESLint)
+- **Formatting:** `pnpm run format` (Prettier)
+- **Commit Hooks:** Husky is configured with `commitlint` and `lint-staged`. Ensure commit messages follow conventional commits.
 
-## Stay in touch
+## Directory Layout
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- `src/api`: Feature modules containing Controllers, Services, DTOs, and Entities.
+- `src/background`: Background task processing (e.g., image jobs).
+- `src/common`: Reusable components (Guards, Filters, Decorators).
+- `src/config`: Configuration namespaces using `@nestjs/config`.
+- `src/db`: Database-related configuration and seeds.
+- `src/imagekit`: ImageKit integration module.
+- `test`: End-to-end tests.
+- `uploads`: Directory for local file uploads (if applicable).

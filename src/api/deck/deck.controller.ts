@@ -19,6 +19,7 @@ import {
   DeckDto,
   DeckQueryDto,
   DeckWithCardsDto,
+  DeckWithStatsDto,
   UpdateDeckDto,
 } from './dtos/deck.dto';
 
@@ -32,7 +33,7 @@ export class DeckController {
     return await this.deckService.getOne(deckId, userId);
   }
 
-  @ApiEndpoint({ type: DeckDto, isPaginated: true })
+  @ApiEndpoint({ type: DeckWithStatsDto, isPaginated: true })
   @Get()
   async getMany(
     @Payload() { userId }: JwtPayload,

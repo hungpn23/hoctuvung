@@ -140,4 +140,11 @@ export class DeckWithCardsDto extends DeckDto {
 }
 
 @Exclude()
+export class DeckWithStatsDto extends DeckDto {
+  @Expose()
+  @ApiProperty({ type: DeckStatsDto })
+  stats!: DeckStatsDto;
+}
+
+@Exclude()
 export class CreateDeckResDto extends PickType(DeckDto, ['id', 'slug']) {}

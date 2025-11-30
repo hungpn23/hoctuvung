@@ -25,6 +25,7 @@ import {
   DeckQueryDto,
   DeckStatsDto,
   DeckWithCardsDto,
+  DeckWithStatsDto,
   UpdateDeckDto,
 } from './dtos/deck.dto';
 import { Card } from './entities/card.entity';
@@ -70,7 +71,7 @@ export class DeckService {
     return plainToInstance(DeckWithCardsDto, {
       ...deck,
       cards,
-      stats: this._calculateDeckStats(cards),
+      stats: this._getDeckStats(cards),
     });
   }
 
@@ -90,16 +91,27 @@ export class DeckService {
         limit,
         offset,
         orderBy: { [orderBy]: order },
+
+        populate: ['cards'],
       },
     );
 
-    return plainToInstance(PaginatedDto<DeckDto>, {
-      data: plainToInstance(DeckDto, decks),
+    const deckWithCards = decks.map((d) => {
+      const cards = d.cards.map((c) => plainToInstance(CardDto, c));
+
+      return plainToInstance(DeckWithStatsDto, {
+        ...d,
+        stats: this._getDeckStats(cards),
+      });
+    });
+
+    return plainToInstance(PaginatedDto<DeckWithStatsDto>, {
+      data: deckWithCards,
       metadata: createMetadata(totalRecords, query),
     });
   }
 
-  async getSharedMany(userId: UUID, query: DeckQueryDto) {
+  async getPublicMany(userId: UUID, query: DeckQueryDto) {
     const { limit, offset, search, orderBy, order } = query;
 
     const where: FilterQuery<Deck> = {
@@ -316,7 +328,7 @@ export class DeckService {
     return plainToInstance(DeckWithCardsDto, {
       ...newDeck,
       cards,
-      stats: this._calculateDeckStats(cards),
+      stats: this._getDeckStats(cards),
     });
   }
 
@@ -342,7 +354,7 @@ export class DeckService {
     await this.em.flush();
   }
 
-  private _calculateDeckStats(cards: CardDto[]): DeckStatsDto {
+  private _getDeckStats(cards: CardDto[]): DeckStatsDto {
     const stats: DeckStatsDto = {
       total: cards.length,
       known: 0,

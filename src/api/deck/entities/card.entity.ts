@@ -41,7 +41,7 @@ export class Card {
 
   @BeforeCreate()
   @BeforeUpdate()
-  calculateStatus() {
+  getStatus() {
     const today = new Date();
 
     if (!this.reviewDate) {
