@@ -4,12 +4,13 @@ import { QueueName } from '@common/constants/queue-name.enum';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
+import { UserStatistic } from './entities/user-statistics.entity';
 import { StudyController } from './study.controller';
 import { StudyService } from './study.service';
 
 @Module({
   imports: [
-    MikroOrmModule.forFeature([Deck, Card]),
+    MikroOrmModule.forFeature([Deck, Card, UserStatistic]),
     BullModule.registerQueue({
       name: QueueName.STUDY,
       defaultJobOptions: {

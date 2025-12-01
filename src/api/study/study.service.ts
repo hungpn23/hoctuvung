@@ -1,3 +1,4 @@
+import { CardStatus } from '@api/deck/deck.enum';
 import { Card } from '@api/deck/entities/card.entity';
 import { Deck } from '@api/deck/entities/deck.entity';
 import { UpdateUserStatsData } from '@background/study-job/study-job.type';
@@ -9,7 +10,9 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Queue } from 'bullmq';
-import { SaveAnswersDto } from './dtos/study.dto';
+import { plainToInstance } from 'class-transformer';
+import { SaveAnswersDto, UserStatsDto } from './dtos/study.dto';
+import { UserStatistic } from './entities/user-statistics.entity';
 
 @Injectable()
 export class StudyService {
@@ -21,16 +24,25 @@ export class StudyService {
     private readonly cardRepository: EntityRepository<Card>,
     @InjectRepository(Deck)
     private readonly deckRepository: EntityRepository<Deck>,
+    @InjectRepository(UserStatistic)
+    private readonly userStatsRepository: EntityRepository<UserStatistic>,
 
     @InjectQueue(QueueName.STUDY)
     private readonly studyQueue: Queue<UpdateUserStatsData, void, JobName>,
   ) {}
 
-  async saveAnswers(
-    userId: UUID,
-    deckId: UUID,
-    dto: SaveAnswersDto,
-  ): Promise<void> {
+  async getUserStats(userId: UUID) {
+    let stats = await this.userStatsRepository.findOne({ user: userId });
+
+    if (!stats) {
+      stats = this.userStatsRepository.create({ user: userId });
+      await this.em.flush();
+    }
+
+    return plainToInstance(UserStatsDto, stats);
+  }
+
+  async saveAnswers(userId: UUID, deckId: UUID, dto: SaveAnswersDto) {
     const deck = await this.deckRepository.findOne({
       id: deckId,
       owner: userId,
@@ -48,15 +60,25 @@ export class StudyService {
 
     for (const a of dto.answers) {
       const cardEntity = map.get(a.id);
-      if (cardEntity) this.cardRepository.assign(cardEntity, a);
+
+      if (cardEntity) {
+        this.cardRepository.assign(cardEntity, a);
+
+        map.set(a.id, cardEntity);
+      }
     }
 
-    await Promise.all([
-      this.studyQueue.add(JobName.UPDATE_USER_STATS, {
-        userId,
-        cardsLearnedCount: dto.answers.length,
-      }),
-      this.em.flush(),
-    ]);
+    await this.em.flush();
+
+    let learnedCount = 0;
+
+    map.forEach((card) => {
+      if (card.status === CardStatus.KNOWN) learnedCount += 1;
+    });
+
+    await this.studyQueue.add(JobName.UPDATE_USER_STATS, {
+      userId,
+      learnedCount,
+    });
   }
 }

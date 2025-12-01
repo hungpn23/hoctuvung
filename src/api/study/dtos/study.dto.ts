@@ -69,3 +69,22 @@ export class StudySessionDto {
   @ApiProperty()
   isCompleted!: boolean;
 }
+
+@Exclude()
+export class UserStatsDto {
+  @Expose()
+  @ApiProperty()
+  currentStreak!: number;
+
+  @Expose()
+  @ApiProperty()
+  longestStreak!: number;
+
+  @Expose()
+  @ApiProperty()
+  totalCardsLearned!: number;
+
+  @Expose()
+  @ApiProperty()
+  masteryRate!: number;
+}

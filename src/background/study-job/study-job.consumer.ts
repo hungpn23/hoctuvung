@@ -21,7 +21,7 @@ export class StudyJobConsumer extends WorkerHost {
   async process(job: Job<UpdateUserStatsData, void, JobName>) {
     this.logger.debug(`Processing job ${job.id} of type ${job.name}...`);
 
-    const { userId, cardsLearnedCount } = job.data;
+    const { userId, learnedCount } = job.data;
     const em = this.em.fork();
     const userStatsRepository = em.getRepository(UserStatistic);
     const cardRepository = em.getRepository(Card);
@@ -36,7 +36,6 @@ export class StudyJobConsumer extends WorkerHost {
 
         if (!stats) {
           stats = userStatsRepository.create({ user: userId });
-          em.persist(stats);
         }
 
         // update streaks
@@ -58,7 +57,7 @@ export class StudyJobConsumer extends WorkerHost {
 
         // update last study date and total cards learned
         stats.lastStudyDate = now;
-        stats.totalCardsLearned += cardsLearnedCount;
+        stats.totalCardsLearned += learnedCount;
 
         // update mastery rate
         const [currentKnownCards, totalCards] = await Promise.all([
