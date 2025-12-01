@@ -27,7 +27,7 @@ export class CreateDeckDto {
 
   @ApiPropertyOptional()
   @StringValidatorOptional()
-  description?: string;
+  description?: string | null;
 
   @ApiProperty({ enum: Visibility })
   @EnumValidator(Visibility)
@@ -39,7 +39,7 @@ export class CreateDeckDto {
   })
   @ValidateIf((o) => (o as CreateDeckDto).visibility === Visibility.PROTECTED)
   @StringValidator({ minLength: 4, maxLength: 20 })
-  passcode?: string;
+  passcode?: string | null;
 
   @ApiProperty({ type: () => [CreateCardDto], minItems: 4 })
   @ArrayMinSize(4)
@@ -54,15 +54,15 @@ export class UpdateDeckDto extends OmitType(CreateDeckDto, [
 ]) {
   @ApiPropertyOptional()
   @StringValidatorOptional({ minLength: 3 })
-  name?: string;
+  name?: string | null;
 
   @ApiPropertyOptional({ enum: Visibility })
   @EnumValidatorOptional(Visibility)
-  visibility?: Visibility;
+  visibility?: Visibility | null;
 
   @ApiPropertyOptional({ type: [UpdateCardDto] })
   @ClassValidatorOptional(UpdateCardDto, { each: true })
-  cards?: UpdateCardDto[];
+  cards?: UpdateCardDto[] | null;
 }
 
 export class CloneDeckDto {
@@ -70,7 +70,7 @@ export class CloneDeckDto {
     description: 'Bắt buộc nếu deck có visibility là PROTECTED.',
   })
   @StringValidatorOptional()
-  passcode?: string;
+  passcode?: string | null;
 }
 
 export class DeckQueryDto extends QueryDto {
@@ -98,7 +98,7 @@ export class DeckDto {
 
   @Expose()
   @ApiPropertyOptional()
-  description?: string;
+  description?: string | null;
 
   @Expose()
   @ApiProperty({ enum: Visibility })
@@ -106,7 +106,7 @@ export class DeckDto {
 
   @Expose()
   @ApiPropertyOptional()
-  openedAt?: Date;
+  openedAt?: Date | null;
 }
 
 @Exclude()

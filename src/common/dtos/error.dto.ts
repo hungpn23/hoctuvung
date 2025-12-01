@@ -17,7 +17,7 @@ export class ErrorDto {
 
   @Expose()
   @ApiPropertyOptional({ type: () => [ErrorDetailDto] })
-  details?: ErrorDetailDto[];
+  details?: ErrorDetailDto[] | null;
 }
 
 @Exclude()

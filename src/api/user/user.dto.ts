@@ -15,7 +15,7 @@ export class UserDto {
 
   @Expose()
   @ApiPropertyOptional()
-  email?: string;
+  email?: string | null;
 
   @Expose()
   @ApiProperty()
@@ -23,7 +23,7 @@ export class UserDto {
 
   @Expose()
   @ApiPropertyOptional()
-  avatarUrl?: string;
+  avatarUrl?: string | null;
 
   @Expose()
   @ApiProperty()
@@ -35,7 +35,7 @@ export class UserDto {
 
   @Expose()
   @ApiPropertyOptional()
-  updatedAt?: Date;
+  updatedAt?: Date | null;
 }
 
 @Exclude()

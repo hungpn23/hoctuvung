@@ -8,8 +8,8 @@ export abstract class SoftDeleteBaseEntity extends BaseEntity {
   isDeleted: Opt<boolean> = false;
 
   @NullableProperty()
-  deletedAt?: Date;
+  deletedAt?: Date | null;
 
   @NullableProperty()
-  deletedBy?: UUID;
+  deletedBy?: UUID | null;
 }

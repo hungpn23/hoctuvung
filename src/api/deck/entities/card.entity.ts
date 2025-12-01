@@ -31,10 +31,10 @@ export class Card {
   streak: Opt<number> = 0;
 
   @NullableProperty()
-  reviewDate?: Date;
+  reviewDate?: Date | null;
 
   @Enum(() => CardStatus)
-  status?: CardStatus;
+  status?: CardStatus | null;
 
   @ManyToOne(() => Deck, { ref: true })
   deck!: Ref<Deck>;

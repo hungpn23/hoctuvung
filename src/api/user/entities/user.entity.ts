@@ -23,7 +23,7 @@ export class User extends BaseEntity {
   username!: string;
 
   @NullableProperty({ unique: true })
-  email?: string;
+  email?: string | null;
 
   @Property()
   emailVerified: Opt<boolean> = false;
@@ -32,7 +32,7 @@ export class User extends BaseEntity {
   password!: Hidden<string>;
 
   @NullableProperty()
-  avatarUrl?: string;
+  avatarUrl?: string | null;
 
   @Enum(() => UserRole)
   role: Opt<UserRole> = UserRole.USER;

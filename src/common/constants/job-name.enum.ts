@@ -1,4 +1,4 @@
 export enum JobName {
   UPLOAD_USER_AVATAR = 'upload_user_avatar',
-  SAVE_CARDS = 'save_cards',
+  UPDATE_USER_STATS = 'update_user_stats',
 }

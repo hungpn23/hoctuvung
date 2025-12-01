@@ -15,8 +15,8 @@ export abstract class BaseEntity {
   createdBy: Opt<UUID> = System;
 
   @NullableProperty({ onUpdate: () => new Date() })
-  updatedAt?: Date;
+  updatedAt?: Date | null;
 
   @NullableProperty()
-  updatedBy?: UUID;
+  updatedBy?: UUID | null;
 }

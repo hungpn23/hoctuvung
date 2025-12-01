@@ -32,7 +32,7 @@ export class SaveAnswersDto {
 export class StudySessionStateDto {
   @Expose()
   @ApiPropertyOptional({ type: CardDto })
-  currentCard?: CardDto;
+  currentCard?: CardDto | null;
 
   @Expose()
   @ApiProperty({ type: [CardDto] })

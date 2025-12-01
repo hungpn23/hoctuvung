@@ -1,5 +1,5 @@
 import {
-  DateValidatorOptional,
+  DateValidator,
   NumberValidator,
   StringValidator,
 } from '@common/decorators/validators.decorator';
@@ -33,9 +33,9 @@ export class CardAnswerDto {
   @NumberValidator()
   streak!: number;
 
-  @ApiPropertyOptional()
-  @DateValidatorOptional()
-  reviewDate?: Date;
+  @ApiProperty()
+  @DateValidator()
+  reviewDate!: Date;
 }
 
 @Exclude()
@@ -58,7 +58,7 @@ export class CardDto {
 
   @Expose()
   @ApiPropertyOptional()
-  reviewDate?: Date;
+  reviewDate?: Date | null;
 
   @Expose()
   @ApiProperty()

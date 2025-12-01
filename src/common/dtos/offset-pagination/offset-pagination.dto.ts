@@ -25,7 +25,7 @@ export class QueryDto {
 
   @ApiPropertyOptional()
   @StringValidatorOptional()
-  search?: string;
+  search?: string | null;
 
   get offset() {
     return this.page ? (this.page - 1) * this.limit : 0;
@@ -52,11 +52,11 @@ export class MetadataDto {
 
   @Expose()
   @ApiPropertyOptional()
-  nextPage?: number;
+  nextPage?: number | null;
 
   @Expose()
   @ApiPropertyOptional()
-  previousPage?: number;
+  previousPage?: number | null;
 }
 
 @Exclude()

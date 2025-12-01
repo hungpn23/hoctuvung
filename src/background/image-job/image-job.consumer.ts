@@ -3,7 +3,7 @@ import { JobName } from '@common/constants/job-name.enum';
 import { IMAGEKIT_CLIENT } from '@common/constants/provider-token';
 import { QueueName } from '@common/constants/queue-name.enum';
 import ImageKit from '@imagekit/nodejs';
-import { EntityManager, EntityRepository } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
@@ -13,22 +13,20 @@ import { ImageUploadData } from './image-job.type';
 @Processor(QueueName.IMAGE)
 export class ImageJobConsumer extends WorkerHost {
   private readonly logger = new Logger(ImageJobConsumer.name);
-  private readonly forkedEm: EntityManager;
-  private readonly userRepository: EntityRepository<User>;
 
   constructor(
     private readonly em: EntityManager,
     @Inject(IMAGEKIT_CLIENT) private readonly imagekitClient: ImageKit,
   ) {
     super();
-    this.forkedEm = this.em.fork();
-    this.userRepository = this.forkedEm.getRepository(User);
   }
 
   async process(job: Job<ImageUploadData, void, JobName>) {
     this.logger.debug(`Processing job ${job.id} of type ${job.name}...`);
 
     const { userId, filePath, fileName } = job.data;
+    const em = this.em.fork();
+    const userRepository = em.getRepository(User);
 
     try {
       if (job.name === JobName.UPLOAD_USER_AVATAR) {
@@ -40,11 +38,11 @@ export class ImageJobConsumer extends WorkerHost {
 
         this.logger.debug(`Uploaded to ImageKit, URL: ${uploadResult.url}`);
 
-        const user = await this.userRepository.findOne(userId);
+        const user = await userRepository.findOne(userId);
         if (!user) throw new Error(`User with ID ${userId} not found`);
 
         user.avatarUrl = uploadResult.url;
-        await this.forkedEm.flush();
+        await em.flush();
         this.logger.debug(`Updated avatar URL for user ${userId} in DB.`);
 
         fs.unlink(filePath, (err) => {
