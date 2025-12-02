@@ -1,3 +1,4 @@
+import { UserDto } from '@api/user/user.dto';
 import { DeckOrderBy } from '@common/constants/order.enum';
 import {
   ClassValidator,
@@ -107,6 +108,10 @@ export class DeckDto {
   @Expose()
   @ApiPropertyOptional()
   openedAt?: Date | null;
+
+  @Expose()
+  @ApiProperty()
+  createdAt!: Date;
 }
 
 @Exclude()
@@ -144,6 +149,17 @@ export class DeckWithStatsDto extends DeckDto {
   @Expose()
   @ApiProperty({ type: DeckStatsDto })
   stats!: DeckStatsDto;
+}
+
+@Exclude()
+export class PublicDeckDto extends DeckDto {
+  @Expose()
+  @ApiProperty()
+  totalCards!: number;
+
+  @Expose()
+  @ApiProperty()
+  owner!: UserDto;
 }
 
 @Exclude()

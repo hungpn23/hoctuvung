@@ -1,3 +1,4 @@
+import { UserDto } from '@api/user/user.dto';
 import { PaginatedDto } from '@common/dtos/offset-pagination/offset-pagination.dto';
 import { createMetadata } from '@common/dtos/offset-pagination/utils';
 import { UUID } from '@common/types/branded.type';
@@ -21,11 +22,11 @@ import {
   CloneDeckDto,
   CreateDeckDto,
   CreateDeckResDto,
-  DeckDto,
   DeckQueryDto,
   DeckStatsDto,
   DeckWithCardsDto,
   DeckWithStatsDto,
+  PublicDeckDto,
   UpdateDeckDto,
 } from './dtos/deck.dto';
 import { Card } from './entities/card.entity';
@@ -120,9 +121,7 @@ export class DeckService {
       isDeleted: false,
     };
 
-    if (search && search.trim() !== '') {
-      where.name = { $ilike: `%${search}%` };
-    }
+    if (search && search.trim() !== '') where.name = { $ilike: `%${search}%` };
 
     const [decks, totalRecords] = await this.deckRepository.findAndCount(
       where,
@@ -130,11 +129,21 @@ export class DeckService {
         limit,
         offset,
         orderBy: { [orderBy]: order },
+
+        populate: ['owner', 'cards'],
       },
     );
 
-    return plainToInstance(PaginatedDto<DeckDto>, {
-      data: plainToInstance(DeckDto, decks),
+    const publicDecks = decks.map((d) => {
+      return plainToInstance(PublicDeckDto, {
+        ...d,
+        totalCards: d.cards.length,
+        owner: plainToInstance(UserDto, d.owner.unwrap()),
+      });
+    });
+
+    return plainToInstance(PaginatedDto<PublicDeckDto>, {
+      data: publicDecks,
       metadata: createMetadata(totalRecords, query),
     });
   }

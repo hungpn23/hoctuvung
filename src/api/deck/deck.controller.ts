@@ -20,18 +20,13 @@ import {
   DeckQueryDto,
   DeckWithCardsDto,
   DeckWithStatsDto,
+  PublicDeckDto,
   UpdateDeckDto,
 } from './dtos/deck.dto';
 
 @Controller('decks')
 export class DeckController {
   constructor(private readonly deckService: DeckService) {}
-
-  @ApiEndpoint({ type: DeckWithCardsDto })
-  @Get(':id')
-  async getOne(@Payload() { userId }: JwtPayload, @Param('id') deckId: UUID) {
-    return await this.deckService.getOne(deckId, userId);
-  }
 
   @ApiEndpoint({ type: DeckWithStatsDto, isPaginated: true })
   @Get()
@@ -40,6 +35,30 @@ export class DeckController {
     @Query() query: DeckQueryDto,
   ) {
     return await this.deckService.getMany(userId, query);
+  }
+
+  @ApiEndpoint({ type: PublicDeckDto, isPaginated: true })
+  @Get('public')
+  async getPublicMany(
+    @Payload() { userId }: JwtPayload,
+    @Query() query: DeckQueryDto,
+  ) {
+    return await this.deckService.getPublicMany(userId, query);
+  }
+
+  @ApiEndpoint({ type: DeckWithCardsDto })
+  @Get('public')
+  async getPublicOne(
+    @Payload() { userId: _ }: JwtPayload,
+    @Query() _query: DeckQueryDto,
+  ) {
+    // return await this.deckService.getPublicOne(userId, query);
+  }
+
+  @ApiEndpoint({ type: DeckWithCardsDto })
+  @Get(':id')
+  async getOne(@Payload() { userId }: JwtPayload, @Param('id') deckId: UUID) {
+    return await this.deckService.getOne(deckId, userId);
   }
 
   @ApiEndpoint({ type: DeckDto })
