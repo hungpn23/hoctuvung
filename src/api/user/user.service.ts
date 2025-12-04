@@ -1,7 +1,7 @@
-import { ImageUploadData } from '@background/image-job/image-job.type';
 import { JobName } from '@common/constants/job-name.enum';
 import { QueueName } from '@common/constants/queue-name.enum';
 import { UUID } from '@common/types/branded.type';
+import { ImageUploadData } from '@common/types/jobs.type';
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { InjectQueue } from '@nestjs/bullmq';

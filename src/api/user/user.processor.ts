@@ -2,17 +2,17 @@ import { User } from '@api/user/entities/user.entity';
 import { JobName } from '@common/constants/job-name.enum';
 import { IMAGEKIT_CLIENT } from '@common/constants/provider-token';
 import { QueueName } from '@common/constants/queue-name.enum';
+import { ImageUploadData } from '@common/types/jobs.type';
 import ImageKit from '@imagekit/nodejs';
 import { EntityManager } from '@mikro-orm/core';
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import fs from 'fs';
-import { ImageUploadData } from './image-job.type';
 
 @Processor(QueueName.IMAGE)
-export class ImageJobConsumer extends WorkerHost {
-  private readonly logger = new Logger(ImageJobConsumer.name);
+export class UserProcessor extends WorkerHost {
+  private readonly logger = new Logger(UserProcessor.name);
 
   constructor(
     private readonly em: EntityManager,

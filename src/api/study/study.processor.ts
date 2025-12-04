@@ -3,16 +3,16 @@ import { Card } from '@api/deck/entities/card.entity';
 import { UserStatistic } from '@api/study/entities/user-statistics.entity';
 import { JobName } from '@common/constants/job-name.enum';
 import { QueueName } from '@common/constants/queue-name.enum';
+import { UpdateUserStatsData } from '@common/types/jobs.type';
 import { EntityManager } from '@mikro-orm/core';
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { differenceInCalendarDays } from 'date-fns';
-import { UpdateUserStatsData } from './study-job.type';
 
 @Processor(QueueName.STUDY)
-export class StudyJobConsumer extends WorkerHost {
-  private readonly logger = new Logger(StudyJobConsumer.name);
+export class StudyProcessor extends WorkerHost {
+  private readonly logger = new Logger(StudyProcessor.name);
 
   constructor(private readonly em: EntityManager) {
     super();
