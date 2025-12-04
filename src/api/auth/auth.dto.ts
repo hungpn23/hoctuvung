@@ -5,9 +5,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
-@Exclude()
 export class LoginDto {
-  @Expose()
   @ApiProperty({ minLength: 6, maxLength: 20 })
   @StringValidator({ minLength: 6, maxLength: 20 })
   username!: string;
@@ -18,40 +16,44 @@ export class LoginDto {
   password!: string;
 }
 
-@Exclude()
 export class RegisterDto {
-  @Expose()
   @ApiProperty({ minLength: 6, maxLength: 20 })
   @StringValidator({ minLength: 6, maxLength: 20 })
   username!: string;
 
-  @Expose()
   @ApiProperty()
   @PasswordValidator()
   password!: string;
 
-  @Expose()
   @ApiProperty()
   @PasswordValidator()
   confirmPassword!: string;
 }
 
-@Exclude()
 export class ChangePasswordDto {
-  @Expose()
   @ApiProperty()
   @PasswordValidator()
   oldPassword!: string;
 
-  @Expose()
   @ApiProperty()
   @PasswordValidator()
   newPassword!: string;
 
-  @Expose()
   @ApiProperty()
   @PasswordValidator()
   confirmPassword!: string;
+}
+
+export class ExchangeTokenDto {
+  @ApiProperty()
+  @StringValidator()
+  code!: string;
+}
+
+export class RefreshTokenDto {
+  @ApiProperty()
+  @StringValidator()
+  refreshToken!: string;
 }
 
 @Exclude()
@@ -63,12 +65,4 @@ export class TokenPairDto {
   @Expose()
   @ApiProperty()
   refreshToken!: string;
-}
-
-@Exclude()
-export class ExchangeTokenDto {
-  @Expose()
-  @ApiProperty()
-  @StringValidator()
-  code!: string;
 }

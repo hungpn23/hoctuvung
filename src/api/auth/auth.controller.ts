@@ -1,16 +1,17 @@
+import { UserDto } from '@api/user/user.dto';
 import {
   ApiEndpoint,
   ApiPublicEndpoint,
 } from '@common/decorators/api-endpoint.decorator';
-import { RefreshToken } from '@common/decorators/auth/refresh-token.decorator';
 import { Payload } from '@common/decorators/jwt-payload.decorator';
-import type { JwtPayload, RefreshTokenPayload } from '@common/types/auth.type';
+import type { JwtPayload } from '@common/types/auth.type';
 import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
 import type { Response } from 'express';
 import {
   ChangePasswordDto,
   ExchangeTokenDto,
   LoginDto,
+  RefreshTokenDto,
   RegisterDto,
   TokenPairDto,
 } from './auth.dto';
@@ -38,6 +39,12 @@ export class AuthController {
     return await this.authService.exchangeOneTimeCodeForTokens(code);
   }
 
+  @ApiEndpoint({ type: UserDto })
+  @Get('session')
+  async getSession(@Payload() payload: JwtPayload) {
+    return await this.authService.getSession(payload.userId);
+  }
+
   @ApiPublicEndpoint({ type: TokenPairDto })
   @Post('register')
   async register(@Body() dto: RegisterDto) {
@@ -56,11 +63,10 @@ export class AuthController {
     return await this.authService.logout(payload);
   }
 
-  @RefreshToken()
-  @ApiEndpoint({ type: TokenPairDto })
+  @ApiPublicEndpoint({ type: TokenPairDto })
   @Post('refresh')
-  async refreshToken(@Payload() payload: RefreshTokenPayload) {
-    return await this.authService.refreshToken(payload);
+  async refresh(@Body() dto: RefreshTokenDto) {
+    return await this.authService.refresh(dto.refreshToken);
   }
 
   @ApiEndpoint()

@@ -1,4 +1,5 @@
 import { User } from '@api/user/entities/user.entity';
+import { UserDto } from '@api/user/user.dto';
 import { JwtPayload, RefreshTokenPayload } from '@common/types/auth.type';
 import { Milliseconds, UUID } from '@common/types/branded.type';
 import {
@@ -135,6 +136,12 @@ export class AuthService {
     return plainToInstance(TokenPairDto, tokenPair);
   }
 
+  async getSession(userId: UUID) {
+    const user = await this.userRepository.findOneOrFail(userId);
+
+    return plainToInstance(UserDto, user);
+  }
+
   async register(dto: RegisterDto) {
     const { username, password, confirmPassword } = dto;
     const user = await this.userRepository.findOne({ username });
@@ -179,7 +186,10 @@ export class AuthService {
     await this.em.removeAndFlush(sessionRef);
   }
 
-  async refreshToken({ sessionId, signature, userId }: RefreshTokenPayload) {
+  async refresh(refreshToken: string) {
+    const { sessionId, signature, userId } =
+      await this._verifyRefreshToken(refreshToken);
+
     const session = await this.sessionRepository.findOne(sessionId, {
       populate: ['user'],
     });
@@ -212,7 +222,7 @@ export class AuthService {
       signature: newSignature,
     });
 
-    const [accessToken, refreshToken] = await Promise.all([
+    const [accessToken, newRefreshToken] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
         secret: this.configService.get('auth.jwtSecret', { infer: true }),
         expiresIn: this.configService.get('auth.jwtExpiresIn', {
@@ -232,7 +242,10 @@ export class AuthService {
       this.em.flush(),
     ]);
 
-    return plainToInstance(TokenPairDto, { accessToken, refreshToken });
+    return plainToInstance(TokenPairDto, {
+      accessToken,
+      refreshToken: newRefreshToken,
+    });
   }
 
   async changePassword(userId: UUID, dto: ChangePasswordDto) {
@@ -285,7 +298,7 @@ export class AuthService {
     return payload;
   }
 
-  async verifyRefreshToken(refreshToken: string) {
+  private async _verifyRefreshToken(refreshToken: string) {
     let payload: RefreshTokenPayload;
     try {
       payload = await this.jwtService.verifyAsync(refreshToken, {

@@ -21,17 +21,6 @@ export class AuthGuard implements CanActivate {
     );
     if (hasPublicDecorator) return true;
 
-    const hasRefreshTokenDecorator = this.reflector.getAllAndOverride<boolean>(
-      MetadataKey.REFRESH_TOKEN,
-      [context.getClass(), context.getHandler()],
-    );
-    if (hasRefreshTokenDecorator) {
-      const refreshToken = this._extractTokenFromHeader(request);
-      request.user = await this.authService.verifyRefreshToken(refreshToken);
-
-      return true;
-    }
-
     const accessToken = this._extractTokenFromHeader(request);
     request.user = await this.authService.verifyAccessToken(accessToken);
 
