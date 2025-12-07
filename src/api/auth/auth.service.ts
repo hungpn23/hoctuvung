@@ -49,7 +49,6 @@ export class AuthService {
     private readonly userRepository: EntityRepository<User>,
   ) {}
 
-  // redirect to oauth consent screen
   googleRedirect(res: Response) {
     const options = {
       redirect_uri: this.configService.get('google.redirectUri', {
@@ -63,15 +62,16 @@ export class AuthService {
 
     const searchParams = new URLSearchParams(options);
 
-    const url =
-      'https://accounts.google.com/o/oauth2/v2/auth?' + searchParams.toString();
-
-    res.redirect(url);
+    // redirect to oauth consent screen
+    res.redirect(
+      'https://accounts.google.com/o/oauth2/v2/auth?' + searchParams.toString(),
+    );
   }
 
   async googleLogin(code: string, res: Response) {
-    const appHost = this.configService.get('app.host', { infer: true });
-    const appPort = this.configService.get('app.port', { infer: true });
+    const clientDomain = this.configService.get('auth.clientDomain', {
+      infer: true,
+    });
     const params = new URLSearchParams({
       code,
       client_id: this.configService.get('google.clientId', { infer: true }),
@@ -120,9 +120,7 @@ export class AuthService {
 
     await this.em.flush();
 
-    return res.redirect(
-      `http://${appHost}:${appPort}/login/callback?code=${oneTimeCode}`,
-    );
+    return res.redirect(`${clientDomain}/login/callback?code=${oneTimeCode}`);
   }
 
   async exchangeOneTimeCodeForTokens(code: string) {
