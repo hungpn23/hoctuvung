@@ -22,20 +22,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiPublicEndpoint()
-  @Get('google')
-  googleRedirect(@Res() res: Response) {
-    return this.authService.googleRedirect(res);
-  }
-
-  @ApiPublicEndpoint()
   @Get('google/callback')
-  async googleLogin(@Query('code') code: string, @Res() res: Response) {
-    return await this.authService.googleLogin(code, res);
+  async googleCallback(@Query('code') code: string, @Res() res: Response) {
+    return await this.authService.googleCallback(code, res);
   }
 
   @ApiPublicEndpoint({ type: TokenPairDto })
-  @Post('google/exchange-token')
-  async exchangeCode(@Body() { code }: ExchangeTokenDto) {
+  @Post('google/exchange')
+  async exchange(@Body() { code }: ExchangeTokenDto) {
     return await this.authService.exchangeOneTimeCodeForTokens(code);
   }
 

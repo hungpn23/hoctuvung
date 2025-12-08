@@ -49,29 +49,11 @@ export class AuthService {
     private readonly userRepository: EntityRepository<User>,
   ) {}
 
-  googleRedirect(res: Response) {
-    const options = {
-      redirect_uri: this.configService.get('google.redirectUri', {
-        infer: true,
-      }),
-      client_id: this.configService.get('google.clientId', { infer: true }),
-      response_type: 'code',
-      scope: 'profile email',
-      prompt: 'select_account',
-    };
-
-    const searchParams = new URLSearchParams(options);
-
-    // redirect to oauth consent screen
-    res.redirect(
-      'https://accounts.google.com/o/oauth2/v2/auth?' + searchParams.toString(),
-    );
-  }
-
-  async googleLogin(code: string, res: Response) {
+  async googleCallback(code: string, res: Response) {
     const clientDomain = this.configService.get('auth.clientDomain', {
       infer: true,
     });
+
     const params = new URLSearchParams({
       code,
       client_id: this.configService.get('google.clientId', { infer: true }),
