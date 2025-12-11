@@ -24,7 +24,7 @@
 ### Caching & Queues
 
 - **Redis:** Used for both caching and message queues.
-- **Queues:** BullMQ (background jobs handled in `src/background`).
+- **Queues:** BullMQ (background jobs handled within feature modules).
 - **Caching:** `@nestjs/cache-manager` with `KeyvRedis`.
 
 ### External Services
@@ -40,7 +40,6 @@
 - **Global Guards:** `AuthGuard` applied globally.
 - **Modules:**
   - `src/api`: Core business logic (Auth, Deck, Study, User).
-  - `src/background`: Background job consumers.
   - `src/common`: Shared constants, decorators, filters, guards, pipes.
   - `src/config`: Environment configuration.
 
@@ -92,7 +91,6 @@
 ## Directory Layout
 
 - `src/api`: Feature modules containing Controllers, Services, DTOs, and Entities.
-- `src/background`: Background task processing (e.g., image jobs).
 - `src/common`: Reusable components (Guards, Filters, Decorators).
 - `src/config`: Configuration namespaces using `@nestjs/config`.
 - `src/db`: Database-related configuration and seeds.
