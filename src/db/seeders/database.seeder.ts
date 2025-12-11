@@ -221,29 +221,21 @@ export class DatabaseSeeder extends Seeder {
   run(em: EntityManager) {
     console.time('🌱 Seeding database');
 
-    const adminUser = em.create(User, {
+    const admin = em.create(User, {
       username: 'admin01',
       email: 'admin01@example.com',
       password: 'Password@123',
       emailVerified: true,
     });
 
-    for (let i = 0; i < 5; i++) {
-      em.create(User, {
-        username: faker.internet.username(),
-        email: faker.internet.email({ provider: 'example.com' }),
-        password: 'Password@123',
-        emailVerified: true,
-      });
-    }
-
+    // admin01 deck
     const deck = em.create(Deck, {
-      owner: adminUser,
+      owner: admin,
       name: '30 Basic English Words',
       description:
         'A collection of 30 fundamental English vocabulary words for beginners.',
       visibility: Visibility.PUBLIC,
-      createdBy: adminUser.id,
+      createdBy: admin.id,
     });
 
     for (const vocab of shuffleArray(basicEnglishVocabulary).slice(0, 30)) {
@@ -252,6 +244,38 @@ export class DatabaseSeeder extends Seeder {
         term: vocab.term,
         definition: vocab.definition,
       });
+    }
+
+    for (let i = 0; i < 5; i++) {
+      const user = em.create(User, {
+        username: faker.internet.username(),
+        email: faker.internet.email({ provider: 'example.com' }),
+        password: 'Password@123',
+        emailVerified: true,
+      });
+
+      const cardCount = faker.number.int({ min: 20, max: 100 });
+      const visibility = faker.helpers.arrayElement(Object.values(Visibility));
+
+      const deck = em.create(Deck, {
+        owner: user,
+        name: `${cardCount} Basic English Words`,
+        description: `A collection of ${cardCount} fundamental English vocabulary words.`,
+        visibility: visibility,
+        passcode: visibility === Visibility.PROTECTED ? '123456' : '',
+        createdBy: user.id,
+      });
+
+      for (const vocab of shuffleArray(basicEnglishVocabulary).slice(
+        0,
+        cardCount,
+      )) {
+        em.create(Card, {
+          deck: deck,
+          term: vocab.term,
+          definition: vocab.definition,
+        });
+      }
     }
 
     console.timeEnd('🌱 Seeding database');
