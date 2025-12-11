@@ -8,7 +8,7 @@ import { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 
 // Danh sách 200 từ vựng tiếng Anh cơ bản
-const basicEnglishVocabulary = [
+const cardResources = [
   { term: 'Ability', definition: 'Khả năng, năng lực' },
   { term: 'Able', definition: 'Có thể, có khả năng' },
   { term: 'About', definition: 'Về, khoảng' },
@@ -238,7 +238,7 @@ export class DatabaseSeeder extends Seeder {
       createdBy: admin.id,
     });
 
-    for (const vocab of shuffleArray(basicEnglishVocabulary).slice(0, 30)) {
+    for (const vocab of shuffleArray(cardResources).slice(0, 30)) {
       em.create(Card, {
         deck: deck,
         term: vocab.term,
@@ -259,19 +259,16 @@ export class DatabaseSeeder extends Seeder {
 
       const deck = em.create(Deck, {
         owner: user,
-        name: `${cardCount} Basic English Words`,
+        name: `${cardCount} Basic English Words by ${user.username}`,
         description: `A collection of ${cardCount} fundamental English vocabulary words.`,
-        visibility: visibility,
-        passcode: visibility === Visibility.PROTECTED ? '123456' : '',
+        visibility,
+        passcode: visibility === Visibility.PROTECTED ? '123456' : null,
         createdBy: user.id,
       });
 
-      for (const vocab of shuffleArray(basicEnglishVocabulary).slice(
-        0,
-        cardCount,
-      )) {
+      for (const vocab of shuffleArray(cardResources).slice(0, cardCount)) {
         em.create(Card, {
-          deck: deck,
+          deck,
           term: vocab.term,
           definition: vocab.definition,
         });

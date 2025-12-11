@@ -47,7 +47,7 @@ export class DeckController {
   }
 
   @ApiEndpoint({ type: DeckWithCardsDto })
-  @Get('public')
+  @Get('public/:id')
   async getPublicOne(
     @Payload() { userId: _ }: JwtPayload,
     @Query() _query: DeckQueryDto,
