@@ -55,9 +55,7 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, documentFactory, {
-    useGlobalPrefix: true,
-  });
+  SwaggerModule.setup('docs', app, documentFactory, { useGlobalPrefix: true });
 
   await app.listen(appPort, appHost, () => {
     logger.log(
