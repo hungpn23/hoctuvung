@@ -3,6 +3,7 @@ import { Visibility } from '@api/deck/deck.enum';
 import { Card } from '@api/deck/entities/card.entity';
 import { Deck } from '@api/deck/entities/deck.entity';
 import { User } from '@api/user/entities/user.entity';
+import { faker } from '@faker-js/faker';
 import { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 
@@ -205,6 +206,17 @@ const basicEnglishVocabulary = [
   { term: 'Cut', definition: 'Cắt' },
 ];
 
+const shuffleArray = <T>(array: T[]) => {
+  const arr = [...array];
+
+  for (let i = arr.length - 1; i > 0; i--) {
+    const random = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[random]] = [arr[random], arr[i]];
+  }
+
+  return arr;
+};
+
 export class DatabaseSeeder extends Seeder {
   run(em: EntityManager) {
     console.time('🌱 Seeding database');
@@ -216,34 +228,25 @@ export class DatabaseSeeder extends Seeder {
       emailVerified: true,
     });
 
-    // for (let i = 1; i <= 20; i++) {
-    //   const deck = em.create(Deck, {
-    //     owner: adminUser,
-    //     name: faker.lorem.words(3),
-    //     description: faker.lorem.sentence(),
-    //     visibility: Visibility.PUBLIC,
-    //     createdBy: adminUser.id,
-    //   });
-
-    //   for (let i = 1; i <= 20; i++) {
-    //     em.create(Card, {
-    //       deck: deck,
-    //       term: faker.lorem.words(3),
-    //       definition: faker.lorem.words(5),
-    //     });
-    //   }
-    // }
+    for (let i = 0; i < 5; i++) {
+      em.create(User, {
+        username: faker.internet.username(),
+        email: faker.internet.email({ provider: 'example.com' }),
+        password: 'Password@123',
+        emailVerified: true,
+      });
+    }
 
     const deck = em.create(Deck, {
       owner: adminUser,
-      name: '200 Basic English Words',
+      name: '30 Basic English Words',
       description:
-        'A collection of 200 fundamental English vocabulary words for beginners.',
+        'A collection of 30 fundamental English vocabulary words for beginners.',
       visibility: Visibility.PUBLIC,
       createdBy: adminUser.id,
     });
 
-    for (const vocab of basicEnglishVocabulary.slice(0, 20)) {
+    for (const vocab of shuffleArray(basicEnglishVocabulary).slice(0, 30)) {
       em.create(Card, {
         deck: deck,
         term: vocab.term,
