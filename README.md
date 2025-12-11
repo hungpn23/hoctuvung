@@ -2,19 +2,19 @@
 
 ## Overview
 
-**hoctuvung** is a NestJS-based backend application designed for vocabulary learning. It utilizes a robust stack including PostgreSQL (via MikroORM) for data persistence, Redis for caching and queues, and ImageKit for media management.
+**hoctuvung** is a NestJS-based backend application designed for vocabulary learning. It utilizes a robust stack including PostgreSQL (via MikroORM) for data persistence, Redis for caching and queues (via BullMQ), and ImageKit for media management.
 
 ## Features
 
 This project showcases robust backend development practices, including:
 
--   **Authentication (AUTH):**
-    -   Secure Refresh Token Rotation for enhanced session management.
-    -   Successful implementation of the OAuth2.0 Authorization Code Flow.
--   **User Management (USER):**
-    -   Efficient image upload handling via background jobs using BullMQ.
+- **Authentication:**
+  - Secure Refresh Token Rotation for enhanced session management (support multiple divices).
+  - Successful implementation of Google OAuth2 Authorization Code Flow.
+- **User Management:**
+  - Efficient image upload handling via background jobs using BullMQ.
 
-The codebase is meticulously crafted, adhering to best practices for maintainability and clarity, resulting in clean and idiomatic TypeScript.
+The codebase is carefully crafted, adhering to best practices for maintainability and clarity, resulting in clean TypeScript.
 
 ## Architecture & Tech Stack
 
@@ -90,14 +90,14 @@ The codebase is meticulously crafted, adhering to best practices for maintainabi
 
 ### Testing
 
-- **Unit Tests:** `pnpm run test`
-- **E2E Tests:** `pnpm run test:e2e`
-- **Coverage:** `pnpm run test:cov`
+- **Unit Tests:** `pnpm test`
+- **E2E Tests:** `pnpm test:e2e`
+- **Coverage:** `pnpm test:cov`
 
 ### Code Quality & Standards
 
-- **Linting:** `pnpm run lint` (ESLint)
-- **Formatting:** `pnpm run format` (Prettier)
+- **Linting:** `pnpm lint` (ESLint)
+- **Formatting:** `pnpm format` (Prettier)
 - **Commit Hooks:** Husky is configured with `commitlint` and `lint-staged`. Ensure commit messages follow conventional commits.
 
 ## Directory Layout
