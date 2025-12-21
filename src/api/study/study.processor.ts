@@ -62,12 +62,12 @@ export class StudyProcessor extends WorkerHost {
         // update mastery rate
         const [currentKnownCards, totalCards] = await Promise.all([
           cardRepository.count({
-            deck: { owner: userId, isDeleted: false },
+            deck: { owner: userId },
             status: CardStatus.KNOWN,
           }),
 
           cardRepository.count({
-            deck: { owner: userId, isDeleted: false },
+            deck: { owner: userId },
           }),
         ]);
 

@@ -47,7 +47,6 @@ export class StudyService {
     const deck = await this.deckRepository.findOne({
       id: deckId,
       owner: userId,
-      isDeleted: false,
     });
 
     if (!deck) throw new NotFoundException();

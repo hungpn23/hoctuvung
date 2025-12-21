@@ -49,7 +49,6 @@ export class DeckService {
       {
         id: deckId,
         owner: userId,
-        isDeleted: false,
       },
       {
         populate: ['cards'],
@@ -79,10 +78,7 @@ export class DeckService {
   async getMany(userId: UUID, query: DeckQueryDto) {
     const { limit, offset, search, orderBy, order } = query;
 
-    const where: FilterQuery<Deck> = {
-      owner: userId,
-      isDeleted: false,
-    };
+    const where: FilterQuery<Deck> = { owner: userId };
 
     if (search && search.trim() !== '') where.name = { $ilike: `%${search}%` };
 
@@ -118,7 +114,6 @@ export class DeckService {
     const where: FilterQuery<Deck> = {
       owner: { $ne: userId },
       visibility: { $in: [Visibility.PUBLIC, Visibility.PROTECTED] },
-      isDeleted: false,
     };
 
     if (search && search.trim() !== '') where.name = { $ilike: `%${search}%` };
@@ -153,7 +148,6 @@ export class DeckService {
 
     const deck = await this.deckRepository.findOne({
       name: deckDto.name,
-      isDeleted: false,
       owner: userId,
     });
     if (deck) {
@@ -185,7 +179,7 @@ export class DeckService {
 
   async update(deckId: UUID, userId: UUID, dto: UpdateDeckDto) {
     const deck = await this.deckRepository.findOne(
-      { id: deckId, owner: userId, isDeleted: false },
+      { id: deckId, owner: userId },
       { populate: ['cards'] },
     );
 
@@ -196,7 +190,6 @@ export class DeckService {
       const existingDeck = await this.deckRepository.findOne({
         name: dto.name,
         owner: userId,
-        isDeleted: false,
       });
 
       if (existingDeck)
@@ -263,14 +256,12 @@ export class DeckService {
     const deck = await this.deckRepository.findOne({
       id: deckId,
       owner: userId,
-      isDeleted: false,
     });
 
     if (!deck)
       throw new NotFoundException(`Deck with id "${deckId}" not found.`);
 
     this.deckRepository.assign(deck, {
-      isDeleted: true,
       deletedAt: new Date(),
       deletedBy: userId,
     });
@@ -280,7 +271,7 @@ export class DeckService {
 
   async clone(userId: UUID, deckId: UUID, dto: CloneDeckDto) {
     const originalDeck = await this.deckRepository.findOne(
-      { id: deckId, isDeleted: false },
+      { id: deckId },
       { populate: ['cards'] },
     );
 
@@ -301,7 +292,6 @@ export class DeckService {
     const existingClonedDeck = await this.deckRepository.findOne({
       name: newDeckName,
       owner: { id: userId },
-      isDeleted: false,
     });
 
     if (existingClonedDeck)
@@ -345,7 +335,6 @@ export class DeckService {
     const deck = await this.deckRepository.findOne({
       id: deckId,
       owner: userId,
-      isDeleted: false,
     });
 
     if (!deck)

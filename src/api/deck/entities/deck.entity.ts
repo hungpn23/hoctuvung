@@ -7,6 +7,7 @@ import {
   Collection,
   Entity,
   Enum,
+  Filter,
   ManyToOne,
   OneToMany,
   Property,
@@ -18,6 +19,7 @@ import slugify from 'slugify';
 import { Visibility } from '../deck.enum';
 import { Card } from './card.entity';
 
+@Filter({ name: 'deletedAt', cond: { deletedAt: null }, default: true })
 @Unique({ properties: ['slug', 'owner'] })
 @Entity()
 export class Deck extends SoftDeleteBaseEntity {
