@@ -320,16 +320,6 @@
           "length": 255,
           "mappedType": "string"
         },
-        "is_deleted": {
-          "name": "is_deleted",
-          "type": "boolean",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "false",
-          "mappedType": "boolean"
-        },
         "deleted_at": {
           "name": "deleted_at",
           "type": "varchar(255)",

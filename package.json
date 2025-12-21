@@ -18,6 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "schema:fresh": "npx mikro-orm schema:fresh --config mikro-orm.config.ts --run",
     "seeder:run": "npx mikro-orm seeder:run",
     "migration:create": "npx mikro-orm migration:create --config mikro-orm.config.ts",
     "migration:up": "npx mikro-orm migration:up",

@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20251221025435 extends Migration {
+export class Migration20251221163913 extends Migration {
 
   override async up(): Promise<void> {
     this.addSql(`create table "user" ("id" uuid not null, "created_at" timestamptz not null, "created_by" varchar(255) not null default 'system', "updated_at" varchar(255) null, "updated_by" varchar(255) null, "username" varchar(255) not null, "email" varchar(255) null, "email_verified" boolean not null default false, "password" varchar(255) not null, "avatar_url" varchar(255) null, "role" smallint not null default 0, constraint "user_pkey" primary key ("id"));`);
@@ -9,7 +9,7 @@ export class Migration20251221025435 extends Migration {
 
     this.addSql(`create table "session" ("id" uuid not null, "created_at" timestamptz not null, "created_by" varchar(255) not null default 'system', "updated_at" varchar(255) null, "updated_by" varchar(255) null, "signature" varchar(255) not null, "expires_at" timestamptz not null, "user_id" uuid not null, constraint "session_pkey" primary key ("id"));`);
 
-    this.addSql(`create table "deck" ("id" uuid not null, "created_at" timestamptz not null, "created_by" varchar(255) not null default 'system', "updated_at" varchar(255) null, "updated_by" varchar(255) null, "is_deleted" boolean not null default false, "deleted_at" varchar(255) null, "deleted_by" varchar(255) null, "name" varchar(255) not null, "slug" varchar(255) not null, "description" varchar(255) null, "visibility" text check ("visibility" in ('Everyone', 'People with a passcode', 'Just me')) not null, "passcode" varchar(255) not null default '', "clone_count" int not null default 0, "opened_at" varchar(255) null, "cloned_from_id" uuid null, "owner_id" uuid not null, constraint "deck_pkey" primary key ("id"));`);
+    this.addSql(`create table "deck" ("id" uuid not null, "created_at" timestamptz not null, "created_by" varchar(255) not null default 'system', "updated_at" varchar(255) null, "updated_by" varchar(255) null, "deleted_at" varchar(255) null, "deleted_by" varchar(255) null, "name" varchar(255) not null, "slug" varchar(255) not null, "description" varchar(255) null, "visibility" text check ("visibility" in ('Everyone', 'People with a passcode', 'Just me')) not null, "passcode" varchar(255) not null default '', "clone_count" int not null default 0, "opened_at" varchar(255) null, "cloned_from_id" uuid null, "owner_id" uuid not null, constraint "deck_pkey" primary key ("id"));`);
     this.addSql(`alter table "deck" add constraint "deck_slug_owner_id_unique" unique ("slug", "owner_id");`);
 
     this.addSql(`create table "card" ("id" uuid not null, "term" text not null, "definition" text not null, "streak" int not null default 0, "review_date" varchar(255) null, "status" text check ("status" in ('known', 'learning', 'new')) not null, "deck_id" uuid not null, constraint "card_pkey" primary key ("id"));`);
