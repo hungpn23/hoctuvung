@@ -15,29 +15,29 @@ export type DatabaseConfig = {
 
 export class DatabaseEnvVariables {
   @StringValidator()
-  DATABASE_HOST!: string;
+  DB_HOST!: string;
 
   @PortValidator()
-  DATABASE_PORT!: number;
+  DB_PORT!: number;
 
   @StringValidator()
-  DATABASE_USER!: string;
+  DB_USER!: string;
 
   @StringValidator()
-  DATABASE_PASSWORD!: string;
+  DB_PASSWORD!: string;
 
   @StringValidator()
-  DATABASE_DB_NAME!: string;
+  DB_DATABASE!: string;
 }
 
 export default registerAs<DatabaseConfig>('database', () => {
   const config = validateConfig<DatabaseEnvVariables>(DatabaseEnvVariables);
 
   return {
-    host: config.DATABASE_HOST,
-    port: config.DATABASE_PORT,
-    user: config.DATABASE_USER,
-    password: config.DATABASE_PASSWORD,
-    dbName: config.DATABASE_DB_NAME,
+    host: config.DB_HOST,
+    port: config.DB_PORT,
+    user: config.DB_USER,
+    password: config.DB_PASSWORD,
+    dbName: config.DB_DATABASE,
   };
 });
