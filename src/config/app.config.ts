@@ -5,17 +5,11 @@ import {
   StringValidator,
   UrlValidator,
 } from '@common/decorators/validators.decorator';
-import { validateConfig } from '@config';
-import { registerAs } from '@nestjs/config';
 
-export type AppConfig = {
-  nodeEnv: Environment;
-  host: string;
-  port: number;
-  apiPrefix: string;
-};
+import { ConfigType, registerAs } from '@nestjs/config';
+import { validateConfig } from './validate-config';
 
-export class AppEnvVariables {
+class AppEnvVariables {
   @EnumValidator(Environment)
   NODE_ENV!: Environment;
 
@@ -29,7 +23,7 @@ export class AppEnvVariables {
   API_PREFIX!: string;
 }
 
-export default registerAs<AppConfig>('app', () => {
+export const getAppConfig = () => {
   const config = validateConfig(AppEnvVariables);
 
   return {
@@ -38,4 +32,8 @@ export default registerAs<AppConfig>('app', () => {
     port: config.APP_PORT,
     apiPrefix: config.API_PREFIX,
   };
-});
+};
+
+export const appConfig = registerAs('app', getAppConfig);
+
+export type AppConfig = ConfigType<typeof appConfig>;

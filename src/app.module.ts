@@ -1,12 +1,12 @@
 import { ApiModule } from '@api/api.module';
 import { AppController } from '@app.controller';
-import { AllConfig } from '@config';
-import appConfig from '@config/app.config';
-import authConfig from '@config/auth.config';
-import databaseConfig from '@config/database.config';
-import googleConfig from '@config/google.config';
-import imagekitConfig from '@config/imagekit.config';
-import redisConfig from '@config/redis.config';
+
+import { appConfig } from '@config/app.config';
+import { authConfig } from '@config/auth.config';
+import { DatabaseConfig, databaseConfig } from '@config/database.config';
+import { googleConfig } from '@config/google.config';
+import { imagekitConfig } from '@config/imagekit.config';
+import { RedisConfig, redisConfig } from '@config/redis.config';
 import KeyvRedis from '@keyv/redis';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
@@ -14,7 +14,7 @@ import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { BullModule } from '@nestjs/bullmq';
 import { CacheModule } from '@nestjs/cache-manager';
 import { Logger, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { config } from 'dotenv';
 import path from 'node:path';
 import * as entities from './db/entities';
@@ -42,16 +42,12 @@ const isProd = process.env.NODE_ENV === 'prod';
     }),
 
     MikroOrmModule.forRootAsync({
-      useFactory: (configService: ConfigService<AllConfig, true>) => {
+      useFactory: (dbConfig: DatabaseConfig) => {
         const logger = new Logger('MikroORM');
 
         return {
           driver: PostgreSqlDriver,
-          host: configService.get('database.host', { infer: true }),
-          port: configService.get('database.port', { infer: true }),
-          user: configService.get('database.user', { infer: true }),
-          password: configService.get('database.password', { infer: true }),
-          dbName: configService.get('database.dbName', { infer: true }),
+          ...dbConfig,
           entities: Object.values(entities),
 
           debug: isProd ? false : true,
@@ -59,19 +55,15 @@ const isProd = process.env.NODE_ENV === 'prod';
           logger: (msg) => logger.debug(msg),
         };
       },
-      imports: [ConfigModule],
-      inject: [ConfigService],
+      inject: [databaseConfig.KEY],
       driver: PostgreSqlDriver,
     }),
 
     CacheModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService<AllConfig, true>) => {
-        const host = configService.get('redis.host', { infer: true });
-        const port = configService.get('redis.port', { infer: true });
-        const username = configService.get('redis.username', { infer: true });
-        const password = configService.get('redis.password', { infer: true });
+      isGlobal: true,
+      inject: [redisConfig.KEY],
+      useFactory: (redisConfig: RedisConfig) => {
+        const { username, password, host, port } = redisConfig;
 
         return {
           stores: new KeyvRedis(
@@ -79,23 +71,11 @@ const isProd = process.env.NODE_ENV === 'prod';
           ),
         };
       },
-
-      isGlobal: true,
     }),
 
     BullModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService<AllConfig, true>) => {
-        return {
-          connection: {
-            host: configService.get('redis.host', { infer: true }),
-            port: configService.get('redis.port', { infer: true }),
-            username: configService.get('redis.username', { infer: true }),
-            password: configService.get('redis.password', { infer: true }),
-          },
-        };
-      },
+      inject: [redisConfig.KEY],
+      useFactory: (redisConfig: RedisConfig) => ({ connection: redisConfig }),
     }),
 
     ApiModule,

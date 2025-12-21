@@ -2,7 +2,7 @@ import { AuthService } from '@api/auth/auth.service';
 import { AppModule } from '@app.module';
 import { GlobalExceptionFilter } from '@common/filters/global-exception.filter';
 import { AuthGuard } from '@common/guards/auth.guard';
-import { AllConfig } from '@config';
+import { getAppConfig } from '@config/app.config';
 import { MikroORM } from '@mikro-orm/core';
 import {
   HttpStatus,
@@ -10,7 +10,6 @@ import {
   UnprocessableEntityException,
   ValidationPipe,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationError } from 'class-validator';
@@ -18,9 +17,7 @@ import { ValidationError } from 'class-validator';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Bootstrap');
-  const configService = app.get(ConfigService<AllConfig, true>);
-  const appHost = configService.get('app.host', { infer: true });
-  const appPort = configService.get('app.port', { infer: true });
+  const { apiPrefix, host, port, nodeEnv } = getAppConfig();
 
   app.enableCors({
     origin: '*',
@@ -29,7 +26,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.setGlobalPrefix(configService.get('app.apiPrefix', { infer: true }));
+  app.setGlobalPrefix(apiPrefix);
 
   app.useGlobalGuards(new AuthGuard(app.get(Reflector), app.get(AuthService)));
   app.useGlobalPipes(
@@ -56,10 +53,12 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory, { useGlobalPrefix: true });
 
-  await app.listen(appPort, appHost, () => {
-    logger.log(
-      `🚀🚀🚀 Application is running on: http://${appHost}:${appPort}`,
-    );
+  const appUrl = `http://${host}:${port}/${apiPrefix}`;
+
+  await app.listen(port, host, () => {
+    logger.log(`🌱 Environment: ${nodeEnv}`);
+    logger.log(`🚀 API live at: ${appUrl}`);
+    logger.log(`📚 Swagger docs at: ${appUrl}/docs`);
   });
 }
 

@@ -6,7 +6,9 @@ import {
   GoogleJwtPayload,
   GoogleTokenResponse,
 } from '@common/types/google.type';
-import { AllConfig } from '@config';
+
+import { authConfig, type AuthConfig } from '@config/auth.config';
+import { googleConfig, type GoogleConfig } from '@config/google.config';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
@@ -17,7 +19,6 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import argon2 from 'argon2';
 import type { Cache } from 'cache-manager';
@@ -39,9 +40,12 @@ export class AuthService {
   private logger = new Logger(AuthService.name);
 
   constructor(
-    private readonly configService: ConfigService<AllConfig, true>,
     private readonly jwtService: JwtService,
     private readonly em: EntityManager,
+    @Inject(authConfig.KEY)
+    private readonly authConfig: AuthConfig,
+    @Inject(googleConfig.KEY)
+    private readonly googleConfig: GoogleConfig,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     @InjectRepository(Session)
     private readonly sessionRepository: EntityRepository<Session>,
@@ -50,19 +54,13 @@ export class AuthService {
   ) {}
 
   async googleCallback(code: string, res: Response) {
-    const clientDomain = this.configService.get('auth.clientDomain', {
-      infer: true,
-    });
+    const frontendUrl = this.authConfig.clientDomain;
 
     const params = new URLSearchParams({
       code,
-      client_id: this.configService.get('google.clientId', { infer: true }),
-      client_secret: this.configService.get('google.clientSecret', {
-        infer: true,
-      }),
-      redirect_uri: this.configService.get('google.redirectUri', {
-        infer: true,
-      }),
+      client_id: this.googleConfig.clientId,
+      client_secret: this.googleConfig.clientSecret,
+      redirect_uri: this.googleConfig.redirectUri,
       grant_type: 'authorization_code',
     }).toString();
 
@@ -102,7 +100,7 @@ export class AuthService {
 
     await this.em.flush();
 
-    return res.redirect(`${clientDomain}/login/callback?code=${oneTimeCode}`);
+    return res.redirect(`${frontendUrl}/login/callback?code=${oneTimeCode}`);
   }
 
   async exchangeOneTimeCodeForTokens(code: string) {
@@ -204,19 +202,13 @@ export class AuthService {
 
     const [accessToken, newRefreshToken] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
-        secret: this.configService.get('auth.jwtSecret', { infer: true }),
-        expiresIn: this.configService.get('auth.jwtExpiresIn', {
-          infer: true,
-        }),
+        secret: this.authConfig.jwtSecret,
+        expiresIn: this.authConfig.jwtExpiresIn,
       }),
 
       this.jwtService.signAsync(refreshTokenPayload, {
-        secret: this.configService.get('auth.refreshTokenSecret', {
-          infer: true,
-        }),
-        expiresIn: this.configService.get('auth.refreshTokenExpiresIn', {
-          infer: true,
-        }),
+        secret: this.authConfig.refreshTokenSecret,
+        expiresIn: this.authConfig.refreshTokenExpiresIn,
       }),
 
       this.em.flush(),
@@ -256,7 +248,7 @@ export class AuthService {
     let payload: JwtPayload;
     try {
       payload = await this.jwtService.verifyAsync(accessToken, {
-        secret: this.configService.get('auth.jwtSecret', { infer: true }),
+        secret: this.authConfig.jwtSecret,
       });
     } catch (_) {
       throw new UnauthorizedException('Invalid token');
@@ -282,9 +274,7 @@ export class AuthService {
     let payload: RefreshTokenPayload;
     try {
       payload = await this.jwtService.verifyAsync(refreshToken, {
-        secret: this.configService.get('auth.refreshTokenSecret', {
-          infer: true,
-        }),
+        secret: this.authConfig.refreshTokenSecret,
       });
     } catch (_) {
       const payload = this.jwtService.decode<RefreshTokenPayload | null>(
@@ -307,10 +297,7 @@ export class AuthService {
   }
 
   private async _createTokenPair(user: User) {
-    const refreshTokenExpiresIn = this.configService.get(
-      'auth.refreshTokenExpiresIn',
-      { infer: true },
-    );
+    const refreshTokenExpiresIn = this.authConfig.refreshTokenExpiresIn;
 
     const signature = this._createSignature();
 
@@ -333,16 +320,12 @@ export class AuthService {
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
-        secret: this.configService.get('auth.jwtSecret', { infer: true }),
-        expiresIn: this.configService.get('auth.jwtExpiresIn', {
-          infer: true,
-        }),
+        secret: this.authConfig.jwtSecret,
+        expiresIn: this.authConfig.jwtExpiresIn,
       }),
 
       this.jwtService.signAsync(refreshTokenPayload, {
-        secret: this.configService.get('auth.refreshTokenSecret', {
-          infer: true,
-        }),
+        secret: this.authConfig.refreshTokenSecret,
         expiresIn: refreshTokenExpiresIn,
       }),
     ]);

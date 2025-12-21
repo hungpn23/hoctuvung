@@ -2,19 +2,11 @@ import {
   StringValidator,
   UrlValidator,
 } from '@common/decorators/validators.decorator';
-import { validateConfig } from '@config';
-import { registerAs } from '@nestjs/config';
+import { ConfigType, registerAs } from '@nestjs/config';
 import ms from 'ms';
+import { validateConfig } from './validate-config';
 
-export type AuthConfig = {
-  clientDomain: string;
-  jwtSecret: string;
-  jwtExpiresIn: ms.StringValue;
-  refreshTokenSecret: string;
-  refreshTokenExpiresIn: ms.StringValue;
-};
-
-export class AuthEnvVariables {
+class AuthEnvVariables {
   @UrlValidator({ require_tld: false })
   FRONTEND_URL!: string;
 
@@ -31,7 +23,7 @@ export class AuthEnvVariables {
   AUTH_REFRESH_TOKEN_EXPIRES_IN!: ms.StringValue;
 }
 
-export default registerAs<AuthConfig>('auth', () => {
+export const authConfig = registerAs('auth', () => {
   const config = validateConfig(AuthEnvVariables);
 
   return {
@@ -42,3 +34,5 @@ export default registerAs<AuthConfig>('auth', () => {
     refreshTokenExpiresIn: config.AUTH_REFRESH_TOKEN_EXPIRES_IN,
   };
 });
+
+export type AuthConfig = ConfigType<typeof authConfig>;

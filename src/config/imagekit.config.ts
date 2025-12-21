@@ -1,20 +1,18 @@
 import { StringValidator } from '@common/decorators/validators.decorator';
-import { validateConfig } from '@config';
-import { registerAs } from '@nestjs/config';
+import { ConfigType, registerAs } from '@nestjs/config';
+import { validateConfig } from './validate-config';
 
-export type ImageKitConfig = {
-  privateKey: string;
-};
-
-export class ImageKitEnvVariables {
+class ImageKitEnvVariables {
   @StringValidator()
   IMAGEKIT_PRIVATE_KEY!: string;
 }
 
-export default registerAs<ImageKitConfig>('imagekit', () => {
+export const imagekitConfig = registerAs('imagekit', () => {
   const config = validateConfig(ImageKitEnvVariables);
 
   return {
     privateKey: config.IMAGEKIT_PRIVATE_KEY,
   };
 });
+
+export type ImageKitConfig = ConfigType<typeof imagekitConfig>;

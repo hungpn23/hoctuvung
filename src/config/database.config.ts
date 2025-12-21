@@ -2,18 +2,10 @@ import {
   PortValidator,
   StringValidator,
 } from '@common/decorators/validators.decorator';
-import { validateConfig } from '@config';
-import { registerAs } from '@nestjs/config';
+import { ConfigType, registerAs } from '@nestjs/config';
+import { validateConfig } from './validate-config';
 
-export type DatabaseConfig = {
-  host: string;
-  port: number;
-  user: string;
-  password: string;
-  dbName: string;
-};
-
-export class DatabaseEnvVariables {
+class DatabaseEnvVariables {
   @StringValidator()
   DB_HOST!: string;
 
@@ -30,7 +22,7 @@ export class DatabaseEnvVariables {
   DB_DATABASE!: string;
 }
 
-export default registerAs<DatabaseConfig>('database', () => {
+export const databaseConfig = registerAs('database', () => {
   const config = validateConfig<DatabaseEnvVariables>(DatabaseEnvVariables);
 
   return {
@@ -41,3 +33,5 @@ export default registerAs<DatabaseConfig>('database', () => {
     dbName: config.DB_DATABASE,
   };
 });
+
+export type DatabaseConfig = ConfigType<typeof databaseConfig>;

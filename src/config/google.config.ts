@@ -1,14 +1,8 @@
 import { StringValidator } from '@common/decorators/validators.decorator';
-import { validateConfig } from '@config';
-import { registerAs } from '@nestjs/config';
+import { ConfigType, registerAs } from '@nestjs/config';
+import { validateConfig } from './validate-config';
 
-export type GoogleConfig = {
-  clientId: string;
-  clientSecret: string;
-  redirectUri: string;
-};
-
-export class GoogleEnvVariables {
+class GoogleEnvVariables {
   @StringValidator()
   GOOGLE_CLIENT_ID!: string;
 
@@ -19,7 +13,7 @@ export class GoogleEnvVariables {
   GOOGLE_REDIRECT_URI!: string;
 }
 
-export default registerAs<GoogleConfig>('google', () => {
+export const googleConfig = registerAs('google', () => {
   const config = validateConfig(GoogleEnvVariables);
 
   return {
@@ -28,3 +22,5 @@ export default registerAs<GoogleConfig>('google', () => {
     redirectUri: config.GOOGLE_REDIRECT_URI,
   };
 });
+
+export type GoogleConfig = ConfigType<typeof googleConfig>;

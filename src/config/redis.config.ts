@@ -2,17 +2,10 @@ import {
   PortValidator,
   StringValidator,
 } from '@common/decorators/validators.decorator';
-import { validateConfig } from '@config';
-import { registerAs } from '@nestjs/config';
+import { ConfigType, registerAs } from '@nestjs/config';
+import { validateConfig } from './validate-config';
 
-export type RedisConfig = {
-  host: string;
-  port: number;
-  username: string;
-  password: string;
-};
-
-export class RedisEnvVariables {
+class RedisEnvVariables {
   @StringValidator()
   REDIS_HOST!: string;
 
@@ -26,7 +19,7 @@ export class RedisEnvVariables {
   REDIS_PASSWORD!: string;
 }
 
-export default registerAs<RedisConfig>('redis', () => {
+export const redisConfig = registerAs('redis', () => {
   const config = validateConfig(RedisEnvVariables);
 
   return {
@@ -36,3 +29,5 @@ export default registerAs<RedisConfig>('redis', () => {
     password: config.REDIS_PASSWORD,
   };
 });
+
+export type RedisConfig = ConfigType<typeof redisConfig>;
