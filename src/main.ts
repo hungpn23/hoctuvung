@@ -45,7 +45,6 @@ async function bootstrap() {
   app.useGlobalFilters(new GlobalExceptionFilter());
 
   const orm = app.get(MikroORM);
-  // await orm.schema.refreshDatabase();
   await orm.schema.updateSchema();
 
   const config = new DocumentBuilder()

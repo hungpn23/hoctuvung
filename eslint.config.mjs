@@ -13,6 +13,7 @@ export default defineConfig(
       'jest.config.mjs',
       'commitlint.config.mjs',
       'prettier.config.mjs',
+      'src/db/migrations/*',
     ],
   },
   eslint.configs.recommended,
