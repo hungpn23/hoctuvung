@@ -16,7 +16,7 @@ export type AuthConfig = {
 
 export class AuthEnvVariables {
   @UrlValidator({ require_tld: false })
-  CLIENT_DOMAIN!: string;
+  FRONTEND_URL!: string;
 
   @StringValidator()
   AUTH_JWT_SECRET!: string;
@@ -35,7 +35,7 @@ export default registerAs<AuthConfig>('auth', () => {
   const config = validateConfig(AuthEnvVariables);
 
   return {
-    clientDomain: config.CLIENT_DOMAIN,
+    clientDomain: config.FRONTEND_URL,
     jwtSecret: config.AUTH_JWT_SECRET,
     jwtExpiresIn: config.AUTH_JWT_EXPIRES_IN,
     refreshTokenSecret: config.AUTH_REFRESH_TOKEN_SECRET,
