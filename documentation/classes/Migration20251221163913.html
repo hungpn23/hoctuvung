@@ -1,0 +1,420 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>betterquizlet documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">betterquizlet documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >Migration20251221163913</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/db/migrations/Migration20251221163913.ts</code>
+        </p>
+
+
+
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                        <code>Migration</code>
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#down" >down</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#up" >up</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="down"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>down</b></span>
+                        <a href="#down"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>down()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="30"
+                                    class="link-to-prism">src/db/migrations/Migration20251221163913.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="up"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>up</b></span>
+                        <a href="#up"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>up()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="5"
+                                    class="link-to-prism">src/db/migrations/Migration20251221163913.ts:5</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Migration } from &#x27;@mikro-orm/migrations&#x27;;
+
+export class Migration20251221163913 extends Migration {
+
+  override async up(): Promise&lt;void&gt; {
+    this.addSql(&#x60;create table &quot;user&quot; (&quot;id&quot; uuid not null, &quot;created_at&quot; timestamptz not null, &quot;created_by&quot; varchar(255) not null default &#x27;system&#x27;, &quot;updated_at&quot; varchar(255) null, &quot;updated_by&quot; varchar(255) null, &quot;username&quot; varchar(255) not null, &quot;email&quot; varchar(255) null, &quot;email_verified&quot; boolean not null default false, &quot;password&quot; varchar(255) not null, &quot;avatar_url&quot; varchar(255) null, &quot;role&quot; smallint not null default 0, constraint &quot;user_pkey&quot; primary key (&quot;id&quot;));&#x60;);
+    this.addSql(&#x60;alter table &quot;user&quot; add constraint &quot;user_username_unique&quot; unique (&quot;username&quot;);&#x60;);
+    this.addSql(&#x60;alter table &quot;user&quot; add constraint &quot;user_email_unique&quot; unique (&quot;email&quot;);&#x60;);
+
+    this.addSql(&#x60;create table &quot;session&quot; (&quot;id&quot; uuid not null, &quot;created_at&quot; timestamptz not null, &quot;created_by&quot; varchar(255) not null default &#x27;system&#x27;, &quot;updated_at&quot; varchar(255) null, &quot;updated_by&quot; varchar(255) null, &quot;signature&quot; varchar(255) not null, &quot;expires_at&quot; timestamptz not null, &quot;user_id&quot; uuid not null, constraint &quot;session_pkey&quot; primary key (&quot;id&quot;));&#x60;);
+
+    this.addSql(&#x60;create table &quot;deck&quot; (&quot;id&quot; uuid not null, &quot;created_at&quot; timestamptz not null, &quot;created_by&quot; varchar(255) not null default &#x27;system&#x27;, &quot;updated_at&quot; varchar(255) null, &quot;updated_by&quot; varchar(255) null, &quot;deleted_at&quot; varchar(255) null, &quot;deleted_by&quot; varchar(255) null, &quot;name&quot; varchar(255) not null, &quot;slug&quot; varchar(255) not null, &quot;description&quot; varchar(255) null, &quot;visibility&quot; text check (&quot;visibility&quot; in (&#x27;Everyone&#x27;, &#x27;People with a passcode&#x27;, &#x27;Just me&#x27;)) not null, &quot;passcode&quot; varchar(255) not null default &#x27;&#x27;, &quot;clone_count&quot; int not null default 0, &quot;opened_at&quot; varchar(255) null, &quot;cloned_from_id&quot; uuid null, &quot;owner_id&quot; uuid not null, constraint &quot;deck_pkey&quot; primary key (&quot;id&quot;));&#x60;);
+    this.addSql(&#x60;alter table &quot;deck&quot; add constraint &quot;deck_slug_owner_id_unique&quot; unique (&quot;slug&quot;, &quot;owner_id&quot;);&#x60;);
+
+    this.addSql(&#x60;create table &quot;card&quot; (&quot;id&quot; uuid not null, &quot;term&quot; text not null, &quot;definition&quot; text not null, &quot;streak&quot; int not null default 0, &quot;review_date&quot; varchar(255) null, &quot;status&quot; text check (&quot;status&quot; in (&#x27;known&#x27;, &#x27;learning&#x27;, &#x27;new&#x27;)) not null, &quot;deck_id&quot; uuid not null, constraint &quot;card_pkey&quot; primary key (&quot;id&quot;));&#x60;);
+
+    this.addSql(&#x60;create table &quot;user_statistic&quot; (&quot;id&quot; uuid not null, &quot;last_study_date&quot; varchar(255) null, &quot;current_streak&quot; int not null default 0, &quot;longest_streak&quot; int not null default 0, &quot;total_cards_learned&quot; int not null default 0, &quot;mastery_rate&quot; real not null default 0, &quot;user_id&quot; uuid not null, constraint &quot;user_statistic_pkey&quot; primary key (&quot;id&quot;));&#x60;);
+    this.addSql(&#x60;alter table &quot;user_statistic&quot; add constraint &quot;user_statistic_user_id_unique&quot; unique (&quot;user_id&quot;);&#x60;);
+
+    this.addSql(&#x60;alter table &quot;session&quot; add constraint &quot;session_user_id_foreign&quot; foreign key (&quot;user_id&quot;) references &quot;user&quot; (&quot;id&quot;) on update cascade;&#x60;);
+
+    this.addSql(&#x60;alter table &quot;deck&quot; add constraint &quot;deck_cloned_from_id_foreign&quot; foreign key (&quot;cloned_from_id&quot;) references &quot;deck&quot; (&quot;id&quot;) on update cascade on delete set null;&#x60;);
+    this.addSql(&#x60;alter table &quot;deck&quot; add constraint &quot;deck_owner_id_foreign&quot; foreign key (&quot;owner_id&quot;) references &quot;user&quot; (&quot;id&quot;) on update cascade;&#x60;);
+
+    this.addSql(&#x60;alter table &quot;card&quot; add constraint &quot;card_deck_id_foreign&quot; foreign key (&quot;deck_id&quot;) references &quot;deck&quot; (&quot;id&quot;) on update cascade;&#x60;);
+
+    this.addSql(&#x60;alter table &quot;user_statistic&quot; add constraint &quot;user_statistic_user_id_foreign&quot; foreign key (&quot;user_id&quot;) references &quot;user&quot; (&quot;id&quot;) on update cascade on delete cascade;&#x60;);
+  }
+
+  override async down(): Promise&lt;void&gt; {
+    this.addSql(&#x60;alter table &quot;session&quot; drop constraint &quot;session_user_id_foreign&quot;;&#x60;);
+
+    this.addSql(&#x60;alter table &quot;deck&quot; drop constraint &quot;deck_owner_id_foreign&quot;;&#x60;);
+
+    this.addSql(&#x60;alter table &quot;user_statistic&quot; drop constraint &quot;user_statistic_user_id_foreign&quot;;&#x60;);
+
+    this.addSql(&#x60;alter table &quot;deck&quot; drop constraint &quot;deck_cloned_from_id_foreign&quot;;&#x60;);
+
+    this.addSql(&#x60;alter table &quot;card&quot; drop constraint &quot;card_deck_id_foreign&quot;;&#x60;);
+
+    this.addSql(&#x60;drop table if exists &quot;user&quot; cascade;&#x60;);
+
+    this.addSql(&#x60;drop table if exists &quot;session&quot; cascade;&#x60;);
+
+    this.addSql(&#x60;drop table if exists &quot;deck&quot; cascade;&#x60;);
+
+    this.addSql(&#x60;drop table if exists &quot;card&quot; cascade;&#x60;);
+
+    this.addSql(&#x60;drop table if exists &quot;user_statistic&quot; cascade;&#x60;);
+  }
+
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'Migration20251221163913.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
