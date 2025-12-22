@@ -150,8 +150,8 @@ export class AuthService {
     return plainToInstance(TokenPairDto, tokenPair);
   }
 
-  async logout(payload: JwtPayload) {
-    const { sessionId, exp, userId } = payload;
+  async logout(user: JwtPayload) {
+    const { sessionId, exp, userId } = user;
     await this.cacheManager.set<boolean>(
       `session_blacklist:${userId}:${sessionId}`,
       true,

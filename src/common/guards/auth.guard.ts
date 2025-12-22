@@ -19,9 +19,17 @@ export class AuthGuard implements CanActivate {
       MetadataKey.PUBLIC_ROUTE,
       [context.getClass(), context.getHandler()],
     );
-    if (hasPublicDecorator) return true;
 
     const accessToken = this._extractTokenFromHeader(request);
+
+    if (hasPublicDecorator) {
+      request.user = await this.authService
+        .verifyAccessToken(accessToken)
+        .catch(() => undefined);
+
+      return true;
+    }
+
     request.user = await this.authService.verifyAccessToken(accessToken);
 
     return true;

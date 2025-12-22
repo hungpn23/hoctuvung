@@ -5,6 +5,7 @@ import {
 } from '@common/decorators/api-endpoint.decorator';
 import { Payload } from '@common/decorators/jwt-payload.decorator';
 import type { JwtPayload } from '@common/types/auth.type';
+import type { UUID } from '@common/types/branded.type';
 import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
 import type { Response } from 'express';
 import {
@@ -35,8 +36,8 @@ export class AuthController {
 
   @ApiEndpoint({ type: UserDto })
   @Get('session')
-  async getSession(@Payload() payload: JwtPayload) {
-    return await this.authService.getSession(payload.userId);
+  async getSession(@Payload('userId') userId: UUID) {
+    return await this.authService.getSession(userId);
   }
 
   @ApiPublicEndpoint({ type: TokenPairDto })
@@ -66,7 +67,7 @@ export class AuthController {
   @ApiEndpoint()
   @Post('password/change')
   async changePassword(
-    @Payload() { userId }: JwtPayload,
+    @Payload('userId') userId: UUID,
     @Body() dto: ChangePasswordDto,
   ) {
     return await this.authService.changePassword(userId, dto);

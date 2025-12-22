@@ -2,7 +2,7 @@ import { ApiEndpoint } from '@common/decorators/api-endpoint.decorator';
 import { ApiFile } from '@common/decorators/api-file.decorator';
 import { Payload } from '@common/decorators/jwt-payload.decorator';
 import { validateImagePipe } from '@common/pipes/validate-image.pipe';
-import type { JwtPayload } from '@common/types/auth.type';
+import type { UUID } from '@common/types/branded.type';
 import { multerStorage } from '@common/utils/multer-storage';
 import { Controller, Get, Post, UploadedFile } from '@nestjs/common';
 import { UploadAvatarDto, UserDto } from './user.dto';
@@ -14,7 +14,7 @@ export class UserController {
 
   @ApiEndpoint({ type: UserDto })
   @Get('me')
-  async getMe(@Payload() { userId }: JwtPayload) {
+  async getMe(@Payload('userId') userId: UUID) {
     return await this.userService.getMe(userId);
   }
 
@@ -24,7 +24,7 @@ export class UserController {
   async uploadAvatar(
     @UploadedFile(validateImagePipe())
     file: Express.Multer.File,
-    @Payload() { userId }: JwtPayload,
+    @Payload('userId') userId: UUID,
   ) {
     return await this.userService.uploadAvatar(userId, file);
   }

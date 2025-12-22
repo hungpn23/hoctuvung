@@ -10,5 +10,5 @@ type BaseJwtPayload = {
 export type JwtPayload = BaseJwtPayload & { userId: UUID; role: UserRole };
 export type RefreshTokenPayload = JwtPayload & { signature: string };
 export type RequestUser = ExpressRequest & {
-  user: JwtPayload | RefreshTokenPayload;
+  user?: JwtPayload;
 };
