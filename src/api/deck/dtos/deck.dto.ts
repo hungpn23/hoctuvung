@@ -55,15 +55,15 @@ export class UpdateDeckDto extends OmitType(CreateDeckDto, [
 ]) {
   @ApiPropertyOptional()
   @StringValidatorOptional({ minLength: 3 })
-  name?: string | null;
+  name?: string;
 
   @ApiPropertyOptional({ enum: Visibility })
   @EnumValidatorOptional(Visibility)
-  visibility?: Visibility | null;
+  visibility?: Visibility;
 
   @ApiPropertyOptional({ type: [UpdateCardDto] })
   @ClassValidatorOptional(UpdateCardDto, { each: true })
-  cards?: UpdateCardDto[] | null;
+  cards?: UpdateCardDto[];
 }
 
 export class CloneDeckDto {
@@ -71,10 +71,10 @@ export class CloneDeckDto {
     description: 'Bắt buộc nếu deck có visibility là PROTECTED.',
   })
   @StringValidatorOptional()
-  passcode?: string | null;
+  passcode?: string;
 }
 
-export class DeckQueryDto extends QueryDto {
+export class GetManyQueryDto extends QueryDto {
   @ApiPropertyOptional({
     enum: DeckOrderBy,
     default: DeckOrderBy.OPENED_AT,
@@ -83,10 +83,10 @@ export class DeckQueryDto extends QueryDto {
   orderBy: DeckOrderBy = DeckOrderBy.OPENED_AT;
 }
 
-export class GetSharedQueryDto extends DeckQueryDto {
+export class GetSharedManyQueryDto extends GetManyQueryDto {
   @ApiPropertyOptional()
   @StringValidatorOptional()
-  userId?: UUID;
+  ownerId?: UUID;
 }
 
 @Exclude()
@@ -148,29 +148,16 @@ export class DeckStatsDto {
 }
 
 @Exclude()
-export class DeckWithCardsDto extends DeckDto {
+export class GetOneResDto extends PickType(DeckDto, [
+  'id',
+  'name',
+  'slug',
+  'description',
+]) {
   @Expose()
   @ApiProperty({ type: [CardDto] })
   cards!: CardDto[];
-
-  @Expose()
-  @ApiProperty({ type: DeckStatsDto })
-  stats!: DeckStatsDto;
 }
-
-@Exclude()
-export class PublicDeckDto extends DeckDto {
-  @Expose()
-  @ApiProperty()
-  totalCards!: number;
-
-  @Expose()
-  @ApiProperty()
-  owner!: UserDto;
-}
-
-@Exclude()
-export class CreateDeckResDto extends PickType(DeckDto, ['id', 'slug']) {}
 
 @Exclude()
 export class GetManyResDto extends PickType(DeckDto, [
@@ -184,3 +171,41 @@ export class GetManyResDto extends PickType(DeckDto, [
   @ApiProperty({ type: DeckStatsDto })
   stats!: DeckStatsDto;
 }
+
+@Exclude()
+export class GetSharedOneResDto extends PickType(DeckDto, [
+  'id',
+  'name',
+  'description',
+]) {
+  @Expose()
+  @ApiProperty()
+  totalCards!: number;
+
+  @Expose()
+  @ApiProperty({ type: [PickType(CardDto, ['term', 'definition'])] })
+  cards!: Pick<CardDto, 'term' | 'definition'>[];
+}
+
+@Exclude()
+export class GetSharedManyResDto extends PickType(DeckDto, [
+  'id',
+  'name',
+  'slug',
+  'visibility',
+  'learnerCount',
+  'createdAt',
+]) {
+  @Expose()
+  @ApiProperty()
+  totalCards!: number;
+
+  @Expose()
+  @ApiProperty({
+    type: PickType(UserDto, ['id', 'username', 'avatarUrl']),
+  })
+  owner!: Pick<UserDto, 'id' | 'username' | 'avatarUrl'>;
+}
+
+@Exclude()
+export class CreateDeckResDto extends PickType(DeckDto, ['id', 'slug']) {}

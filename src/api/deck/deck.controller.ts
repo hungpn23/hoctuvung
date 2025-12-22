@@ -3,10 +3,8 @@ import {
   ApiPublicEndpoint,
 } from '@common/decorators/api-endpoint.decorator';
 import { Payload } from '@common/decorators/jwt-payload.decorator';
-import type { JwtPayload } from '@common/types/auth.type';
 import type { UUID } from '@common/types/branded.type';
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -21,11 +19,12 @@ import {
   CloneDeckDto,
   CreateDeckDto,
   DeckDto,
-  DeckQueryDto,
-  DeckWithCardsDto,
+  GetManyQueryDto,
   GetManyResDto,
-  GetSharedQueryDto,
-  PublicDeckDto,
+  GetOneResDto,
+  GetSharedManyQueryDto,
+  GetSharedManyResDto,
+  GetSharedOneResDto,
   UpdateDeckDto,
 } from './dtos/deck.dto';
 
@@ -33,63 +32,62 @@ import {
 export class DeckController {
   constructor(private readonly deckService: DeckService) {}
 
-  @ApiPublicEndpoint({ type: PublicDeckDto, isPaginated: true })
+  @ApiPublicEndpoint({ type: GetSharedManyResDto, isPaginated: true })
   @Get('shared')
-  async getSharedMany(@Query() query: GetSharedQueryDto) {
+  async getSharedMany(@Query() query: GetSharedManyQueryDto) {
     return await this.deckService.getSharedMany(query);
   }
 
-  @ApiPublicEndpoint({ type: DeckWithCardsDto })
-  @Get('shared/:id')
-  getSharedOne(
-    @Payload() { userId: _ }: JwtPayload,
-    @Query() _query: DeckQueryDto,
+  @ApiPublicEndpoint({ type: GetSharedOneResDto })
+  @Get('shared/:deckId')
+  async getSharedOne(
+    @Payload('userId') userId: UUID | undefined,
+    @Param('deckId') deckId: UUID,
   ) {
-    // return await this.deckService.getSharedOne(userId, query);
-    throw new BadRequestException('Not implemented');
+    return await this.deckService.getSharedOne(deckId, userId);
   }
 
   @ApiEndpoint({ type: GetManyResDto, isPaginated: true })
   @Get()
   async getMany(
-    @Payload() { userId }: JwtPayload,
-    @Query() query: DeckQueryDto,
+    @Payload('userId') userId: UUID,
+    @Query() query: GetManyQueryDto,
   ) {
     return await this.deckService.getMany(userId, query);
   }
 
-  @ApiEndpoint({ type: DeckWithCardsDto })
-  @Get(':id')
-  async getOne(@Payload() { userId }: JwtPayload, @Param('id') deckId: UUID) {
-    return await this.deckService.getOne(deckId, userId);
+  @ApiEndpoint({ type: GetOneResDto })
+  @Get(':deckId')
+  async getOne(@Payload('userId') userId: UUID, @Param('deckId') deckId: UUID) {
+    return await this.deckService.getOne(userId, deckId);
   }
 
   @ApiEndpoint({ type: DeckDto })
   @Post()
-  async create(@Payload() { userId }: JwtPayload, @Body() dto: CreateDeckDto) {
+  async create(@Payload('userId') userId: UUID, @Body() dto: CreateDeckDto) {
     return await this.deckService.create(userId, dto);
   }
 
   @ApiEndpoint({ type: DeckDto })
-  @Patch(':id')
+  @Patch(':deckId')
   async update(
-    @Payload() { userId }: JwtPayload,
-    @Param('id') deckId: UUID,
+    @Payload('userId') userId: UUID,
+    @Param('deckId') deckId: UUID,
     @Body() dto: UpdateDeckDto,
   ) {
-    return await this.deckService.update(deckId, userId, dto);
+    return await this.deckService.update(userId, deckId, dto);
   }
 
   @ApiEndpoint()
-  @Delete(':id')
-  async delete(@Payload() { userId }: JwtPayload, @Param('id') deckId: UUID) {
+  @Delete(':deckId')
+  async delete(@Payload('userId') userId: UUID, @Param('deckId') deckId: UUID) {
     return await this.deckService.delete(userId, deckId);
   }
 
   @ApiEndpoint()
   @Post('clone/:deckId')
   async clone(
-    @Payload() { userId }: JwtPayload,
+    @Payload('userId') userId: UUID,
     @Param('deckId') deckId: UUID,
     @Body() dto: CloneDeckDto,
   ) {
@@ -99,7 +97,7 @@ export class DeckController {
   @ApiEndpoint()
   @Post('restart/:deckId')
   async restart(
-    @Payload() { userId }: JwtPayload,
+    @Payload('userId') userId: UUID,
     @Param('deckId') deckId: UUID,
   ) {
     return await this.deckService.restart(userId, deckId);

@@ -2,13 +2,7 @@ import { UserDto } from '@api/user/user.dto';
 import { PaginatedDto } from '@common/dtos/offset-pagination/offset-pagination.dto';
 import { createMetadata } from '@common/dtos/offset-pagination/utils';
 import { UUID } from '@common/types/branded.type';
-import {
-  EntityDTO,
-  EntityRepository,
-  FilterQuery,
-  Loaded,
-  QueryOrder,
-} from '@mikro-orm/core';
+import { EntityRepository, FilterQuery, QueryOrder } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 import {
@@ -18,18 +12,20 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+import { pick } from 'lodash';
 import { Visibility } from './deck.enum';
 import { CardDto } from './dtos/card.dto';
 import {
   CloneDeckDto,
   CreateDeckDto,
   CreateDeckResDto,
-  DeckQueryDto,
   DeckStatsDto,
-  DeckWithCardsDto,
+  GetManyQueryDto,
   GetManyResDto,
-  GetSharedQueryDto,
-  PublicDeckDto,
+  GetOneResDto,
+  GetSharedManyQueryDto,
+  GetSharedManyResDto,
+  GetSharedOneResDto,
   UpdateDeckDto,
 } from './dtos/deck.dto';
 import { Card } from './entities/card.entity';
@@ -47,7 +43,7 @@ export class DeckService {
     private readonly cardRepository: EntityRepository<Card>,
   ) {}
 
-  async getOne(deckId: UUID, userId: UUID) {
+  async getOne(userId: UUID, deckId: UUID) {
     const deck = await this.deckRepository.findOne(
       {
         id: deckId,
@@ -55,6 +51,7 @@ export class DeckService {
       },
       {
         populate: ['cards'],
+        fields: ['id', 'name', 'slug', 'description', 'cards'],
         orderBy: { cards: { term: QueryOrder.ASC_NULLS_LAST } },
       },
     );
@@ -67,18 +64,16 @@ export class DeckService {
 
     await this.em.flush();
 
-    const cards = deck.cards
-      .getItems()
-      .map((card) => plainToInstance(CardDto, card));
+    const cards = plainToInstance(CardDto, deck.cards.getItems());
 
-    return plainToInstance(DeckWithCardsDto, {
+    return plainToInstance(GetOneResDto, {
       ...deck,
       cards,
-      stats: this._getDeckStats(cards),
+      stats: this._getDeckStats(cards.map((c) => pick(c, 'status'))),
     });
   }
 
-  async getMany(userId: UUID, query: DeckQueryDto) {
+  async getMany(userId: UUID, query: GetManyQueryDto) {
     const { limit, offset, search, orderBy, order } = query;
 
     const where: FilterQuery<Deck> = { owner: userId };
@@ -100,7 +95,9 @@ export class DeckService {
     const deckWithCards = decks.map((d) => {
       return plainToInstance(GetManyResDto, {
         ...d,
-        stats: this._getDeckStats(d.cards.toArray()),
+        stats: this._getDeckStats(
+          d.cards.getItems().map((c) => pick(c, 'status')),
+        ),
       });
     });
 
@@ -110,14 +107,39 @@ export class DeckService {
     });
   }
 
-  async getSharedMany(query: GetSharedQueryDto) {
-    const { limit, offset, search, orderBy, order, userId } = query;
+  async getSharedOne(deckId: UUID, ownerId?: UUID) {
+    const where: FilterQuery<Deck> = {
+      id: deckId,
+      visibility: [Visibility.PUBLIC, Visibility.PROTECTED],
+    };
+
+    if (ownerId) where.owner = { $ne: ownerId };
+
+    const deck = await this.deckRepository.findOne(where, {
+      populate: ['cards'],
+      fields: ['id', 'name', 'description', 'cards.term', 'cards.definition'],
+      orderBy: { cards: { term: QueryOrder.ASC_NULLS_LAST } },
+    });
+
+    if (!deck) {
+      throw new NotFoundException(`Deck with id "${deckId}" not found.`);
+    }
+
+    return plainToInstance(GetSharedOneResDto, {
+      ...deck,
+      totalCards: deck.cards.length,
+      cards: deck.cards.getItems().map((c) => pick(c, ['term', 'definition'])),
+    });
+  }
+
+  async getSharedMany(query: GetSharedManyQueryDto) {
+    const { limit, offset, search, orderBy, order, ownerId } = query;
 
     const where: FilterQuery<Deck> = {
       visibility: [Visibility.PUBLIC, Visibility.PROTECTED],
     };
 
-    if (userId) where.owner = { $ne: userId };
+    if (ownerId) where.owner = { $ne: ownerId };
     if (search && search.trim() !== '') where.name = { $ilike: `%${search}%` };
 
     const [decks, totalRecords] = await this.deckRepository.findAndCount(
@@ -129,27 +151,27 @@ export class DeckService {
         populate: ['owner', 'cards:ref'],
         fields: [
           'name',
+          'slug',
           'visibility',
           'learnerCount',
-          'slug',
           'createdAt',
           'owner.username',
           'owner.avatarUrl',
-          'cards',
+          'cards.id',
         ],
       },
     );
 
-    const publicDecks = decks.map((d) => {
-      return plainToInstance(PublicDeckDto, {
+    const data = decks.map((d) => {
+      return plainToInstance(GetSharedManyResDto, {
         ...d,
         totalCards: d.cards.length,
         owner: plainToInstance(UserDto, d.owner.unwrap()),
       });
     });
 
-    return plainToInstance(PaginatedDto<PublicDeckDto>, {
-      data: publicDecks,
+    return plainToInstance(PaginatedDto<GetSharedManyResDto>, {
+      data,
       metadata: createMetadata(totalRecords, query),
     });
   }
@@ -188,7 +210,7 @@ export class DeckService {
     });
   }
 
-  async update(deckId: UUID, userId: UUID, dto: UpdateDeckDto) {
+  async update(userId: UUID, deckId: UUID, dto: UpdateDeckDto) {
     const deck = await this.deckRepository.findOne(
       { id: deckId, owner: userId },
       { populate: ['cards'] },
@@ -353,9 +375,7 @@ export class DeckService {
     await this.em.flush();
   }
 
-  private _getDeckStats(
-    cards: EntityDTO<Loaded<Card, never, 'status', never>>[],
-  ): DeckStatsDto {
+  private _getDeckStats(cards: Pick<CardDto, 'status'>[]): DeckStatsDto {
     const stats: DeckStatsDto = {
       total: cards.length,
       known: 0,
