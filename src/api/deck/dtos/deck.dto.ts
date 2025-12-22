@@ -83,6 +83,12 @@ export class DeckQueryDto extends QueryDto {
   orderBy: DeckOrderBy = DeckOrderBy.OPENED_AT;
 }
 
+export class GetSharedQueryDto extends DeckQueryDto {
+  @ApiPropertyOptional()
+  @StringValidatorOptional()
+  userId?: UUID;
+}
+
 @Exclude()
 export class DeckDto {
   @Expose()
@@ -104,6 +110,14 @@ export class DeckDto {
   @Expose()
   @ApiProperty({ enum: Visibility })
   visibility!: Visibility;
+
+  @Expose()
+  @ApiProperty()
+  learnerCount!: number;
+
+  @Expose()
+  @ApiPropertyOptional({ type: () => DeckDto })
+  clonedFrom?: Pick<DeckDto, 'id' | 'name'> | null;
 
   @Expose()
   @ApiPropertyOptional()
@@ -145,13 +159,6 @@ export class DeckWithCardsDto extends DeckDto {
 }
 
 @Exclude()
-export class DeckWithStatsDto extends DeckDto {
-  @Expose()
-  @ApiProperty({ type: DeckStatsDto })
-  stats!: DeckStatsDto;
-}
-
-@Exclude()
 export class PublicDeckDto extends DeckDto {
   @Expose()
   @ApiProperty()
@@ -164,3 +171,16 @@ export class PublicDeckDto extends DeckDto {
 
 @Exclude()
 export class CreateDeckResDto extends PickType(DeckDto, ['id', 'slug']) {}
+
+@Exclude()
+export class GetManyResDto extends PickType(DeckDto, [
+  'id',
+  'name',
+  'slug',
+  'visibility',
+  'openedAt',
+]) {
+  @Expose()
+  @ApiProperty({ type: DeckStatsDto })
+  stats!: DeckStatsDto;
+}

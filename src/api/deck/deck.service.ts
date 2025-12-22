@@ -3,12 +3,14 @@ import { PaginatedDto } from '@common/dtos/offset-pagination/offset-pagination.d
 import { createMetadata } from '@common/dtos/offset-pagination/utils';
 import { UUID } from '@common/types/branded.type';
 import {
-  EntityManager,
+  EntityDTO,
   EntityRepository,
   FilterQuery,
+  Loaded,
   QueryOrder,
 } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityManager } from '@mikro-orm/postgresql';
 import {
   BadRequestException,
   Injectable,
@@ -25,7 +27,8 @@ import {
   DeckQueryDto,
   DeckStatsDto,
   DeckWithCardsDto,
-  DeckWithStatsDto,
+  GetManyResDto,
+  GetSharedQueryDto,
   PublicDeckDto,
   UpdateDeckDto,
 } from './dtos/deck.dto';
@@ -90,32 +93,31 @@ export class DeckService {
         orderBy: { [orderBy]: order },
 
         populate: ['cards'],
+        fields: ['name', 'slug', 'visibility', 'openedAt', 'cards.status'],
       },
     );
 
     const deckWithCards = decks.map((d) => {
-      const cards = d.cards.map((c) => plainToInstance(CardDto, c));
-
-      return plainToInstance(DeckWithStatsDto, {
+      return plainToInstance(GetManyResDto, {
         ...d,
-        stats: this._getDeckStats(cards),
+        stats: this._getDeckStats(d.cards.toArray()),
       });
     });
 
-    return plainToInstance(PaginatedDto<DeckWithStatsDto>, {
+    return plainToInstance(PaginatedDto<GetManyResDto>, {
       data: deckWithCards,
       metadata: createMetadata(totalRecords, query),
     });
   }
 
-  async getPublicMany(userId: UUID, query: DeckQueryDto) {
-    const { limit, offset, search, orderBy, order } = query;
+  async getSharedMany(query: GetSharedQueryDto) {
+    const { limit, offset, search, orderBy, order, userId } = query;
 
     const where: FilterQuery<Deck> = {
-      owner: { $ne: userId },
-      visibility: { $in: [Visibility.PUBLIC, Visibility.PROTECTED] },
+      visibility: [Visibility.PUBLIC, Visibility.PROTECTED],
     };
 
+    if (userId) where.owner = { $ne: userId };
     if (search && search.trim() !== '') where.name = { $ilike: `%${search}%` };
 
     const [decks, totalRecords] = await this.deckRepository.findAndCount(
@@ -124,8 +126,17 @@ export class DeckService {
         limit,
         offset,
         orderBy: { [orderBy]: order },
-
-        populate: ['owner', 'cards'],
+        populate: ['owner', 'cards:ref'],
+        fields: [
+          'name',
+          'visibility',
+          'learnerCount',
+          'slug',
+          'createdAt',
+          'owner.username',
+          'owner.avatarUrl',
+          'cards',
+        ],
       },
     );
 
@@ -316,19 +327,9 @@ export class DeckService {
       }),
     );
 
-    originalDeck.cloneCount++;
+    originalDeck.learnerCount++;
 
     await this.em.flush();
-
-    const cards = newDeck.cards
-      .getItems()
-      .map((card) => plainToInstance(CardDto, card));
-
-    return plainToInstance(DeckWithCardsDto, {
-      ...newDeck,
-      cards,
-      stats: this._getDeckStats(cards),
-    });
   }
 
   async restart(userId: UUID, deckId: UUID) {
@@ -352,7 +353,9 @@ export class DeckService {
     await this.em.flush();
   }
 
-  private _getDeckStats(cards: CardDto[]): DeckStatsDto {
+  private _getDeckStats(
+    cards: EntityDTO<Loaded<Card, never, 'status', never>>[],
+  ): DeckStatsDto {
     const stats: DeckStatsDto = {
       total: cards.length,
       known: 0,
@@ -360,7 +363,7 @@ export class DeckService {
       new: 0,
     };
 
-    cards.forEach((c) => stats[c.status]++);
+    cards.forEach((c) => stats[c.status as keyof DeckStatsDto]++);
 
     return stats;
   }

@@ -38,8 +38,8 @@ export class Deck extends SoftDeleteBaseEntity {
   @Property()
   passcode: Opt<string> = '';
 
-  @Property({ default: 0 })
-  cloneCount: Opt<number> = 0;
+  @Property()
+  learnerCount: Opt<number> = 0;
 
   @NullableProperty()
   openedAt?: Date | null;

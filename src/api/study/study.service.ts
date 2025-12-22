@@ -52,7 +52,7 @@ export class StudyService {
     if (!deck) throw new NotFoundException();
 
     const cardsToUpdate = await this.cardRepository.find({
-      id: { $in: dto.answers.map((a) => a.id) },
+      id: dto.answers.map((a) => a.id),
       deck: deckId,
     });
 

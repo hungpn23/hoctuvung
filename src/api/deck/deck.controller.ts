@@ -1,8 +1,12 @@
-import { ApiEndpoint } from '@common/decorators/api-endpoint.decorator';
+import {
+  ApiEndpoint,
+  ApiPublicEndpoint,
+} from '@common/decorators/api-endpoint.decorator';
 import { Payload } from '@common/decorators/jwt-payload.decorator';
 import type { JwtPayload } from '@common/types/auth.type';
 import type { UUID } from '@common/types/branded.type';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -19,7 +23,8 @@ import {
   DeckDto,
   DeckQueryDto,
   DeckWithCardsDto,
-  DeckWithStatsDto,
+  GetManyResDto,
+  GetSharedQueryDto,
   PublicDeckDto,
   UpdateDeckDto,
 } from './dtos/deck.dto';
@@ -28,31 +33,29 @@ import {
 export class DeckController {
   constructor(private readonly deckService: DeckService) {}
 
-  @ApiEndpoint({ type: DeckWithStatsDto, isPaginated: true })
+  @ApiPublicEndpoint({ type: PublicDeckDto, isPaginated: true })
+  @Get('shared')
+  async getSharedMany(@Query() query: GetSharedQueryDto) {
+    return await this.deckService.getSharedMany(query);
+  }
+
+  @ApiPublicEndpoint({ type: DeckWithCardsDto })
+  @Get('shared/:id')
+  getSharedOne(
+    @Payload() { userId: _ }: JwtPayload,
+    @Query() _query: DeckQueryDto,
+  ) {
+    // return await this.deckService.getSharedOne(userId, query);
+    throw new BadRequestException('Not implemented');
+  }
+
+  @ApiEndpoint({ type: GetManyResDto, isPaginated: true })
   @Get()
   async getMany(
     @Payload() { userId }: JwtPayload,
     @Query() query: DeckQueryDto,
   ) {
     return await this.deckService.getMany(userId, query);
-  }
-
-  @ApiEndpoint({ type: PublicDeckDto, isPaginated: true })
-  @Get('public')
-  async getPublicMany(
-    @Payload() { userId }: JwtPayload,
-    @Query() query: DeckQueryDto,
-  ) {
-    return await this.deckService.getPublicMany(userId, query);
-  }
-
-  @ApiEndpoint({ type: DeckWithCardsDto })
-  @Get('public/:id')
-  async getPublicOne(
-    @Payload() { userId: _ }: JwtPayload,
-    @Query() _query: DeckQueryDto,
-  ) {
-    // return await this.deckService.getPublicOne(userId, query);
   }
 
   @ApiEndpoint({ type: DeckWithCardsDto })
@@ -83,11 +86,11 @@ export class DeckController {
     return await this.deckService.delete(userId, deckId);
   }
 
-  @ApiEndpoint({ type: DeckWithCardsDto })
-  @Post(':id/clone')
+  @ApiEndpoint()
+  @Post('clone/:deckId')
   async clone(
     @Payload() { userId }: JwtPayload,
-    @Param('id') deckId: UUID,
+    @Param('deckId') deckId: UUID,
     @Body() dto: CloneDeckDto,
   ) {
     return await this.deckService.clone(userId, deckId, dto);
