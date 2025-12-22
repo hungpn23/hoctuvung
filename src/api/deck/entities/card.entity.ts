@@ -34,7 +34,7 @@ export class Card {
   reviewDate?: Date | null;
 
   @Enum(() => CardStatus)
-  status!: Opt<CardStatus>;
+  status: Opt<CardStatus> = CardStatus.NEW;
 
   @ManyToOne(() => Deck, { ref: true })
   deck!: Ref<Deck>;

@@ -73,7 +73,7 @@ export class StudyService {
     let learnedCount = 0;
 
     map.forEach((card) => {
-      if (card.status === CardStatus.KNOWN) learnedCount += 1;
+      if ((card.status as CardStatus) === CardStatus.KNOWN) learnedCount += 1;
     });
 
     await this.studyQueue.add(JobName.UPDATE_USER_STATS, {
