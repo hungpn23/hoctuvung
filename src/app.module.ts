@@ -1,12 +1,13 @@
 import { ApiModule } from '@api/api.module';
 import { AppController } from '@app.controller';
-
 import { appConfig } from '@config/app.config';
 import { authConfig } from '@config/auth.config';
 import { DatabaseConfig, databaseConfig } from '@config/database.config';
 import { googleConfig } from '@config/google.config';
 import { imagekitConfig } from '@config/imagekit.config';
+import { mailConfig } from '@config/mail.config';
 import { RedisConfig, redisConfig } from '@config/redis.config';
+import { IntegrationModule } from '@integrations/intergration.module';
 import KeyvRedis from '@keyv/redis';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
@@ -33,11 +34,12 @@ const isProd = process.env.NODE_ENV === 'prod';
       skipProcessEnv: true,
       load: [
         appConfig,
-        databaseConfig,
         authConfig,
-        redisConfig,
+        databaseConfig,
         googleConfig,
         imagekitConfig,
+        mailConfig,
+        redisConfig,
       ],
     }),
 
@@ -79,6 +81,7 @@ const isProd = process.env.NODE_ENV === 'prod';
     }),
 
     ApiModule,
+    IntegrationModule,
   ],
   controllers: [AppController],
 })

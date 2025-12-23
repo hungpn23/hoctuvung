@@ -23,7 +23,7 @@ class DatabaseEnvVariables {
 }
 
 export const databaseConfig = registerAs('database', () => {
-  const config = validateConfig<DatabaseEnvVariables>(DatabaseEnvVariables);
+  const config = validateConfig(DatabaseEnvVariables);
 
   return {
     host: config.DB_HOST,

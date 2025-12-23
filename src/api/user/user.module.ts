@@ -1,5 +1,5 @@
 import { QueueName } from '@common/constants/queue-name.enum';
-import { ImageKitModule } from '@imagekit/imagekit.module';
+import { ImageKitModule } from '@integrations/imagekit/imagekit.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
