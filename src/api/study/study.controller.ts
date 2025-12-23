@@ -1,7 +1,14 @@
 import { ApiEndpoint } from '@common/decorators/api-endpoint.decorator';
 import { Payload } from '@common/decorators/jwt-payload.decorator';
 import type { UUID } from '@common/types/branded.type';
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { SaveAnswersDto } from './dtos/study.dto';
 import { StudyService } from './study.service';
 
@@ -13,7 +20,7 @@ export class StudyController {
   @Post('save-answer/:deckId')
   async saveAnswers(
     @Payload('userId') userId: UUID,
-    @Param('deckId') deckId: UUID,
+    @Param('deckId', ParseUUIDPipe) deckId: UUID,
     @Body() dto: SaveAnswersDto,
   ) {
     return await this.studyService.saveAnswers(userId, deckId, dto);

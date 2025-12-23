@@ -10,14 +10,9 @@ import {
 } from '@common/decorators/validators.decorator';
 import { QueryDto } from '@common/dtos/offset-pagination/offset-pagination.dto';
 import type { UUID } from '@common/types/branded.type';
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  OmitType,
-  PickType,
-} from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { ArrayMinSize, ValidateIf } from 'class-validator';
+import { ArrayMinSize, IsUUID, ValidateIf } from 'class-validator';
 import { Visibility } from '../deck.enum';
 import {
   CardDto,
@@ -53,10 +48,9 @@ export class CreateDeckDto {
   cards!: CreateCardDto[];
 }
 
-export class UpdateDeckDto extends OmitType(CreateDeckDto, [
-  'name',
-  'visibility',
-  'cards',
+export class UpdateDeckDto extends PickType(CreateDeckDto, [
+  'description',
+  'passcode',
 ]) {
   @ApiPropertyOptional()
   @StringValidatorOptional({ minLength: 3 })
@@ -88,16 +82,11 @@ export class GetManyQueryDto extends QueryDto {
   orderBy: DeckOrderBy = DeckOrderBy.OPENED_AT;
 }
 
-export class GetSharedManyQueryDto extends GetManyQueryDto {
-  @ApiPropertyOptional()
-  @StringValidatorOptional()
-  ownerId?: UUID;
-}
-
 @Exclude()
 export class DeckDto {
   @Expose()
   @ApiProperty()
+  @IsUUID()
   id!: UUID;
 
   @Expose()

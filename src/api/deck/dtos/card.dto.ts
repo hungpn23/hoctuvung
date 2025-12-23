@@ -6,6 +6,7 @@ import {
 import type { UUID } from '@common/types/branded.type';
 import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
+import { IsUUID } from 'class-validator';
 import { CardStatus } from '../deck.enum';
 
 export class CreateCardDto {
@@ -21,12 +22,14 @@ export class CreateCardDto {
 export class UpdateCardDto extends CreateCardDto {
   @ApiProperty()
   @StringValidator()
+  @IsUUID()
   id!: UUID;
 }
 
 export class CardAnswerDto {
   @ApiProperty()
   @StringValidator()
+  @IsUUID()
   id!: UUID;
 
   @ApiProperty()

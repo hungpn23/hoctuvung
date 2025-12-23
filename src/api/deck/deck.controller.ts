@@ -10,6 +10,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -22,7 +23,6 @@ import {
   GetManyQueryDto,
   GetManyResDto,
   GetOneResDto,
-  GetSharedManyQueryDto,
   GetSharedManyResDto,
   GetSharedOneResDto,
   UpdateDeckDto,
@@ -34,17 +34,20 @@ export class DeckController {
 
   @ApiPublicEndpoint({ type: GetSharedManyResDto, isPaginated: true })
   @Get('shared')
-  async getSharedMany(@Query() query: GetSharedManyQueryDto) {
-    return await this.deckService.getSharedMany(query);
+  async getSharedMany(
+    @Payload('userId') userId: UUID | undefined,
+    @Query() query: GetManyQueryDto,
+  ) {
+    return await this.deckService.getSharedMany(userId, query);
   }
 
   @ApiPublicEndpoint({ type: GetSharedOneResDto })
   @Get('shared/:deckId')
   async getSharedOne(
     @Payload('userId') userId: UUID | undefined,
-    @Param('deckId') deckId: UUID,
+    @Param('deckId', ParseUUIDPipe) deckId: UUID,
   ) {
-    return await this.deckService.getSharedOne(deckId, userId);
+    return await this.deckService.getSharedOne(userId, deckId);
   }
 
   @ApiEndpoint({ type: GetManyResDto, isPaginated: true })
@@ -58,7 +61,10 @@ export class DeckController {
 
   @ApiEndpoint({ type: GetOneResDto })
   @Get(':deckId')
-  async getOne(@Payload('userId') userId: UUID, @Param('deckId') deckId: UUID) {
+  async getOne(
+    @Payload('userId') userId: UUID,
+    @Param('deckId', ParseUUIDPipe) deckId: UUID,
+  ) {
     return await this.deckService.getOne(userId, deckId);
   }
 
@@ -72,7 +78,7 @@ export class DeckController {
   @Patch(':deckId')
   async update(
     @Payload('userId') userId: UUID,
-    @Param('deckId') deckId: UUID,
+    @Param('deckId', ParseUUIDPipe) deckId: UUID,
     @Body() dto: UpdateDeckDto,
   ) {
     return await this.deckService.update(userId, deckId, dto);
@@ -80,7 +86,10 @@ export class DeckController {
 
   @ApiEndpoint()
   @Delete(':deckId')
-  async delete(@Payload('userId') userId: UUID, @Param('deckId') deckId: UUID) {
+  async delete(
+    @Payload('userId') userId: UUID,
+    @Param('deckId', ParseUUIDPipe) deckId: UUID,
+  ) {
     return await this.deckService.delete(userId, deckId);
   }
 
@@ -88,7 +97,7 @@ export class DeckController {
   @Post('clone/:deckId')
   async clone(
     @Payload('userId') userId: UUID,
-    @Param('deckId') deckId: UUID,
+    @Param('deckId', ParseUUIDPipe) deckId: UUID,
     @Body() dto: CloneDeckDto,
   ) {
     return await this.deckService.clone(userId, deckId, dto);
@@ -98,7 +107,7 @@ export class DeckController {
   @Post('restart/:deckId')
   async restart(
     @Payload('userId') userId: UUID,
-    @Param('deckId') deckId: UUID,
+    @Param('deckId', ParseUUIDPipe) deckId: UUID,
   ) {
     return await this.deckService.restart(userId, deckId);
   }

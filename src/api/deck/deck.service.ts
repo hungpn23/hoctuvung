@@ -23,7 +23,6 @@ import {
   GetManyQueryDto,
   GetManyResDto,
   GetOneResDto,
-  GetSharedManyQueryDto,
   GetSharedManyResDto,
   GetSharedOneResDto,
   UpdateDeckDto,
@@ -107,13 +106,13 @@ export class DeckService {
     });
   }
 
-  async getSharedOne(deckId: UUID, ownerId?: UUID) {
+  async getSharedOne(userId: UUID | undefined, deckId: UUID) {
     const where: FilterQuery<Deck> = {
       id: deckId,
       visibility: [Visibility.PUBLIC, Visibility.PROTECTED],
     };
 
-    if (ownerId) where.owner = { $ne: ownerId };
+    if (userId) where.owner = { $ne: userId };
 
     const deck = await this.deckRepository.findOne(where, {
       populate: ['owner', 'cards'],
@@ -141,14 +140,14 @@ export class DeckService {
     });
   }
 
-  async getSharedMany(query: GetSharedManyQueryDto) {
-    const { limit, offset, search, orderBy, order, ownerId } = query;
+  async getSharedMany(userId: UUID | undefined, query: GetManyQueryDto) {
+    const { limit, offset, search, orderBy, order } = query;
 
     const where: FilterQuery<Deck> = {
       visibility: [Visibility.PUBLIC, Visibility.PROTECTED],
     };
 
-    if (ownerId) where.owner = { $ne: ownerId };
+    if (userId) where.owner = { $ne: userId };
     if (search && search.trim() !== '') where.name = { $ilike: `%${search}%` };
 
     const [decks, totalRecords] = await this.deckRepository.findAndCount(
