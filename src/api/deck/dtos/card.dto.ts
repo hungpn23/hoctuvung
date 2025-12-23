@@ -4,7 +4,7 @@ import {
   StringValidator,
 } from '@common/decorators/validators.decorator';
 import type { UUID } from '@common/types/branded.type';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { CardStatus } from '../deck.enum';
 
@@ -64,3 +64,6 @@ export class CardDto {
   @ApiProperty()
   status!: CardStatus;
 }
+
+@Exclude()
+export class PreviewCardDto extends PickType(CardDto, ['term', 'definition']) {}

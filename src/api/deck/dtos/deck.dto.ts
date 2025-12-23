@@ -1,4 +1,4 @@
-import { UserDto } from '@api/user/user.dto';
+import { OwnerDto } from '@api/user/user.dto';
 import { DeckOrderBy } from '@common/constants/order.enum';
 import {
   ClassValidator,
@@ -19,7 +19,12 @@ import {
 import { Exclude, Expose } from 'class-transformer';
 import { ArrayMinSize, ValidateIf } from 'class-validator';
 import { Visibility } from '../deck.enum';
-import { CardDto, CreateCardDto, UpdateCardDto } from './card.dto';
+import {
+  CardDto,
+  CreateCardDto,
+  PreviewCardDto,
+  UpdateCardDto,
+} from './card.dto';
 
 export class CreateDeckDto {
   @ApiProperty()
@@ -183,8 +188,12 @@ export class GetSharedOneResDto extends PickType(DeckDto, [
   totalCards!: number;
 
   @Expose()
-  @ApiProperty({ type: [PickType(CardDto, ['term', 'definition'])] })
-  cards!: Pick<CardDto, 'term' | 'definition'>[];
+  @ApiProperty({ type: OwnerDto })
+  owner!: OwnerDto;
+
+  @Expose()
+  @ApiProperty({ type: [PreviewCardDto] })
+  cards!: PreviewCardDto[];
 }
 
 @Exclude()
@@ -201,10 +210,8 @@ export class GetSharedManyResDto extends PickType(DeckDto, [
   totalCards!: number;
 
   @Expose()
-  @ApiProperty({
-    type: PickType(UserDto, ['id', 'username', 'avatarUrl']),
-  })
-  owner!: Pick<UserDto, 'id' | 'username' | 'avatarUrl'>;
+  @ApiProperty({ type: OwnerDto })
+  owner!: OwnerDto;
 }
 
 @Exclude()

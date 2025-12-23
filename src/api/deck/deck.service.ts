@@ -1,4 +1,4 @@
-import { UserDto } from '@api/user/user.dto';
+import { OwnerDto, UserDto } from '@api/user/user.dto';
 import { PaginatedDto } from '@common/dtos/offset-pagination/offset-pagination.dto';
 import { createMetadata } from '@common/dtos/offset-pagination/utils';
 import { UUID } from '@common/types/branded.type';
@@ -14,7 +14,7 @@ import {
 import { plainToInstance } from 'class-transformer';
 import { pick } from 'lodash';
 import { Visibility } from './deck.enum';
-import { CardDto } from './dtos/card.dto';
+import { CardDto, PreviewCardDto } from './dtos/card.dto';
 import {
   CloneDeckDto,
   CreateDeckDto,
@@ -64,10 +64,10 @@ export class DeckService {
 
     await this.em.flush();
 
-    const cards = plainToInstance(CardDto, deck.cards.getItems());
+    const cards = plainToInstance(CardDto, deck.cards.toArray());
 
     return plainToInstance(GetOneResDto, {
-      ...deck,
+      ...pick(deck, ['id', 'name', 'slug', 'description']),
       cards,
       stats: this._getDeckStats(cards.map((c) => pick(c, 'status'))),
     });
@@ -96,7 +96,7 @@ export class DeckService {
       return plainToInstance(GetManyResDto, {
         ...d,
         stats: this._getDeckStats(
-          d.cards.getItems().map((c) => pick(c, 'status')),
+          d.cards.toArray().map((c) => pick(c, 'status')),
         ),
       });
     });
@@ -116,8 +116,16 @@ export class DeckService {
     if (ownerId) where.owner = { $ne: ownerId };
 
     const deck = await this.deckRepository.findOne(where, {
-      populate: ['cards'],
-      fields: ['id', 'name', 'description', 'cards.term', 'cards.definition'],
+      populate: ['owner', 'cards'],
+      fields: [
+        'id',
+        'name',
+        'description',
+        'owner.username',
+        'owner.avatarUrl',
+        'cards.term',
+        'cards.definition',
+      ],
       orderBy: { cards: { term: QueryOrder.ASC_NULLS_LAST } },
     });
 
@@ -126,9 +134,10 @@ export class DeckService {
     }
 
     return plainToInstance(GetSharedOneResDto, {
-      ...deck,
+      ...pick(deck, ['id', 'name', 'description']),
       totalCards: deck.cards.length,
-      cards: deck.cards.getItems().map((c) => pick(c, ['term', 'definition'])),
+      owner: plainToInstance(OwnerDto, deck.owner.toJSON()),
+      cards: plainToInstance(PreviewCardDto, deck.cards.toArray()),
     });
   }
 
@@ -164,7 +173,14 @@ export class DeckService {
 
     const data = decks.map((d) => {
       return plainToInstance(GetSharedManyResDto, {
-        ...d,
+        ...pick(d, [
+          'id',
+          'name',
+          'slug',
+          'visibility',
+          'learnerCount',
+          'createdAt',
+        ]),
         totalCards: d.cards.length,
         owner: plainToInstance(UserDto, d.owner.unwrap()),
       });
@@ -341,7 +357,7 @@ export class DeckService {
       clonedFrom: originalDeck.id,
     });
 
-    originalDeck.cards.getItems().forEach((card) =>
+    originalDeck.cards.toArray().forEach((card) =>
       this.cardRepository.create({
         deck: newDeck.id,
         term: card.term,

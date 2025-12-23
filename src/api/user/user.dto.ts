@@ -1,6 +1,6 @@
 import { UserRole } from '@common/constants/role.enum';
 import type { UUID } from '@common/types/branded.type';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
@@ -37,6 +37,13 @@ export class UserDto {
   @ApiPropertyOptional()
   updatedAt?: Date | null;
 }
+
+@Exclude()
+export class OwnerDto extends PickType(UserDto, [
+  'id',
+  'username',
+  'avatarUrl',
+]) {}
 
 @Exclude()
 export class UploadAvatarDto {
