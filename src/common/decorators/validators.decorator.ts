@@ -3,12 +3,12 @@ import { ClassConstructor, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsDate,
-  IsDefined,
   IsEmail,
   IsEnum,
   IsInt,
+  IsNotEmpty,
   IsNumber,
-  IsOptional,
+  IsPort,
   IsPositive,
   IsString,
   IsUrl,
@@ -16,6 +16,7 @@ import {
   MaxLength,
   Min,
   MinLength,
+  ValidateIf,
   ValidateNested,
   ValidationOptions,
   registerDecorator,
@@ -130,12 +131,22 @@ export function NumberValidator(
 
 export function NumberValidatorOptional(
   options: Omit<NumberOptions, 'required'> = {},
-) {
+): PropertyDecorator {
   return NumberValidator({ ...options, required: false });
 }
 
-export function PortValidator(): PropertyDecorator {
-  return NumberValidator({ isInt: true, minimum: 1, maximum: 65535 });
+export function PortValidator(options: CommonOptions = {}): PropertyDecorator {
+  let decorators = [IsPort({ each: options.each })];
+
+  decorators = handleCommonOptions(decorators, options);
+
+  return applyDecorators(...decorators);
+}
+
+export function PortValidatorOptional(
+  options: Omit<CommonOptions, 'required'> = {},
+): PropertyDecorator {
+  return PortValidator({ ...options, required: false });
 }
 
 // ****************
@@ -149,6 +160,12 @@ export function BooleanValidator(
   decorators = handleCommonOptions(decorators, options);
 
   return applyDecorators(...decorators);
+}
+
+export function BooleanValidatorOptional(
+  options: Omit<CommonOptions, 'required'> = {},
+): PropertyDecorator {
+  return BooleanValidator({ ...options, required: false });
 }
 
 export function EnumValidator<T extends object>(
@@ -237,9 +254,9 @@ function handleCommonOptions(
 ) {
   const { required, each } = options;
   if (required === false) {
-    decorators.push(IsOptional({ each }));
+    decorators.push(ValidateIf((_obj, value) => !!value));
   } else {
-    decorators.push(IsDefined({ each }));
+    decorators.push(IsNotEmpty({ each }));
   }
 
   return decorators;

@@ -7,10 +7,13 @@ import {
   GoogleTokenResponse,
 } from '@common/types/google.type';
 
+import { JobName } from '@common/constants/job-name.enum';
+import { QueueName } from '@common/constants/queue-name.enum';
 import { authConfig, type AuthConfig } from '@config/auth.config';
 import { googleConfig, type GoogleConfig } from '@config/google.config';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
+import { InjectQueue } from '@nestjs/bullmq';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   BadRequestException,
@@ -21,6 +24,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import argon2 from 'argon2';
+import { Queue } from 'bullmq';
 import type { Cache } from 'cache-manager';
 import { plainToInstance } from 'class-transformer';
 import crypto from 'crypto';
@@ -42,6 +46,8 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly em: EntityManager,
+    @InjectQueue(QueueName.EMAIL)
+    private readonly emailQueue: Queue<void, void, JobName>,
     @Inject(authConfig.KEY)
     private readonly authConfig: AuthConfig,
     @Inject(googleConfig.KEY)
@@ -133,6 +139,8 @@ export class AuthService {
 
     await this.em.flush();
 
+    await this.emailQueue.add(JobName.SEND_WELCOME_EMAIL);
+
     return plainToInstance(TokenPairDto, tokenPair);
   }
 
@@ -161,7 +169,7 @@ export class AuthService {
     const sessionRef = this.sessionRepository.getReference(sessionId);
     if (!sessionRef) throw new BadRequestException();
 
-    await this.em.removeAndFlush(sessionRef);
+    await this.em.remove(sessionRef).flush();
   }
 
   async refresh(refreshToken: string) {
@@ -263,7 +271,7 @@ export class AuthService {
       const sessions = await this.sessionRepository.find({
         user: { id: userId },
       });
-      await this.em.removeAndFlush(sessions);
+      await this.em.remove(sessions).flush();
       throw new UnauthorizedException();
     }
 
@@ -285,9 +293,8 @@ export class AuthService {
         const expiredSession = await this.sessionRepository.findOne(
           payload.sessionId,
         );
-        if (expiredSession) {
-          await this.em.removeAndFlush(expiredSession);
-        }
+
+        if (expiredSession) await this.em.remove(expiredSession).flush();
       }
 
       throw new UnauthorizedException('Session expired');

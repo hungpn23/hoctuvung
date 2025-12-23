@@ -1,10 +1,11 @@
 import { QueueName } from '@common/constants/queue-name.enum';
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
-import { MailService } from './mail.service';
+import { ResendProcessor } from './resend.processor';
+import { ResendService } from './resend.service';
 
 @Module({
   imports: [BullModule.registerQueue({ name: QueueName.EMAIL })],
-  providers: [MailService],
+  providers: [ResendService, ResendProcessor],
 })
-export class MailModule {}
+export class ResendModule {}

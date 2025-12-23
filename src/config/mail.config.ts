@@ -1,7 +1,8 @@
 import {
-  BooleanValidator,
-  PortValidator,
+  BooleanValidatorOptional,
+  PortValidatorOptional,
   StringValidator,
+  StringValidatorOptional,
 } from '@common/decorators/validators.decorator';
 import { ConfigType, registerAs } from '@nestjs/config';
 import { validateConfig } from './validate-config';
@@ -10,20 +11,20 @@ class MailEnvVariables {
   @StringValidator()
   RESEND_API_KEY!: string;
 
-  @StringValidator()
-  MAIL_HOST!: string;
+  @StringValidatorOptional()
+  MAIL_HOST?: string;
 
-  @PortValidator()
-  MAIL_PORT!: number;
+  @PortValidatorOptional()
+  MAIL_PORT?: number;
 
-  @BooleanValidator()
-  MAIL_SECURE!: boolean;
+  @BooleanValidatorOptional()
+  MAIL_SECURE?: boolean;
 
-  @StringValidator()
-  MAIL_AUTH_USER!: string;
+  @StringValidatorOptional()
+  MAIL_AUTH_USER?: string;
 
-  @StringValidator()
-  MAIL_AUTH_PASS!: string;
+  @StringValidatorOptional()
+  MAIL_AUTH_PASS?: string;
 
   @StringValidator()
   MAIL_FROM!: string;
@@ -33,6 +34,7 @@ export const mailConfig = registerAs('mail', () => {
   const config = validateConfig(MailEnvVariables);
 
   return {
+    resendApiKey: config.RESEND_API_KEY,
     host: config.MAIL_HOST,
     port: config.MAIL_PORT,
     secure: config.MAIL_SECURE,
