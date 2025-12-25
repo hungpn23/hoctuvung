@@ -24,6 +24,6 @@ export class ResendService {
 
     if (error) return this.logger.error({ error });
 
-    this.logger.log({ data });
+    this.logger.debug({ data });
   }
 }

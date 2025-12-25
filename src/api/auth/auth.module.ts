@@ -1,6 +1,5 @@
-import { Session } from '@api/user/entities/session.entity';
-import { User } from '@api/user/entities/user.entity';
 import { QueueName } from '@common/constants/queue-name.enum';
+import { Session, User } from '@db/entities';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';

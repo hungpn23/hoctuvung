@@ -25,7 +25,7 @@ export class MailService {
       if (error) {
         this.logger.error('Error connecting to mail server:', error.message);
       } else {
-        this.logger.log('Mail server connection established');
+        this.logger.debug('Mail server connection established');
       }
     });
   }

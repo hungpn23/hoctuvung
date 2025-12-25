@@ -1,12 +1,15 @@
+import { NotificationModule } from '@api/notification/notification.module';
+import { Card, Deck, Notification, User } from '@db/entities';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { DeckController } from './deck.controller';
 import { DeckService } from './deck.service';
-import { Card } from './entities/card.entity';
-import { Deck } from './entities/deck.entity';
 
 @Module({
-  imports: [MikroOrmModule.forFeature([Deck, Card])],
+  imports: [
+    MikroOrmModule.forFeature([Deck, Card, User, Notification]),
+    NotificationModule,
+  ],
   controllers: [DeckController],
   providers: [DeckService],
 })

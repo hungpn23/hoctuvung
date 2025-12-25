@@ -2,13 +2,13 @@ import { JobName } from '@common/constants/job-name.enum';
 import { QueueName } from '@common/constants/queue-name.enum';
 import { UUID } from '@common/types/branded.type';
 import { ImageUploadData } from '@common/types/jobs.type';
-import { EntityRepository } from '@mikro-orm/core';
+import { User } from '@db/entities';
+import { EntityRepository, wrap } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, Logger } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import { plainToInstance } from 'class-transformer';
-import { User } from './entities/user.entity';
 import { UploadAvatarDto, UserDto } from './user.dto';
 
 @Injectable()
@@ -25,7 +25,8 @@ export class UserService {
 
   async getMe(userId: UUID) {
     const user = await this.userRepository.findOneOrFail(userId);
-    return plainToInstance(UserDto, user);
+
+    return plainToInstance(UserDto, wrap(user).toPOJO());
   }
 
   async uploadAvatar(userId: UUID, file: Express.Multer.File) {

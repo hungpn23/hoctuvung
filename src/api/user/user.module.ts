@@ -1,9 +1,9 @@
 import { QueueName } from '@common/constants/queue-name.enum';
+import { User } from '@db/entities';
 import { ImageKitModule } from '@integrations/imagekit/imagekit.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
-import { User } from './entities/user.entity';
 import { UserController } from './user.controller';
 import { UserProcessor } from './user.processor';
 import { UserService } from './user.service';

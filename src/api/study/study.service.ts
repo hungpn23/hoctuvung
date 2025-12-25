@@ -1,19 +1,17 @@
 import { CardStatus } from '@api/deck/deck.enum';
-import { Card } from '@api/deck/entities/card.entity';
-import { Deck } from '@api/deck/entities/deck.entity';
 
 import { JobName } from '@common/constants/job-name.enum';
 import { QueueName } from '@common/constants/queue-name.enum';
 import type { UUID } from '@common/types/branded.type';
 import { UpdateUserStatsData } from '@common/types/jobs.type';
-import { EntityManager, EntityRepository } from '@mikro-orm/core';
+import { Card, Deck, UserStatistic } from '@db/entities';
+import { EntityManager, EntityRepository, wrap } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import { plainToInstance } from 'class-transformer';
 import { SaveAnswersDto, UserStatsDto } from './dtos/study.dto';
-import { UserStatistic } from './entities/user-statistics.entity';
 
 @Injectable()
 export class StudyService {
@@ -40,7 +38,7 @@ export class StudyService {
       await this.em.flush();
     }
 
-    return plainToInstance(UserStatsDto, stats);
+    return plainToInstance(UserStatsDto, wrap(stats).toPOJO());
   }
 
   async saveAnswers(userId: UUID, deckId: UUID, dto: SaveAnswersDto) {

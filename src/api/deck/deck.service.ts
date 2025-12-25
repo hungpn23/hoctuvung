@@ -1,8 +1,15 @@
-import { OwnerDto, UserDto } from '@api/user/user.dto';
+import { NotificationDto } from '@api/notification/notification.dto';
+import { NotificationGateway } from '@api/notification/notification.gateway';
 import { PaginatedDto } from '@common/dtos/offset-pagination/offset-pagination.dto';
 import { createMetadata } from '@common/dtos/offset-pagination/utils';
 import { UUID } from '@common/types/branded.type';
-import { EntityRepository, FilterQuery, QueryOrder } from '@mikro-orm/core';
+import { Card, Deck, Notification, User } from '@db/entities';
+import {
+  EntityRepository,
+  FilterQuery,
+  QueryOrder,
+  wrap,
+} from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 import {
@@ -14,7 +21,7 @@ import {
 import { plainToInstance } from 'class-transformer';
 import { pick } from 'lodash';
 import { Visibility } from './deck.enum';
-import { CardDto, PreviewCardDto } from './dtos/card.dto';
+import { CardDto } from './dtos/card.dto';
 import {
   CloneDeckDto,
   CreateDeckDto,
@@ -27,8 +34,6 @@ import {
   GetSharedOneResDto,
   UpdateDeckDto,
 } from './dtos/deck.dto';
-import { Card } from './entities/card.entity';
-import { Deck } from './entities/deck.entity';
 
 @Injectable()
 export class DeckService {
@@ -36,10 +41,15 @@ export class DeckService {
 
   constructor(
     private readonly em: EntityManager,
+    private readonly notificationGateway: NotificationGateway,
     @InjectRepository(Deck)
     private readonly deckRepository: EntityRepository<Deck>,
     @InjectRepository(Card)
     private readonly cardRepository: EntityRepository<Card>,
+    @InjectRepository(User)
+    private readonly userRepository: EntityRepository<User>,
+    @InjectRepository(Notification)
+    private readonly notificationRepository: EntityRepository<Notification>,
   ) {}
 
   async getOne(userId: UUID, deckId: UUID) {
@@ -63,13 +73,7 @@ export class DeckService {
 
     await this.em.flush();
 
-    const cards = plainToInstance(CardDto, deck.cards.toArray());
-
-    return plainToInstance(GetOneResDto, {
-      ...pick(deck, ['id', 'name', 'slug', 'description']),
-      cards,
-      stats: this._getDeckStats(cards.map((c) => pick(c, 'status'))),
-    });
+    return plainToInstance(GetOneResDto, wrap(deck).toPOJO());
   }
 
   async getMany(userId: UUID, query: GetManyQueryDto) {
@@ -92,10 +96,12 @@ export class DeckService {
     );
 
     const deckWithCards = decks.map((d) => {
+      const plainDeck = wrap(d).toPOJO();
+
       return plainToInstance(GetManyResDto, {
-        ...d,
+        ...plainDeck,
         stats: this._getDeckStats(
-          d.cards.toArray().map((c) => pick(c, 'status')),
+          plainDeck.cards.map((c) => pick(c, 'status')),
         ),
       });
     });
@@ -132,11 +138,11 @@ export class DeckService {
       throw new NotFoundException(`Deck with id "${deckId}" not found.`);
     }
 
+    const plainDeck = wrap(deck).toPOJO();
+
     return plainToInstance(GetSharedOneResDto, {
-      ...pick(deck, ['id', 'name', 'description']),
-      totalCards: deck.cards.length,
-      owner: plainToInstance(OwnerDto, deck.owner.toJSON()),
-      cards: plainToInstance(PreviewCardDto, deck.cards.toArray()),
+      ...plainDeck,
+      totalCards: plainDeck.cards.length,
     });
   }
 
@@ -156,7 +162,7 @@ export class DeckService {
         limit,
         offset,
         orderBy: { [orderBy]: order },
-        populate: ['owner', 'cards:ref'],
+        populate: ['owner', 'cards'],
         fields: [
           'name',
           'slug',
@@ -165,23 +171,16 @@ export class DeckService {
           'createdAt',
           'owner.username',
           'owner.avatarUrl',
-          'cards.id',
         ],
       },
     );
 
     const data = decks.map((d) => {
+      const plainDeck = wrap(d).toPOJO();
+
       return plainToInstance(GetSharedManyResDto, {
-        ...pick(d, [
-          'id',
-          'name',
-          'slug',
-          'visibility',
-          'learnerCount',
-          'createdAt',
-        ]),
-        totalCards: d.cards.length,
-        owner: plainToInstance(UserDto, d.owner.unwrap()),
+        ...plainDeck,
+        totalCards: plainDeck.cards.length,
       });
     });
 
@@ -219,10 +218,7 @@ export class DeckService {
 
     await this.em.flush();
 
-    return plainToInstance(CreateDeckResDto, {
-      id: newDeck.id,
-      slug: newDeck.slug,
-    });
+    return plainToInstance(CreateDeckResDto, pick(newDeck, ['id', 'slug']));
   }
 
   async update(userId: UUID, deckId: UUID, dto: UpdateDeckDto) {
@@ -301,24 +297,24 @@ export class DeckService {
   }
 
   async delete(userId: UUID, deckId: UUID) {
-    const deck = await this.deckRepository.findOne({
-      id: deckId,
-      owner: userId,
-    });
+    const deck = await this.deckRepository.findOne(
+      {
+        id: deckId,
+        owner: userId,
+      },
+      { populate: ['cards'] },
+    );
 
     if (!deck)
       throw new NotFoundException(`Deck with id "${deckId}" not found.`);
 
-    this.deckRepository.assign(deck, { deletedAt: new Date() });
-
-    await this.em.flush();
+    await this.em.remove(deck).flush();
   }
 
   async clone(userId: UUID, deckId: UUID, dto: CloneDeckDto) {
-    const originalDeck = await this.deckRepository.findOne(
-      { id: deckId },
-      { populate: ['cards'] },
-    );
+    const originalDeck = await this.deckRepository.findOne(deckId, {
+      populate: ['owner', 'cards'],
+    });
 
     if (!originalDeck)
       throw new NotFoundException(`Deck with id "${deckId}" not found.`);
@@ -333,10 +329,8 @@ export class DeckService {
       if (!dto.passcode || dto.passcode !== originalDeck.passcode)
         throw new BadRequestException('Invalid passcode.');
 
-    const newDeckName = `${originalDeck.name} (Clone)`;
-
     const newDeck = this.deckRepository.create({
-      name: newDeckName,
+      name: `${originalDeck.name} (Clone) ${Date.now()}`,
       description: originalDeck.description,
       visibility: Visibility.PRIVATE,
       owner: userId,
@@ -354,7 +348,18 @@ export class DeckService {
 
     originalDeck.learnerCount++;
 
+    const notification = this.notificationRepository.create({
+      entityId: originalDeck.id,
+      content: `Your deck "${originalDeck.name}" has been cloned by an user.`,
+      actor: userId,
+      recipient: originalDeck.owner.id,
+    });
+
     await this.em.flush();
+
+    this.notificationGateway.sendNotification(
+      plainToInstance(NotificationDto, wrap(notification).toPOJO()),
+    );
   }
 
   async restart(userId: UUID, deckId: UUID) {

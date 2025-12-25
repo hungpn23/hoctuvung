@@ -1,5 +1,5 @@
-import { User } from '@api/user/entities/user.entity';
 import { NullableProperty } from '@common/utils/nullable-property';
+import { User } from '@db/entities';
 import type { Opt, Ref } from '@mikro-orm/core';
 import { Entity, OneToOne, PrimaryKey, Property, t } from '@mikro-orm/core';
 import { UUID } from 'crypto';

@@ -69,4 +69,8 @@ export class CardDto {
 }
 
 @Exclude()
-export class PreviewCardDto extends PickType(CardDto, ['term', 'definition']) {}
+export class PreviewCardDto extends PickType(CardDto, [
+  'id',
+  'term',
+  'definition',
+]) {}

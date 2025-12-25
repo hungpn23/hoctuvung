@@ -12,7 +12,7 @@ import { QueryDto } from '@common/dtos/offset-pagination/offset-pagination.dto';
 import type { UUID } from '@common/types/branded.type';
 import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { ArrayMinSize, IsUUID, ValidateIf } from 'class-validator';
+import { ArrayMinSize, ValidateIf } from 'class-validator';
 import { Visibility } from '../deck.enum';
 import {
   CardDto,
@@ -86,7 +86,6 @@ export class GetManyQueryDto extends QueryDto {
 export class DeckDto {
   @Expose()
   @ApiProperty()
-  @IsUUID()
   id!: UUID;
 
   @Expose()

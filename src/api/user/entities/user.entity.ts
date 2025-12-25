@@ -1,7 +1,7 @@
-import { Deck } from '@api/deck/entities/deck.entity';
 import { UserRole } from '@common/constants/role.enum';
 import { HiddenProperty } from '@common/utils/hidden-property';
 import { NullableProperty } from '@common/utils/nullable-property';
+import { Deck, Notification, Session } from '@db/entities';
 import { BaseEntity } from '@db/entities/base.entity';
 import {
   BeforeCreate,
@@ -14,9 +14,7 @@ import {
   type Hidden,
   type Opt,
 } from '@mikro-orm/core';
-import { Notification } from '@notification/notification.entity';
 import argon2 from 'argon2';
-import { Session } from './session.entity';
 
 @Entity()
 export class User extends BaseEntity {

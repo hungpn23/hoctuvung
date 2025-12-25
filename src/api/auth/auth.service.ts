@@ -1,4 +1,3 @@
-import { User } from '@api/user/entities/user.entity';
 import { UserDto } from '@api/user/user.dto';
 import { JwtPayload, RefreshTokenPayload } from '@common/types/auth.type';
 import { Milliseconds, UUID } from '@common/types/branded.type';
@@ -11,7 +10,8 @@ import { JobName } from '@common/constants/job-name.enum';
 import { QueueName } from '@common/constants/queue-name.enum';
 import { authConfig, type AuthConfig } from '@config/auth.config';
 import { googleConfig, type GoogleConfig } from '@config/google.config';
-import { EntityManager, EntityRepository } from '@mikro-orm/core';
+import { Session, User } from '@db/entities';
+import { EntityManager, EntityRepository, wrap } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { InjectQueue } from '@nestjs/bullmq';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
@@ -31,7 +31,6 @@ import crypto from 'crypto';
 import { Response } from 'express';
 import ms from 'ms';
 import { generateFromEmail } from 'unique-username-generator';
-import { Session } from './../user/entities/session.entity';
 import {
   ChangePasswordDto,
   LoginDto,
@@ -123,7 +122,7 @@ export class AuthService {
   async getSession(userId: UUID) {
     const user = await this.userRepository.findOneOrFail(userId);
 
-    return plainToInstance(UserDto, user);
+    return plainToInstance(UserDto, wrap(user).toPOJO());
   }
 
   async register(dto: RegisterDto) {

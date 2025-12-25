@@ -1,6 +1,6 @@
-import { User } from '@api/user/entities/user.entity';
 import type { UUID } from '@common/types/branded.type';
 import { NullableProperty } from '@common/utils/nullable-property';
+import { User } from '@db/entities';
 import { BaseEntity } from '@db/entities/base.entity';
 import { Entity, ManyToOne, Property, t, type Ref } from '@mikro-orm/core';
 
@@ -8,9 +8,6 @@ import { Entity, ManyToOne, Property, t, type Ref } from '@mikro-orm/core';
 export class Notification extends BaseEntity {
   @Property({ type: t.uuid })
   entityId!: UUID;
-
-  @Property()
-  entityName!: string;
 
   @Property()
   content!: string;

@@ -46,6 +46,9 @@ export class OwnerDto extends PickType(UserDto, [
 ]) {}
 
 @Exclude()
+export class ActorDto extends OwnerDto {}
+
+@Exclude()
 export class UploadAvatarDto {
   @Expose()
   @ApiProperty()

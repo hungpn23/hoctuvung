@@ -1,10 +1,8 @@
-import { Card } from '@api/deck/entities/card.entity';
-import { Deck } from '@api/deck/entities/deck.entity';
 import { QueueName } from '@common/constants/queue-name.enum';
+import { Card, Deck, UserStatistic } from '@db/entities';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
-import { UserStatistic } from './entities/user-statistics.entity';
 import { StudyController } from './study.controller';
 import { StudyProcessor } from './study.processor';
 import { StudyService } from './study.service';

@@ -1,8 +1,6 @@
 // src/db/seeders/database.seeder.ts
 import { Visibility } from '@api/deck/deck.enum';
-import { Card } from '@api/deck/entities/card.entity';
-import { Deck } from '@api/deck/entities/deck.entity';
-import { User } from '@api/user/entities/user.entity';
+import { Card, Deck, User } from '@db/entities';
 import { faker } from '@faker-js/faker';
 import { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';

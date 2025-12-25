@@ -12,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { NotificationGateway } from '@notification/notification.gateway';
 import { ValidationError } from 'class-validator';
 
 async function bootstrap() {
@@ -61,11 +60,6 @@ async function bootstrap() {
     logger.log(`🚀 API live at: ${appUrl}`);
     logger.log(`📚 Swagger docs at: ${appUrl}/docs`);
   });
-
-  const notificationGateway = app.get(NotificationGateway);
-  setInterval(() => {
-    notificationGateway.sendNotification();
-  }, 3000);
 }
 
 void bootstrap();

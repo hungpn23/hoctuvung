@@ -5,7 +5,9 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { DefaultEventsMap, Server } from 'socket.io';
+import { NotificationDto } from './notification.dto';
+import { ServerToClientEvents } from './notification.interface';
 
 @WebSocketGateway({ namespace: 'notifications' })
 export class NotificationGateway {
@@ -18,7 +20,7 @@ export class NotificationGateway {
    * @bugOrNot A bug?: In this case, it also returns Server instance even though we have namespace configured. And it works as expected (namespace usage won't fit my use case).
    */
   @WebSocketServer()
-  private readonly server!: Server;
+  private readonly server!: Server<DefaultEventsMap, ServerToClientEvents>;
 
   constructor() {}
 
@@ -27,9 +29,7 @@ export class NotificationGateway {
     return data;
   }
 
-  sendNotification() {
-    this.server.emit('notification', {
-      message: 'This is a notification',
-    });
+  sendNotification(payload: NotificationDto) {
+    this.server.emit('notificationAdded', payload);
   }
 }

@@ -8,8 +8,8 @@ import {
   HttpStatus,
   Logger,
   UnprocessableEntityException,
-  ValidationError,
 } from '@nestjs/common';
+import { ValidationError } from 'class-validator';
 import { Response } from 'express';
 import { STATUS_CODES } from 'node:http';
 
