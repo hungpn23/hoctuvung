@@ -14,6 +14,7 @@ import {
   type Hidden,
   type Opt,
 } from '@mikro-orm/core';
+import { Notification } from '@notification/notification.entity';
 import argon2 from 'argon2';
 import { Session } from './session.entity';
 
@@ -42,6 +43,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Deck, 'owner', { orphanRemoval: true })
   decks = new Collection<Deck, User>(this);
+
+  @OneToMany(() => Notification, 'recipient', { orphanRemoval: true })
+  notifications = new Collection<Notification, User>(this);
 
   @BeforeCreate()
   @BeforeUpdate()

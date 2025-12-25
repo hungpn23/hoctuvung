@@ -16,6 +16,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { CacheModule } from '@nestjs/cache-manager';
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { NotificationModule } from '@notification/notification.module';
 import { config } from 'dotenv';
 import path from 'node:path';
 import * as entities from './db/entities';
@@ -82,6 +83,7 @@ const isProd = process.env.NODE_ENV === 'prod';
 
     ApiModule,
     IntegrationModule,
+    NotificationModule,
   ],
   controllers: [AppController],
 })

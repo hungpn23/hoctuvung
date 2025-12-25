@@ -309,10 +309,7 @@ export class DeckService {
     if (!deck)
       throw new NotFoundException(`Deck with id "${deckId}" not found.`);
 
-    this.deckRepository.assign(deck, {
-      deletedAt: new Date(),
-      deletedBy: userId,
-    });
+    this.deckRepository.assign(deck, { deletedAt: new Date() });
 
     await this.em.flush();
   }
@@ -337,15 +334,6 @@ export class DeckService {
         throw new BadRequestException('Invalid passcode.');
 
     const newDeckName = `${originalDeck.name} (Clone)`;
-    const existingClonedDeck = await this.deckRepository.findOne({
-      name: newDeckName,
-      owner: { id: userId },
-    });
-
-    if (existingClonedDeck)
-      throw new BadRequestException(
-        `You have already cloned this deck as "${newDeckName}". Please rename it before cloning again.`,
-      );
 
     const newDeck = this.deckRepository.create({
       name: newDeckName,

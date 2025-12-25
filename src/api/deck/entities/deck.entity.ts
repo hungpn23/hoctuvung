@@ -1,4 +1,5 @@
 import { User } from '@api/user/entities/user.entity';
+import type { UUID } from '@common/types/branded.type';
 import { NullableProperty } from '@common/utils/nullable-property';
 import { SoftDeleteBaseEntity } from '@db/entities/soft-delete.base.entity';
 import {
@@ -11,6 +12,7 @@ import {
   ManyToOne,
   OneToMany,
   Property,
+  t,
   Unique,
   type Opt,
   type Ref,
@@ -20,6 +22,7 @@ import { Visibility } from '../deck.enum';
 import { Card } from './card.entity';
 
 @Filter({ name: 'deletedAt', cond: { deletedAt: null }, default: true })
+@Unique({ properties: ['name', 'owner'] })
 @Unique({ properties: ['slug', 'owner'] })
 @Entity()
 export class Deck extends SoftDeleteBaseEntity {
@@ -41,7 +44,7 @@ export class Deck extends SoftDeleteBaseEntity {
   @Property()
   learnerCount: Opt<number> = 0;
 
-  @NullableProperty()
+  @NullableProperty({ type: t.datetime })
   openedAt?: Date | null;
 
   @ManyToOne(() => Deck, { ref: true, nullable: true })
@@ -52,6 +55,12 @@ export class Deck extends SoftDeleteBaseEntity {
 
   @OneToMany(() => Card, 'deck', { orphanRemoval: true })
   cards = new Collection<Card, Deck>(this);
+
+  @Property()
+  createdBy!: UUID;
+
+  @NullableProperty()
+  updatedBy?: UUID | null;
 
   @BeforeCreate()
   @BeforeUpdate()

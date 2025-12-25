@@ -1,4 +1,3 @@
-import { System } from '@common/constants';
 import type { UUID } from '@common/types/branded.type';
 import { NullableProperty } from '@common/utils/nullable-property';
 import { type Opt, PrimaryKey, Property, t } from '@mikro-orm/core';
@@ -8,15 +7,9 @@ export abstract class BaseEntity {
   @PrimaryKey({ type: t.uuid })
   id: Opt<UUID> = v4() as UUID;
 
-  @Property()
+  @Property({ type: t.datetime })
   createdAt: Opt<Date> = new Date();
 
-  @Property()
-  createdBy: Opt<UUID> = System;
-
-  @NullableProperty({ onUpdate: () => new Date() })
+  @NullableProperty({ type: t.datetime, onUpdate: () => new Date() })
   updatedAt?: Date | null;
-
-  @NullableProperty()
-  updatedBy?: UUID | null;
 }

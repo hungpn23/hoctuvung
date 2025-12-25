@@ -1,4 +1,5 @@
 import { ErrorDetailDto, ErrorDto } from '@common/dtos/error.dto';
+import { UniqueConstraintViolationException } from '@mikro-orm/postgresql';
 import {
   ArgumentsHost,
   Catch,
@@ -9,8 +10,8 @@ import {
   UnprocessableEntityException,
   ValidationError,
 } from '@nestjs/common';
-import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 import { Response } from 'express';
+import { STATUS_CODES } from 'node:http';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -27,8 +28,10 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       error = this._handleUnprocessableEntityException(exception);
     } else if (exception instanceof HttpException) {
       error = this._handleHttpException(exception);
+    } else if (exception instanceof UniqueConstraintViolationException) {
+      error = this._handleUniqueConstraintException(exception);
     } else {
-      error = this._handleError(exception);
+      error = this._handleUnknownError(exception);
     }
 
     response.status(error.statusCode).json(error);
@@ -47,25 +50,44 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       details: this._handleValidationErrors(response.message),
     };
 
-    return errorResponse as ErrorDto;
+    return errorResponse satisfies ErrorDto;
   }
 
   private _handleHttpException(exception: HttpException) {
+    const statusCode = exception.getStatus();
+
     return {
       timestamp: new Date().toISOString(),
-      statusCode: exception.getStatus(),
+      statusCode,
+      statusMessage: STATUS_CODES[statusCode],
       message: exception.message,
-    } as ErrorDto;
+    } satisfies ErrorDto;
   }
 
-  private _handleError(error: unknown) {
-    const err = error instanceof Error ? error : new Error(String(error));
+  private _handleUniqueConstraintException(
+    exception: UniqueConstraintViolationException,
+  ) {
+    const statusCode = HttpStatus.CONFLICT;
 
     return {
       timestamp: new Date().toISOString(),
-      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-      message: err.message || HttpErrorByCode[HttpStatus.INTERNAL_SERVER_ERROR],
-    } as ErrorDto;
+      statusCode,
+      statusMessage: STATUS_CODES[statusCode],
+      message: JSON.stringify(exception.name),
+    } satisfies ErrorDto;
+  }
+
+  private _handleUnknownError(error: unknown) {
+    const err = error instanceof Error ? error : new Error(String(error));
+    const statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+    const statusMessage = STATUS_CODES[statusCode] || 'Internal Server Error';
+
+    return {
+      timestamp: new Date().toISOString(),
+      statusCode,
+      statusMessage,
+      message: err.message || statusMessage,
+    } satisfies ErrorDto;
   }
 
   // ref: https://www.yasint.dev/flatten-error-constraints
