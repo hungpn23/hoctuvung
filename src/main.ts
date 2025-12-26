@@ -12,12 +12,14 @@ import {
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SocketIOAdapter } from '@socket-io.adapter';
 import { ValidationError } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Bootstrap');
   const { apiPrefix, host, port, nodeEnv } = getAppConfig();
+  const authService = app.get(AuthService);
 
   app.enableCors({
     origin: '*',
@@ -28,7 +30,8 @@ async function bootstrap() {
 
   app.setGlobalPrefix(apiPrefix);
 
-  app.useGlobalGuards(new AuthGuard(app.get(Reflector), app.get(AuthService)));
+  app.useWebSocketAdapter(new SocketIOAdapter(app, authService));
+  app.useGlobalGuards(new AuthGuard(app.get(Reflector), authService));
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

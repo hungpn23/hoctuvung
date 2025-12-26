@@ -251,7 +251,9 @@ export class AuthService {
     await this.em.flush();
   }
 
-  async verifyAccessToken(accessToken: string) {
+  async verifyAccessToken(authorizationHeader?: string) {
+    const accessToken = this._extractTokenFromHeader(authorizationHeader);
+
     let payload: JwtPayload;
     try {
       payload = await this.jwtService.verifyAsync(accessToken, {
@@ -275,6 +277,11 @@ export class AuthService {
     }
 
     return payload;
+  }
+
+  private _extractTokenFromHeader(authorizationHeader?: string) {
+    const [type, token] = authorizationHeader?.split(' ') ?? [];
+    return type === 'Bearer' ? token : '';
   }
 
   private async _verifyRefreshToken(refreshToken: string) {

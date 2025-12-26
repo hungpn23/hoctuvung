@@ -1,6 +1,10 @@
-import { Logger } from '@nestjs/common';
+import { WsGuard } from '@common/guards/ws.guard';
+import { SocketUser } from '@common/types/auth.type';
+import { Logger, UseGuards } from '@nestjs/common';
 import {
   MessageBody,
+  OnGatewayConnection,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -10,7 +14,7 @@ import { NotificationDto } from './notification.dto';
 import { ServerToClientEvents } from './notification.interface';
 
 @WebSocketGateway({ namespace: 'notifications' })
-export class NotificationGateway {
+export class NotificationGateway implements OnGatewayInit, OnGatewayConnection {
   private readonly logger = new Logger(NotificationGateway.name);
 
   /**
@@ -22,8 +26,15 @@ export class NotificationGateway {
   @WebSocketServer()
   private readonly server!: Server<DefaultEventsMap, ServerToClientEvents>;
 
-  constructor() {}
+  afterInit() {
+    this.logger.debug('NotificationGateway initialized');
+  }
 
+  handleConnection(client: SocketUser) {
+    this.logger.log(`Client connected: ${client.user.userId}`);
+  }
+
+  @UseGuards(WsGuard)
   @SubscribeMessage('message')
   handleMessage(@MessageBody() data: string): string {
     return data;
