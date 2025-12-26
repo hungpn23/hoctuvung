@@ -1,9 +1,7 @@
 import { SocketUser } from '@common/types/auth.type';
 import { Logger } from '@nestjs/common';
 import {
-  MessageBody,
   OnGatewayConnection,
-  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
@@ -26,18 +24,13 @@ export class NotificationGateway implements OnGatewayConnection {
 
   async handleConnection(socket: SocketUser) {
     const userId = socket.user.userId;
+    this.logger.debug(`Socket connected: ${socket.id} for User: ${userId}`);
 
     await socket.join(userId);
 
     this.server
       .to(userId)
       .emit('socketConnected', 'Welcome to Notification Service!');
-  }
-
-  // @UseGuards(WsGuard)
-  @SubscribeMessage('message')
-  handleMessage(@MessageBody() data: string): string {
-    return data;
   }
 
   sendNotification(payload: NotificationDto) {
