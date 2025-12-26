@@ -11,7 +11,7 @@ export class AuthGuard implements CanActivate {
     private readonly authService: AuthService,
   ) {}
 
-  canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<RequestUser>();
 
     const hasPublicDecorator = this.reflector.getAllAndOverride<boolean>(
@@ -19,9 +19,8 @@ export class AuthGuard implements CanActivate {
       [context.getClass(), context.getHandler()],
     );
 
-    this.authService
+    request.user = await this.authService
       .verifyAccessToken(request.headers.authorization)
-      .then((payload) => (request.user = payload))
       .catch((err) => {
         if (hasPublicDecorator) return undefined;
 
