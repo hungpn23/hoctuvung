@@ -14,7 +14,7 @@ import {
   type Ref,
 } from '@mikro-orm/core';
 import { v4 } from 'uuid';
-import { CardStatus } from '../deck.enum';
+import { CardStatus, Language } from '../deck.enum';
 
 @Entity()
 export class Card {
@@ -24,8 +24,17 @@ export class Card {
   @Property({ type: t.text })
   term!: string;
 
+  @Enum({ items: () => Language })
+  termLanguage!: Language;
+
   @Property({ type: t.text })
   definition!: string;
+
+  @Enum({ items: () => Language })
+  definitionLanguage!: Language;
+
+  @NullableProperty({ type: t.text })
+  phonetic?: string;
 
   @Property()
   streak: Opt<number> = 0;

@@ -1,5 +1,5 @@
 // src/db/seeders/database.seeder.ts
-import { Visibility } from '@api/deck/deck.enum';
+import { Language, Visibility } from '@api/deck/deck.enum';
 import { Card, Deck, User } from '@db/entities';
 import { faker } from '@faker-js/faker';
 import { EntityManager } from '@mikro-orm/core';
@@ -216,7 +216,7 @@ const shuffleArray = <T>(array: T[]) => {
 };
 
 export class DatabaseSeeder extends Seeder {
-  run(em: EntityManager) {
+  async run(em: EntityManager) {
     console.time('🌱 Seeding database');
 
     const admin = em.create(User, {
@@ -241,10 +241,12 @@ export class DatabaseSeeder extends Seeder {
         deck: deck,
         term: vocab.term,
         definition: vocab.definition,
+        termLanguage: Language.ENG,
+        definitionLanguage: Language.VIE,
       });
     }
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 200; i++) {
       const user = em.create(User, {
         username: faker.internet.username(),
         email: faker.internet.email({ provider: 'example.com' }),
@@ -253,7 +255,7 @@ export class DatabaseSeeder extends Seeder {
         avatarUrl: faker.image.avatar(),
       });
 
-      const cardCount = faker.number.int({ min: 20, max: 100 });
+      const cardCount = faker.number.int({ min: 5, max: 20 });
       const visibility = faker.helpers.arrayElement(Object.values(Visibility));
 
       const deck = em.create(Deck, {
@@ -270,9 +272,13 @@ export class DatabaseSeeder extends Seeder {
           deck,
           term: vocab.term,
           definition: vocab.definition,
+          termLanguage: Language.ENG,
+          definitionLanguage: Language.VIE,
         });
       }
     }
+
+    await em.flush();
 
     console.timeEnd('🌱 Seeding database');
   }

@@ -19,7 +19,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { pick } from 'lodash';
+import { assign, omit, pick } from 'lodash';
 import { Visibility } from './deck.enum';
 import { CardDto } from './dtos/card.dto';
 import {
@@ -60,7 +60,6 @@ export class DeckService {
       },
       {
         populate: ['cards'],
-        fields: ['id', 'name', 'slug', 'description', 'cards'],
         orderBy: { cards: { term: QueryOrder.ASC_NULLS_LAST } },
       },
     );
@@ -73,7 +72,10 @@ export class DeckService {
 
     await this.em.flush();
 
-    return plainToInstance(GetOneResDto, wrap(deck).toPOJO());
+    const plainDeck = wrap(deck).toPOJO();
+    const cards = plainDeck.cards.map((c) => omit(c, ['deck']));
+
+    return plainToInstance(GetOneResDto, assign(plainDeck, { cards }));
   }
 
   async getMany(userId: UUID, query: GetManyQueryDto) {
@@ -89,9 +91,7 @@ export class DeckService {
         limit,
         offset,
         orderBy: { [orderBy]: order },
-
         populate: ['cards'],
-        fields: ['name', 'slug', 'visibility', 'openedAt', 'cards.status'],
       },
     );
 
@@ -122,15 +122,6 @@ export class DeckService {
 
     const deck = await this.deckRepository.findOne(where, {
       populate: ['owner', 'cards'],
-      fields: [
-        'id',
-        'name',
-        'description',
-        'owner.username',
-        'owner.avatarUrl',
-        'cards.term',
-        'cards.definition',
-      ],
       orderBy: { cards: { term: QueryOrder.ASC_NULLS_LAST } },
     });
 
@@ -163,15 +154,6 @@ export class DeckService {
         offset,
         orderBy: { [orderBy]: order },
         populate: ['owner', 'cards'],
-        fields: [
-          'name',
-          'slug',
-          'visibility',
-          'learnerCount',
-          'createdAt',
-          'owner.username',
-          'owner.avatarUrl',
-        ],
       },
     );
 
@@ -298,10 +280,7 @@ export class DeckService {
 
   async delete(userId: UUID, deckId: UUID) {
     const deck = await this.deckRepository.findOne(
-      {
-        id: deckId,
-        owner: userId,
-      },
+      { id: deckId, owner: userId },
       { populate: ['cards'] },
     );
 
@@ -338,13 +317,18 @@ export class DeckService {
       clonedFrom: originalDeck.id,
     });
 
-    originalDeck.cards.toArray().forEach((card) =>
-      this.cardRepository.create({
+    originalDeck.cards.toArray().forEach((card) => {
+      return this.cardRepository.create({
+        ...pick(card, [
+          'term',
+          'termLanguage',
+          'definition',
+          'definitionLanguage',
+          'phonetic',
+        ]),
         deck: newDeck.id,
-        term: card.term,
-        definition: card.definition,
-      }),
-    );
+      });
+    });
 
     originalDeck.learnerCount++;
 
