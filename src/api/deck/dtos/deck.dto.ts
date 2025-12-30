@@ -106,6 +106,10 @@ export class DeckDto {
 
   @Expose()
   @ApiProperty()
+  viewCount!: number;
+
+  @Expose()
+  @ApiProperty()
   learnerCount!: number;
 
   @Expose()
@@ -170,6 +174,7 @@ export class GetSharedOneResDto extends PickType(DeckDto, [
   'id',
   'name',
   'description',
+  'visibility',
 ]) {
   @Expose()
   @ApiProperty()
@@ -190,6 +195,7 @@ export class GetSharedManyResDto extends PickType(DeckDto, [
   'name',
   'slug',
   'visibility',
+  'viewCount',
   'learnerCount',
   'createdAt',
 ]) {

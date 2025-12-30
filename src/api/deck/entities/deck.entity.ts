@@ -41,6 +41,9 @@ export class Deck extends SoftDeleteBaseEntity {
   passcode: Opt<string> = '';
 
   @Property()
+  viewCount: Opt<number> = 0;
+
+  @Property()
   learnerCount: Opt<number> = 0;
 
   @NullableProperty({ type: t.datetime })

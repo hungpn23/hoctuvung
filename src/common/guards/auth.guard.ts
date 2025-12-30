@@ -26,6 +26,7 @@ export class AuthGuard implements CanActivate {
 
         throw err;
       });
+    console.log(`🚀 ~ AuthGuard ~ canActivate ~ request.user:`, request.user);
 
     return true;
   }

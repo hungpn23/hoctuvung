@@ -9,7 +9,13 @@ import { DefaultEventsMap, Server } from 'socket.io';
 import { NotificationDto } from './notification.dto';
 import { ServerToClientEvents } from './notification.interface';
 
-@WebSocketGateway({ namespace: 'notifications' })
+@WebSocketGateway({
+  namespace: 'notifications',
+  cors: {
+    origin: 'http://localhost:3000',
+    credentials: true,
+  },
+})
 export class NotificationGateway implements OnGatewayConnection {
   private readonly logger = new Logger(NotificationGateway.name);
 

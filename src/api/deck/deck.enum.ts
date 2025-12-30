@@ -1,7 +1,7 @@
 export enum Visibility {
-  PUBLIC = 'everyone',
-  PROTECTED = 'people_with_a_passcode',
-  PRIVATE = 'just_me',
+  PUBLIC = 'public',
+  PROTECTED = 'protected',
+  PRIVATE = 'private',
 }
 
 export enum CardStatus {

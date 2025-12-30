@@ -129,6 +129,10 @@ export class DeckService {
       throw new NotFoundException(`Deck with id "${deckId}" not found.`);
     }
 
+    deck.viewCount++;
+
+    await this.em.flush();
+
     const plainDeck = wrap(deck).toPOJO();
 
     return plainToInstance(GetSharedOneResDto, {
@@ -138,6 +142,7 @@ export class DeckService {
   }
 
   async getSharedMany(userId: UUID | undefined, query: GetManyQueryDto) {
+    console.log(`🚀 ~ DeckService ~ getSharedMany ~ userId:`, userId);
     const { limit, offset, search, orderBy, order } = query;
 
     const where: FilterQuery<Deck> = {
