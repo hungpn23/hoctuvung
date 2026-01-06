@@ -1,12 +1,12 @@
 import { CardStatus } from "@api/deck/deck.enum";
 import { JobName } from "@common/constants/job-name.enum";
 import { QueueName } from "@common/constants/queue-name.enum";
-import { UpdateUserStatsData } from "@common/types/jobs.type";
+import type { UpdateUserStatsData } from "@common/types/jobs.type";
 import { Card, UserStatistic } from "@db/entities";
-import { EntityManager } from "@mikro-orm/core";
+import type { EntityManager } from "@mikro-orm/core";
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Logger } from "@nestjs/common";
-import { Job } from "bullmq";
+import type { Job } from "bullmq";
 import { differenceInCalendarDays } from "date-fns";
 
 @Processor(QueueName.STUDY)

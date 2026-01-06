@@ -1,13 +1,13 @@
 import { JobName } from "@common/constants/job-name.enum";
 import { QueueName } from "@common/constants/queue-name.enum";
-import { UUID } from "@common/types/branded.type";
-import { ImageUploadData } from "@common/types/jobs.type";
+import type { UUID } from "@common/types/branded.type";
+import type { ImageUploadData } from "@common/types/jobs.type";
 import { User } from "@db/entities";
-import { EntityRepository } from "@mikro-orm/core";
+import type { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable, Logger } from "@nestjs/common";
-import { Queue } from "bullmq";
+import type { Queue } from "bullmq";
 import { plainToInstance } from "class-transformer";
 import { UploadAvatarDto } from "./user.dto";
 

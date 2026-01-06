@@ -1,7 +1,7 @@
 import { UserDto } from "@api/user/user.dto";
-import { JwtPayload, RefreshTokenPayload } from "@common/types/auth.type";
-import { Milliseconds, UUID } from "@common/types/branded.type";
-import {
+import type { JwtPayload, RefreshTokenPayload } from "@common/types/auth.type";
+import type { Milliseconds, UUID } from "@common/types/branded.type";
+import type {
 	GoogleJwtPayload,
 	GoogleTokenResponse,
 } from "@common/types/google.type";
@@ -11,7 +11,7 @@ import { QueueName } from "@common/constants/queue-name.enum";
 import { authConfig, type AuthConfig } from "@config/auth.config";
 import { googleConfig, type GoogleConfig } from "@config/google.config";
 import { Session, User } from "@db/entities";
-import { EntityManager, EntityRepository, wrap } from "@mikro-orm/core";
+import { type EntityManager, type EntityRepository, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { InjectQueue } from "@nestjs/bullmq";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
@@ -22,19 +22,19 @@ import {
 	Logger,
 	UnauthorizedException,
 } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
+import type { JwtService } from "@nestjs/jwt";
 import argon2 from "argon2";
-import { Queue } from "bullmq";
+import type { Queue } from "bullmq";
 import type { Cache } from "cache-manager";
 import { plainToInstance } from "class-transformer";
 import crypto from "crypto";
-import { Response } from "express";
+import type { Response } from "express";
 import ms from "ms";
 import { generateFromEmail } from "unique-username-generator";
 import {
-	ChangePasswordDto,
-	LoginDto,
-	RegisterDto,
+	type ChangePasswordDto,
+	type LoginDto,
+	type RegisterDto,
 	TokenPairDto,
 } from "./auth.dto";
 

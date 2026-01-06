@@ -1,13 +1,13 @@
 import { MetadataKey } from "@common/constants/metadata.enum";
-import { UserRole } from "@common/constants/role.enum";
-import { RequestUser } from "@common/types/auth.type";
+import type { UserRole } from "@common/constants/role.enum";
+import type { RequestUser } from "@common/types/auth.type";
 import {
-	CanActivate,
-	ExecutionContext,
+	type CanActivate,
+	type ExecutionContext,
 	ForbiddenException,
 	Injectable,
 } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
+import type { Reflector } from "@nestjs/core";
 
 @Injectable()
 export class RoleGuard implements CanActivate {

@@ -1,17 +1,17 @@
 import { applyDecorators, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
-import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
+import type { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 import {
 	ApiBody,
 	ApiConsumes,
 	ApiExtraModels,
 	getSchemaPath,
 } from "@nestjs/swagger";
-import {
+import type {
 	ReferenceObject,
 	SchemaObject,
 } from "@nestjs/swagger/dist/interfaces/open-api-spec.interface";
-import { ClassConstructor } from "class-transformer";
+import type { ClassConstructor } from "class-transformer";
 
 export function ApiFile(
 	fieldName: string,

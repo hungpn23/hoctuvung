@@ -1,13 +1,13 @@
-import { SocketUser } from "@common/types/auth.type";
+import type { SocketUser } from "@common/types/auth.type";
 import { Logger } from "@nestjs/common";
 import {
-	OnGatewayConnection,
+	type OnGatewayConnection,
 	WebSocketGateway,
 	WebSocketServer,
 } from "@nestjs/websockets";
-import { DefaultEventsMap, Server } from "socket.io";
-import { NotificationDto } from "./notification.dto";
-import { ServerToClientEvents } from "./notification.interface";
+import type { DefaultEventsMap, Server } from "socket.io";
+import type { NotificationDto } from "./notification.dto";
+import type { ServerToClientEvents } from "./notification.interface";
 
 @WebSocketGateway({
 	namespace: "notifications",

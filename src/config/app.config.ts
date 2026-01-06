@@ -6,7 +6,7 @@ import {
 	UrlValidator,
 } from "@common/decorators/validators.decorator";
 
-import { ConfigType, registerAs } from "@nestjs/config";
+import { type ConfigType, registerAs } from "@nestjs/config";
 import { validateConfig } from "./validate-config";
 
 class AppEnvVariables {

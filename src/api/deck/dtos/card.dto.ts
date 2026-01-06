@@ -8,7 +8,7 @@ import type { UUID } from "@common/types/branded.type";
 import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 import { IsUUID } from "class-validator";
-import { CardStatus, Language } from "../deck.enum";
+import { type CardStatus, Language } from "../deck.enum";
 
 export class CreateCardDto {
 	@ApiProperty()

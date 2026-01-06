@@ -2,7 +2,7 @@
 import { Language, Visibility } from "@api/deck/deck.enum";
 import { Card, Deck, User } from "@db/entities";
 import { faker } from "@faker-js/faker";
-import { EntityManager } from "@mikro-orm/core";
+import type { EntityManager } from "@mikro-orm/core";
 import { Seeder } from "@mikro-orm/seeder";
 
 // Danh sách 200 từ vựng tiếng Anh cơ bản

@@ -1,5 +1,5 @@
 import { ParseFilePipeBuilder } from "@nestjs/common";
-import { OptionalValidateFileOptions } from "./validate-file.pipe";
+import type { OptionalValidateFileOptions } from "./validate-file.pipe";
 
 export function validateImagePipe(options: OptionalValidateFileOptions = {}) {
 	const { fileType = "image/(png|jpg|jpeg|gif)", maxSize = 5 * 1024 * 1024 } =

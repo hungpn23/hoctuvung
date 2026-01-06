@@ -1,12 +1,12 @@
-import { AuthService } from "@api/auth/auth.service";
-import { SocketUser } from "@common/types/auth.type";
+import type { AuthService } from "@api/auth/auth.service";
+import type { SocketUser } from "@common/types/auth.type";
 import {
-	INestApplication,
+	type INestApplication,
 	Logger,
-	UnauthorizedException,
+	type UnauthorizedException,
 } from "@nestjs/common";
 import { IoAdapter } from "@nestjs/platform-socket.io";
-import { ExtendedError, Server, ServerOptions, Socket } from "socket.io";
+import type { ExtendedError, Server, ServerOptions, Socket } from "socket.io";
 
 export class SocketIOAdapter extends IoAdapter {
 	private readonly logger = new Logger(SocketIOAdapter.name);

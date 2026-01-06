@@ -1,4 +1,4 @@
-import { UUID } from "@common/types/branded.type";
+import type { UUID } from "@common/types/branded.type";
 import { NullableProperty } from "@common/utils/nullable-property";
 import { Deck } from "@db/entities";
 import {
@@ -7,7 +7,7 @@ import {
 	Entity,
 	Enum,
 	ManyToOne,
-	Opt,
+	type Opt,
 	PrimaryKey,
 	Property,
 	t,

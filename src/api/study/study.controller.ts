@@ -9,8 +9,8 @@ import {
 	ParseUUIDPipe,
 	Post,
 } from "@nestjs/common";
-import { SaveAnswersDto } from "./dtos/study.dto";
-import { StudyService } from "./study.service";
+import type { SaveAnswersDto } from "./dtos/study.dto";
+import type { StudyService } from "./study.service";
 
 @Controller("study")
 export class StudyController {

@@ -1,5 +1,5 @@
 import { plainToInstance } from "class-transformer";
-import { MetadataDto, QueryDto } from "./offset-pagination.dto";
+import { MetadataDto, type QueryDto } from "./offset-pagination.dto";
 
 export function createMetadata(totalRecords: number, query: QueryDto) {
 	const limit = query.limit;

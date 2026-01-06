@@ -2,8 +2,8 @@ import { JobName } from "@common/constants/job-name.enum";
 import { QueueName } from "@common/constants/queue-name.enum";
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Logger } from "@nestjs/common";
-import { Job } from "bullmq";
-import { ResendService } from "./resend.service";
+import type { Job } from "bullmq";
+import type { ResendService } from "./resend.service";
 
 @Processor(QueueName.EMAIL)
 export class ResendProcessor extends WorkerHost {

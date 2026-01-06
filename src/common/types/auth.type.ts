@@ -1,7 +1,7 @@
-import { UserRole } from "@common/constants/role.enum";
-import { Request as ExpressRequest } from "express";
-import { Socket } from "socket.io";
-import { Seconds, UUID } from "./branded.type";
+import type { UserRole } from "@common/constants/role.enum";
+import type { Request as ExpressRequest } from "express";
+import type { Socket } from "socket.io";
+import type { Seconds, UUID } from "./branded.type";
 
 type BaseJwtPayload = {
 	sessionId: UUID;

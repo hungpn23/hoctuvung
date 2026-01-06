@@ -1,7 +1,7 @@
 import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
 import { Document } from "@langchain/core/documents";
 import { Injectable, Logger } from "@nestjs/common";
-import { EmbeddingService } from "./embedding.service";
+import type { EmbeddingService } from "./embedding.service";
 import type { EntryRecord } from "./types";
 
 const sampleData: EntryRecord[] = [

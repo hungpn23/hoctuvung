@@ -15,17 +15,17 @@ import {
 	Post,
 	Query,
 } from "@nestjs/common";
-import { DeckService } from "./deck.service";
+import type { DeckService } from "./deck.service";
 import {
-	CloneDeckDto,
-	CreateDeckDto,
+	type CloneDeckDto,
+	type CreateDeckDto,
 	DeckDto,
-	GetManyQueryDto,
+	type GetManyQueryDto,
 	GetManyResDto,
 	GetOneResDto,
 	GetSharedManyResDto,
 	GetSharedOneResDto,
-	UpdateDeckDto,
+	type UpdateDeckDto,
 } from "./dtos/deck.dto";
 
 @Controller("decks")

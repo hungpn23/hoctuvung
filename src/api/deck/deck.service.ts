@@ -1,17 +1,17 @@
 import { NotificationDto } from "@api/notification/notification.dto";
-import { NotificationGateway } from "@api/notification/notification.gateway";
+import type { NotificationGateway } from "@api/notification/notification.gateway";
 import { PaginatedDto } from "@common/dtos/offset-pagination/offset-pagination.dto";
 import { createMetadata } from "@common/dtos/offset-pagination/utils";
-import { UUID } from "@common/types/branded.type";
+import type { UUID } from "@common/types/branded.type";
 import { Card, Deck, Notification, User } from "@db/entities";
 import {
-	EntityRepository,
-	FilterQuery,
+	type EntityRepository,
+	type FilterQuery,
 	QueryOrder,
 	wrap,
 } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager } from "@mikro-orm/postgresql";
+import type { EntityManager } from "@mikro-orm/postgresql";
 import {
 	BadRequestException,
 	Injectable,
@@ -21,18 +21,18 @@ import {
 import { plainToInstance } from "class-transformer";
 import { assign, omit, pick } from "lodash";
 import { Visibility } from "./deck.enum";
-import { CardDto } from "./dtos/card.dto";
+import type { CardDto } from "./dtos/card.dto";
 import {
-	CloneDeckDto,
-	CreateDeckDto,
+	type CloneDeckDto,
+	type CreateDeckDto,
 	CreateDeckResDto,
-	DeckStatsDto,
-	GetManyQueryDto,
+	type DeckStatsDto,
+	type GetManyQueryDto,
 	GetManyResDto,
 	GetOneResDto,
 	GetSharedManyResDto,
 	GetSharedOneResDto,
-	UpdateDeckDto,
+	type UpdateDeckDto,
 } from "./dtos/deck.dto";
 
 @Injectable()

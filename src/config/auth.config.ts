@@ -2,8 +2,8 @@ import {
 	StringValidator,
 	UrlValidator,
 } from "@common/decorators/validators.decorator";
-import { ConfigType, registerAs } from "@nestjs/config";
-import ms from "ms";
+import { type ConfigType, registerAs } from "@nestjs/config";
+import type ms from "ms";
 import { validateConfig } from "./validate-config";
 
 class AuthEnvVariables {

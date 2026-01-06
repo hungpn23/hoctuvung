@@ -9,14 +9,14 @@ import type { UUID } from "@common/types/branded.type";
 import { Body, Controller, Get, Post, Query, Res } from "@nestjs/common";
 import type { Response } from "express";
 import {
-	ChangePasswordDto,
-	ExchangeTokenDto,
-	LoginDto,
-	RefreshTokenDto,
-	RegisterDto,
+	type ChangePasswordDto,
+	type ExchangeTokenDto,
+	type LoginDto,
+	type RefreshTokenDto,
+	type RegisterDto,
 	TokenPairDto,
 } from "./auth.dto";
-import { AuthService } from "./auth.service";
+import type { AuthService } from "./auth.service";
 
 @Controller({ path: "auth" })
 export class AuthController {

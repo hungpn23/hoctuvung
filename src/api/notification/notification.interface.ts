@@ -1,4 +1,4 @@
-import { NotificationDto } from "./notification.dto";
+import type { NotificationDto } from "./notification.dto";
 
 export interface ServerToClientEvents {
 	socketConnected: (message: string) => void;

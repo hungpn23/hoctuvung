@@ -1,8 +1,8 @@
-import { AuthService } from "@api/auth/auth.service";
+import type { AuthService } from "@api/auth/auth.service";
 import { MetadataKey } from "@common/constants/metadata.enum";
-import { RequestUser } from "@common/types/auth.type";
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
+import type { RequestUser } from "@common/types/auth.type";
+import { type CanActivate, type ExecutionContext, Injectable } from "@nestjs/common";
+import type { Reflector } from "@nestjs/core";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
