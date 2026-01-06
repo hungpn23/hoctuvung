@@ -16,10 +16,10 @@ import {
 	MaxLength,
 	Min,
 	MinLength,
+	registerDecorator,
 	ValidateIf,
 	ValidateNested,
 	type ValidationOptions,
-	registerDecorator,
 } from "class-validator";
 import { ToBoolean, ToLowerCase, ToUpperCase } from "./transforms.decorator";
 

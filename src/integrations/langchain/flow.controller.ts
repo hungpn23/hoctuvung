@@ -1,5 +1,5 @@
 import { ApiPublicEndpoint } from "@common/decorators/api-endpoint.decorator";
-import type { StoreService } from "@integrations/langchain/store.service";
+import { StoreService } from "@integrations/langchain/store.service";
 import { Body, Controller, Get, Post } from "@nestjs/common";
 
 @Controller("flow")

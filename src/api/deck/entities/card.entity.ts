@@ -10,8 +10,8 @@ import {
 	type Opt,
 	PrimaryKey,
 	Property,
-	t,
 	type Ref,
+	t,
 } from "@mikro-orm/core";
 import { v4 } from "uuid";
 import { CardStatus, Language } from "../deck.enum";

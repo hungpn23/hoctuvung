@@ -1,3 +1,4 @@
+import path from "node:path";
 import { ApiModule } from "@api/api.module";
 import { AppController } from "@app.controller";
 import { appConfig } from "@config/app.config";
@@ -17,7 +18,6 @@ import { CacheModule } from "@nestjs/cache-manager";
 import { Logger, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { config } from "dotenv";
-import path from "node:path";
 import * as entities from "./db/entities";
 
 config({ path: path.resolve(process.cwd(), ".env.local") });

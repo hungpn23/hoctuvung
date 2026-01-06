@@ -1,9 +1,9 @@
+import path from "node:path";
 import * as entities from "@db/entities";
 import { Migrator } from "@mikro-orm/migrations";
 import { defineConfig } from "@mikro-orm/postgresql";
 import { SeedManager } from "@mikro-orm/seeder";
 import { config } from "dotenv";
-import path from "node:path";
 
 config({ path: path.resolve(process.cwd(), ".env.local") });
 

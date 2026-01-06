@@ -1,21 +1,17 @@
+import crypto from "node:crypto";
 import { UserDto } from "@api/user/user.dto";
+import { JobName } from "@common/constants/job-name.enum";
+import { QueueName } from "@common/constants/queue-name.enum";
 import type { JwtPayload, RefreshTokenPayload } from "@common/types/auth.type";
 import type { Milliseconds, UUID } from "@common/types/branded.type";
 import type {
 	GoogleJwtPayload,
 	GoogleTokenResponse,
 } from "@common/types/google.type";
-
-import { JobName } from "@common/constants/job-name.enum";
-import { QueueName } from "@common/constants/queue-name.enum";
-import { authConfig, type AuthConfig } from "@config/auth.config";
-import { googleConfig, type GoogleConfig } from "@config/google.config";
+import { type AuthConfig, authConfig } from "@config/auth.config";
+import { type GoogleConfig, googleConfig } from "@config/google.config";
 import { Session, User } from "@db/entities";
-import {
-	type EntityManager,
-	type EntityRepository,
-	wrap,
-} from "@mikro-orm/core";
+import { EntityManager, type EntityRepository, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { InjectQueue } from "@nestjs/bullmq";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
@@ -26,12 +22,11 @@ import {
 	Logger,
 	UnauthorizedException,
 } from "@nestjs/common";
-import type { JwtService } from "@nestjs/jwt";
+import { JwtService } from "@nestjs/jwt";
 import argon2 from "argon2";
 import type { Queue } from "bullmq";
 import type { Cache } from "cache-manager";
 import { plainToInstance } from "class-transformer";
-import crypto from "node:crypto";
 import type { Response } from "express";
 import ms from "ms";
 import { generateFromEmail } from "unique-username-generator";

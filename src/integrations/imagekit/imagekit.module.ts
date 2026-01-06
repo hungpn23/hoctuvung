@@ -1,5 +1,5 @@
 import { IMAGEKIT_CLIENT } from "@common/constants/provider-token";
-import { imagekitConfig, type ImageKitConfig } from "@config/imagekit.config";
+import { type ImageKitConfig, imagekitConfig } from "@config/imagekit.config";
 import ImageKit from "@imagekit/nodejs";
 import { Module } from "@nestjs/common";
 

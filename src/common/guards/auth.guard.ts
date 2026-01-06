@@ -1,7 +1,11 @@
-import type { AuthService } from "@api/auth/auth.service";
+import { AuthService } from "@api/auth/auth.service";
 import { MetadataKey } from "@common/constants/metadata.enum";
 import type { RequestUser } from "@common/types/auth.type";
-import { type CanActivate, type ExecutionContext, Injectable } from "@nestjs/common";
+import {
+	type CanActivate,
+	type ExecutionContext,
+	Injectable,
+} from "@nestjs/common";
 import type { Reflector } from "@nestjs/core";
 
 @Injectable()

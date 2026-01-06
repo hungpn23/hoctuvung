@@ -5,11 +5,7 @@ import { QueueName } from "@common/constants/queue-name.enum";
 import type { UUID } from "@common/types/branded.type";
 import type { UpdateUserStatsData } from "@common/types/jobs.type";
 import { Card, Deck, UserStatistic } from "@db/entities";
-import {
-	type EntityManager,
-	type EntityRepository,
-	wrap,
-} from "@mikro-orm/core";
+import { EntityManager, type EntityRepository, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable, NotFoundException } from "@nestjs/common";

@@ -15,7 +15,7 @@ import {
 	Post,
 	Query,
 } from "@nestjs/common";
-import type { DeckService } from "./deck.service";
+import { DeckService } from "./deck.service";
 import {
 	type CloneDeckDto,
 	type CreateDeckDto,

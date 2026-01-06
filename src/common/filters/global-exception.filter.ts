@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "node:http";
 import type { ErrorDetailDto, ErrorDto } from "@common/dtos/error.dto";
 import { UniqueConstraintViolationException } from "@mikro-orm/postgresql";
 import {
@@ -10,7 +11,6 @@ import {
 } from "@nestjs/common";
 import type { ValidationError } from "class-validator";
 import type { Response } from "express";
-import { STATUS_CODES } from "node:http";
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {

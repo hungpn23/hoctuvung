@@ -11,11 +11,11 @@ import {
 	Filter,
 	ManyToOne,
 	OneToMany,
+	type Opt,
 	Property,
+	type Ref,
 	t,
 	Unique,
-	type Opt,
-	type Ref,
 } from "@mikro-orm/core";
 import slugify from "slugify";
 import { Visibility } from "../deck.enum";

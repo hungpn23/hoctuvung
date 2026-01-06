@@ -16,7 +16,7 @@ import {
 	type RegisterDto,
 	TokenPairDto,
 } from "./auth.dto";
-import type { AuthService } from "./auth.service";
+import { AuthService } from "./auth.service";
 
 @Controller({ path: "auth" })
 export class AuthController {

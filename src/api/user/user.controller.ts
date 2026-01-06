@@ -6,7 +6,7 @@ import type { UUID } from "@common/types/branded.type";
 import { multerStorage } from "@common/utils/multer-storage";
 import { Controller, Post, UploadedFile } from "@nestjs/common";
 import { UploadAvatarDto } from "./user.dto";
-import type { UserService } from "./user.service";
+import { UserService } from "./user.service";
 
 @Controller("users")
 export class UserController {

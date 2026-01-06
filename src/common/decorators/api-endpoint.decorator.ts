@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "node:http";
 import { ErrorDto } from "@common/dtos/error.dto";
 import { PaginatedDto } from "@common/dtos/offset-pagination/offset-pagination.dto";
 import {
@@ -14,7 +15,6 @@ import {
 	ApiResponse,
 	getSchemaPath,
 } from "@nestjs/swagger";
-import { STATUS_CODES } from "node:http";
 import { ApiPublic } from "./auth/api-public.decorator";
 
 type EndpointOptions = {

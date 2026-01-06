@@ -10,7 +10,7 @@ import {
 	Post,
 } from "@nestjs/common";
 import type { SaveAnswersDto } from "./dtos/study.dto";
-import type { StudyService } from "./study.service";
+import { StudyService } from "./study.service";
 
 @Controller("study")
 export class StudyController {

@@ -3,7 +3,7 @@ import { QueueName } from "@common/constants/queue-name.enum";
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Logger } from "@nestjs/common";
 import type { Job } from "bullmq";
-import type { ResendService } from "./resend.service";
+import { ResendService } from "./resend.service";
 
 @Processor(QueueName.EMAIL)
 export class ResendProcessor extends WorkerHost {

@@ -3,7 +3,7 @@ import { JobName } from "@common/constants/job-name.enum";
 import { QueueName } from "@common/constants/queue-name.enum";
 import type { UpdateUserStatsData } from "@common/types/jobs.type";
 import { Card, UserStatistic } from "@db/entities";
-import type { EntityManager } from "@mikro-orm/core";
+import { EntityManager } from "@mikro-orm/core";
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Logger } from "@nestjs/common";
 import type { Job } from "bullmq";
