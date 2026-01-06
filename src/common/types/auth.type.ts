@@ -5,7 +5,7 @@ import type { Seconds, UUID } from "./branded.type";
 
 type BaseJwtPayload = {
 	sessionId: UUID;
-	exp?: Seconds | null;
+	exp?: Seconds;
 };
 
 export type JwtPayload = BaseJwtPayload & { userId: UUID; role: UserRole };

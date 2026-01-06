@@ -3,7 +3,7 @@ import type { NotificationGateway } from "@api/notification/notification.gateway
 import { PaginatedDto } from "@common/dtos/offset-pagination/offset-pagination.dto";
 import { createMetadata } from "@common/dtos/offset-pagination/utils";
 import type { UUID } from "@common/types/branded.type";
-import { Card, Deck, Notification, User } from "@db/entities";
+import { Card, Deck, Notification } from "@db/entities";
 import {
 	type EntityRepository,
 	type FilterQuery,
@@ -15,7 +15,6 @@ import type { EntityManager } from "@mikro-orm/postgresql";
 import {
 	BadRequestException,
 	Injectable,
-	Logger,
 	NotFoundException,
 } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
@@ -37,8 +36,6 @@ import {
 
 @Injectable()
 export class DeckService {
-	private readonly logger = new Logger(DeckService.name);
-
 	constructor(
 		private readonly em: EntityManager,
 		private readonly notificationGateway: NotificationGateway,
@@ -46,8 +43,6 @@ export class DeckService {
 		private readonly deckRepository: EntityRepository<Deck>,
 		@InjectRepository(Card)
 		private readonly cardRepository: EntityRepository<Card>,
-		@InjectRepository(User)
-		private readonly userRepository: EntityRepository<User>,
 		@InjectRepository(Notification)
 		private readonly notificationRepository: EntityRepository<Notification>,
 	) {}
@@ -196,12 +191,12 @@ export class DeckService {
 			createdBy: userId,
 		});
 
-		cardDtos.forEach((c) =>
+		for (const c of cardDtos) {
 			this.cardRepository.create({
 				...c,
 				deck: newDeck.id,
-			}),
-		);
+			});
+		}
 
 		await this.em.flush();
 
@@ -249,9 +244,10 @@ export class DeckService {
 			const newOrUpdatedCards: Card[] = [];
 
 			for (const cardDto of dto.cards) {
-				if (cardDto.id && cardMap.has(cardDto.id)) {
+				const existingCard = cardMap.get(cardDto.id);
+
+				if (existingCard) {
 					// update existing card
-					const existingCard = cardMap.get(cardDto.id)!;
 					this.cardRepository.assign(existingCard, cardDto);
 					newOrUpdatedCards.push(existingCard);
 					cardMap.delete(cardDto.id);
@@ -322,8 +318,8 @@ export class DeckService {
 			clonedFrom: originalDeck.id,
 		});
 
-		originalDeck.cards.toArray().forEach((card) => {
-			return this.cardRepository.create({
+		for (const card of originalDeck.cards.toArray()) {
+			this.cardRepository.create({
 				...pick(card, [
 					"term",
 					"termLanguage",
@@ -333,7 +329,7 @@ export class DeckService {
 				]),
 				deck: newDeck.id,
 			});
-		});
+		}
 
 		originalDeck.learnerCount++;
 
@@ -380,7 +376,7 @@ export class DeckService {
 			new: 0,
 		};
 
-		cards.forEach((c) => stats[c.status as keyof DeckStatsDto]++);
+		for (const c of cards) stats[c.status as keyof DeckStatsDto]++;
 
 		return stats;
 	}

@@ -14,7 +14,7 @@ import {
 	ApiResponse,
 	getSchemaPath,
 } from "@nestjs/swagger";
-import { STATUS_CODES } from "http";
+import { STATUS_CODES } from "node:http";
 import { ApiPublic } from "./auth/api-public.decorator";
 
 type EndpointOptions = {

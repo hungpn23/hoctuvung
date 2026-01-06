@@ -9,14 +9,14 @@ export class ResendService {
 
 	constructor(
 		@Inject(mailConfig.KEY)
-		private readonly mailConfig: MailConfig,
+		private readonly mailConf: MailConfig,
 	) {
-		this.resend = new Resend(this.mailConfig.resendApiKey);
+		this.resend = new Resend(this.mailConf.resendApiKey);
 	}
 
 	async sendEmail() {
 		const { data, error } = await this.resend.emails.send({
-			from: this.mailConfig.from,
+			from: this.mailConf.from,
 			to: ["hungpn23@gmail.com"],
 			subject: "Hello from NestJS Processor!",
 			html: "<strong>It works!</strong>",

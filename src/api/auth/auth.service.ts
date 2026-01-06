@@ -11,7 +11,11 @@ import { QueueName } from "@common/constants/queue-name.enum";
 import { authConfig, type AuthConfig } from "@config/auth.config";
 import { googleConfig, type GoogleConfig } from "@config/google.config";
 import { Session, User } from "@db/entities";
-import { type EntityManager, type EntityRepository, wrap } from "@mikro-orm/core";
+import {
+	type EntityManager,
+	type EntityRepository,
+	wrap,
+} from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { InjectQueue } from "@nestjs/bullmq";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
@@ -27,7 +31,7 @@ import argon2 from "argon2";
 import type { Queue } from "bullmq";
 import type { Cache } from "cache-manager";
 import { plainToInstance } from "class-transformer";
-import crypto from "crypto";
+import crypto from "node:crypto";
 import type { Response } from "express";
 import ms from "ms";
 import { generateFromEmail } from "unique-username-generator";
@@ -48,9 +52,9 @@ export class AuthService {
 		@InjectQueue(QueueName.EMAIL)
 		private readonly emailQueue: Queue<void, void, JobName>,
 		@Inject(authConfig.KEY)
-		private readonly authConfig: AuthConfig,
+		private readonly authConf: AuthConfig,
 		@Inject(googleConfig.KEY)
-		private readonly googleConfig: GoogleConfig,
+		private readonly googleConf: GoogleConfig,
 		@Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
 		@InjectRepository(Session)
 		private readonly sessionRepository: EntityRepository<Session>,
@@ -59,18 +63,18 @@ export class AuthService {
 	) {}
 
 	async googleCallback(code: string, res: Response) {
-		const frontendUrl = this.authConfig.clientDomain;
+		const frontendUrl = this.authConf.clientDomain;
 
 		const params = new URLSearchParams({
 			code,
-			client_id: this.googleConfig.clientId,
-			client_secret: this.googleConfig.clientSecret,
-			redirect_uri: this.googleConfig.redirectUri,
+			client_id: this.googleConf.clientId,
+			client_secret: this.googleConf.clientSecret,
+			redirect_uri: this.googleConf.redirectUri,
 			grant_type: "authorization_code",
 		}).toString();
 
 		const response = await fetch(
-			"https://oauth2.googleapis.com/token?" + params,
+			`https://oauth2.googleapis.com/token?${params}`,
 			{
 				method: "POST",
 				headers: {
@@ -209,13 +213,13 @@ export class AuthService {
 
 		const [accessToken, newRefreshToken] = await Promise.all([
 			this.jwtService.signAsync(jwtPayload, {
-				secret: this.authConfig.jwtSecret,
-				expiresIn: this.authConfig.jwtExpiresIn,
+				secret: this.authConf.jwtSecret,
+				expiresIn: this.authConf.jwtExpiresIn,
 			}),
 
 			this.jwtService.signAsync(refreshTokenPayload, {
-				secret: this.authConfig.refreshTokenSecret,
-				expiresIn: this.authConfig.refreshTokenExpiresIn,
+				secret: this.authConf.refreshTokenSecret,
+				expiresIn: this.authConf.refreshTokenExpiresIn,
 			}),
 
 			this.em.flush(),
@@ -257,7 +261,7 @@ export class AuthService {
 		let payload: JwtPayload;
 		try {
 			payload = await this.jwtService.verifyAsync(accessToken, {
-				secret: this.authConfig.jwtSecret,
+				secret: this.authConf.jwtSecret,
 			});
 		} catch (_) {
 			throw new UnauthorizedException("Invalid token");
@@ -288,7 +292,7 @@ export class AuthService {
 		let payload: RefreshTokenPayload;
 		try {
 			payload = await this.jwtService.verifyAsync(refreshToken, {
-				secret: this.authConfig.refreshTokenSecret,
+				secret: this.authConf.refreshTokenSecret,
 			});
 		} catch (_) {
 			const payload = this.jwtService.decode<RefreshTokenPayload | null>(
@@ -310,7 +314,7 @@ export class AuthService {
 	}
 
 	private async _createTokenPair(user: User) {
-		const refreshTokenExpiresIn = this.authConfig.refreshTokenExpiresIn;
+		const refreshTokenExpiresIn = this.authConf.refreshTokenExpiresIn;
 
 		const signature = this._createSignature();
 
@@ -333,12 +337,12 @@ export class AuthService {
 
 		const [accessToken, refreshToken] = await Promise.all([
 			this.jwtService.signAsync(jwtPayload, {
-				secret: this.authConfig.jwtSecret,
-				expiresIn: this.authConfig.jwtExpiresIn,
+				secret: this.authConf.jwtSecret,
+				expiresIn: this.authConf.jwtExpiresIn,
 			}),
 
 			this.jwtService.signAsync(refreshTokenPayload, {
-				secret: this.authConfig.refreshTokenSecret,
+				secret: this.authConf.refreshTokenSecret,
 				expiresIn: refreshTokenExpiresIn,
 			}),
 		]);

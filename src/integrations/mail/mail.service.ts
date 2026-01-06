@@ -9,15 +9,15 @@ export class MailService {
 
 	constructor(
 		@Inject(mailConfig.KEY)
-		private readonly mailConfig: MailConfig,
+		private readonly mailConf: MailConfig,
 	) {
 		this.transporter = createTransport({
-			host: this.mailConfig.host,
-			port: this.mailConfig.port,
-			secure: this.mailConfig.secure,
+			host: this.mailConf.host,
+			port: this.mailConf.port,
+			secure: this.mailConf.secure,
 			auth: {
-				user: this.mailConfig.user,
-				pass: this.mailConfig.pass,
+				user: this.mailConf.user,
+				pass: this.mailConf.pass,
 			},
 		});
 

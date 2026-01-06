@@ -2,7 +2,7 @@ import { NullableProperty } from "@common/utils/nullable-property";
 import { User } from "@db/entities";
 import type { Opt, Ref } from "@mikro-orm/core";
 import { Entity, OneToOne, PrimaryKey, Property, t } from "@mikro-orm/core";
-import type { UUID } from "crypto";
+import type { UUID } from "node:crypto";
 import { v4 } from "uuid";
 
 @Entity()

@@ -1,6 +1,6 @@
-import { randomBytes } from "crypto";
+import { randomBytes } from "node:crypto";
 import { diskStorage } from "multer";
-import { extname } from "path";
+import { extname } from "node:path";
 
 export function multerStorage(folderName?: string) {
 	return diskStorage({

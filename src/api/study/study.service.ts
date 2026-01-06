@@ -5,18 +5,20 @@ import { QueueName } from "@common/constants/queue-name.enum";
 import type { UUID } from "@common/types/branded.type";
 import type { UpdateUserStatsData } from "@common/types/jobs.type";
 import { Card, Deck, UserStatistic } from "@db/entities";
-import { type EntityManager, type EntityRepository, wrap } from "@mikro-orm/core";
+import {
+	type EntityManager,
+	type EntityRepository,
+	wrap,
+} from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { InjectQueue } from "@nestjs/bullmq";
-import { Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import type { Queue } from "bullmq";
 import { plainToInstance } from "class-transformer";
 import { type SaveAnswersDto, UserStatsDto } from "./dtos/study.dto";
 
 @Injectable()
 export class StudyService {
-	private readonly logger = new Logger(StudyService.name);
-
 	constructor(
 		private readonly em: EntityManager,
 		@InjectRepository(Card)

@@ -52,7 +52,7 @@ const isProd = process.env.NODE_ENV === "prod";
 					...dbConfig,
 					entities: Object.values(entities),
 
-					debug: isProd ? false : true,
+					debug: !isProd,
 					highlighter: new SqlHighlighter(),
 					logger: (msg) => logger.debug(msg),
 				};

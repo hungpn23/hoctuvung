@@ -6,7 +6,6 @@ import {
 	type ExceptionFilter,
 	HttpException,
 	HttpStatus,
-	Logger,
 	UnprocessableEntityException,
 } from "@nestjs/common";
 import type { ValidationError } from "class-validator";
@@ -15,8 +14,6 @@ import { STATUS_CODES } from "node:http";
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
-	private readonly logger = new Logger(GlobalExceptionFilter.name);
-
 	catch(exception: unknown, host: ArgumentsHost): void {
 		const ctx = host.switchToHttp();
 		const response: Response = ctx.getResponse();

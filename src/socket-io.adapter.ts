@@ -1,18 +1,15 @@
 import type { AuthService } from "@api/auth/auth.service";
 import type { SocketUser } from "@common/types/auth.type";
-import {
-	type INestApplication,
-	Logger,
-	type UnauthorizedException,
+import type {
+	INestApplication,
+	UnauthorizedException,
 } from "@nestjs/common";
 import { IoAdapter } from "@nestjs/platform-socket.io";
 import type { ExtendedError, Server, ServerOptions, Socket } from "socket.io";
 
 export class SocketIOAdapter extends IoAdapter {
-	private readonly logger = new Logger(SocketIOAdapter.name);
-
 	constructor(
-		private readonly app: INestApplication,
+		readonly app: INestApplication,
 		private readonly authService: AuthService,
 	) {
 		super(app);
@@ -25,7 +22,7 @@ export class SocketIOAdapter extends IoAdapter {
 			.of("notifications")
 			.use((socket: Socket, next: (err?: ExtendedError) => void) => {
 				this.authService
-					.verifyAccessToken(socket.handshake.headers["authorization"])
+					.verifyAccessToken(socket.handshake.headers.authorization)
 					.then((payload) => {
 						(socket as SocketUser).user = payload;
 						next();

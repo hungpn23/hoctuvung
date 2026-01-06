@@ -66,7 +66,7 @@ export function ApiArrayFiles<TClass>(
 	if (extraModels) {
 		decorators.push(ApiExtraModels(extraModels));
 
-		schema.allOf!.push({
+		schema.allOf?.push({
 			$ref: getSchemaPath(extraModels),
 		});
 	}

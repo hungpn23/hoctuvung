@@ -8,7 +8,7 @@ import type { EntityManager } from "@mikro-orm/core";
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Inject, Logger } from "@nestjs/common";
 import type { Job } from "bullmq";
-import fs from "fs";
+import fs from "node:fs";
 
 @Processor(QueueName.IMAGE)
 export class UserProcessor extends WorkerHost {
