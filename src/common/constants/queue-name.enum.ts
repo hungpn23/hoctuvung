@@ -1,5 +1,5 @@
 export enum QueueName {
-  IMAGE = 'image',
-  STUDY = 'study',
-  EMAIL = 'email',
+	IMAGE = "image",
+	STUDY = "study",
+	EMAIL = "email",
 }

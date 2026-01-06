@@ -1,37 +1,37 @@
-import { JobName } from '@common/constants/job-name.enum';
-import { QueueName } from '@common/constants/queue-name.enum';
-import { UUID } from '@common/types/branded.type';
-import { ImageUploadData } from '@common/types/jobs.type';
-import { User } from '@db/entities';
-import { EntityRepository } from '@mikro-orm/core';
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { InjectQueue } from '@nestjs/bullmq';
-import { Injectable, Logger } from '@nestjs/common';
-import { Queue } from 'bullmq';
-import { plainToInstance } from 'class-transformer';
-import { UploadAvatarDto } from './user.dto';
+import { JobName } from "@common/constants/job-name.enum";
+import { QueueName } from "@common/constants/queue-name.enum";
+import { UUID } from "@common/types/branded.type";
+import { ImageUploadData } from "@common/types/jobs.type";
+import { User } from "@db/entities";
+import { EntityRepository } from "@mikro-orm/core";
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { InjectQueue } from "@nestjs/bullmq";
+import { Injectable, Logger } from "@nestjs/common";
+import { Queue } from "bullmq";
+import { plainToInstance } from "class-transformer";
+import { UploadAvatarDto } from "./user.dto";
 
 @Injectable()
 export class UserService {
-  private readonly logger = new Logger(UserService.name);
+	private readonly logger = new Logger(UserService.name);
 
-  constructor(
-    @InjectRepository(User)
-    private readonly userRepository: EntityRepository<User>,
+	constructor(
+		@InjectRepository(User)
+		private readonly userRepository: EntityRepository<User>,
 
-    @InjectQueue(QueueName.IMAGE)
-    private readonly imageQueue: Queue<ImageUploadData, void, JobName>,
-  ) {}
+		@InjectQueue(QueueName.IMAGE)
+		private readonly imageQueue: Queue<ImageUploadData, void, JobName>,
+	) {}
 
-  async uploadAvatar(userId: UUID, file: Express.Multer.File) {
-    await this.imageQueue.add(JobName.UPLOAD_USER_AVATAR, {
-      userId,
-      filePath: file.path,
-      fileName: file.filename,
-    });
+	async uploadAvatar(userId: UUID, file: Express.Multer.File) {
+		await this.imageQueue.add(JobName.UPLOAD_USER_AVATAR, {
+			userId,
+			filePath: file.path,
+			fileName: file.filename,
+		});
 
-    return plainToInstance(UploadAvatarDto, {
-      status: 'Avatar is being processed.',
-    });
-  }
+		return plainToInstance(UploadAvatarDto, {
+			status: "Avatar is being processed.",
+		});
+	}
 }

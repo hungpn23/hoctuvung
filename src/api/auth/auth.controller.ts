@@ -1,96 +1,96 @@
-import { UserDto } from '@api/user/user.dto';
+import { UserDto } from "@api/user/user.dto";
 import {
-  ApiEndpoint,
-  ApiPublicEndpoint,
-} from '@common/decorators/api-endpoint.decorator';
-import { Payload } from '@common/decorators/jwt-payload.decorator';
-import type { JwtPayload } from '@common/types/auth.type';
-import type { UUID } from '@common/types/branded.type';
-import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
-import type { Response } from 'express';
+	ApiEndpoint,
+	ApiPublicEndpoint,
+} from "@common/decorators/api-endpoint.decorator";
+import { Payload } from "@common/decorators/jwt-payload.decorator";
+import type { JwtPayload } from "@common/types/auth.type";
+import type { UUID } from "@common/types/branded.type";
+import { Body, Controller, Get, Post, Query, Res } from "@nestjs/common";
+import type { Response } from "express";
 import {
-  ChangePasswordDto,
-  ExchangeTokenDto,
-  LoginDto,
-  RefreshTokenDto,
-  RegisterDto,
-  TokenPairDto,
-} from './auth.dto';
-import { AuthService } from './auth.service';
+	ChangePasswordDto,
+	ExchangeTokenDto,
+	LoginDto,
+	RefreshTokenDto,
+	RegisterDto,
+	TokenPairDto,
+} from "./auth.dto";
+import { AuthService } from "./auth.service";
 
-@Controller({ path: 'auth' })
+@Controller({ path: "auth" })
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+	constructor(private readonly authService: AuthService) {}
 
-  @ApiPublicEndpoint()
-  @Get('google/callback')
-  async googleCallback(@Query('code') code: string, @Res() res: Response) {
-    return await this.authService.googleCallback(code, res);
-  }
+	@ApiPublicEndpoint()
+	@Get("google/callback")
+	async googleCallback(@Query("code") code: string, @Res() res: Response) {
+		return await this.authService.googleCallback(code, res);
+	}
 
-  @ApiPublicEndpoint({ type: TokenPairDto })
-  @Post('google/exchange')
-  async exchange(@Body() { code }: ExchangeTokenDto) {
-    return await this.authService.exchangeOneTimeCodeForTokens(code);
-  }
+	@ApiPublicEndpoint({ type: TokenPairDto })
+	@Post("google/exchange")
+	async exchange(@Body() { code }: ExchangeTokenDto) {
+		return await this.authService.exchangeOneTimeCodeForTokens(code);
+	}
 
-  @ApiEndpoint({ type: UserDto })
-  @Get('session')
-  async getSession(@Payload('userId') userId: UUID) {
-    return await this.authService.getSession(userId);
-  }
+	@ApiEndpoint({ type: UserDto })
+	@Get("session")
+	async getSession(@Payload("userId") userId: UUID) {
+		return await this.authService.getSession(userId);
+	}
 
-  @ApiPublicEndpoint({ type: TokenPairDto })
-  @Post('register')
-  async register(@Body() dto: RegisterDto) {
-    return await this.authService.register(dto);
-  }
+	@ApiPublicEndpoint({ type: TokenPairDto })
+	@Post("register")
+	async register(@Body() dto: RegisterDto) {
+		return await this.authService.register(dto);
+	}
 
-  @ApiPublicEndpoint({ type: TokenPairDto })
-  @Post('login')
-  async login(@Body() dto: LoginDto) {
-    return await this.authService.login(dto);
-  }
+	@ApiPublicEndpoint({ type: TokenPairDto })
+	@Post("login")
+	async login(@Body() dto: LoginDto) {
+		return await this.authService.login(dto);
+	}
 
-  @ApiEndpoint()
-  @Post('logout')
-  async logout(@Payload() payload: JwtPayload) {
-    return await this.authService.logout(payload);
-  }
+	@ApiEndpoint()
+	@Post("logout")
+	async logout(@Payload() payload: JwtPayload) {
+		return await this.authService.logout(payload);
+	}
 
-  @ApiPublicEndpoint({ type: TokenPairDto })
-  @Post('refresh')
-  async refresh(@Body() dto: RefreshTokenDto) {
-    return await this.authService.refresh(dto.refreshToken);
-  }
+	@ApiPublicEndpoint({ type: TokenPairDto })
+	@Post("refresh")
+	async refresh(@Body() dto: RefreshTokenDto) {
+		return await this.authService.refresh(dto.refreshToken);
+	}
 
-  @ApiEndpoint()
-  @Post('password/change')
-  async changePassword(
-    @Payload('userId') userId: UUID,
-    @Body() dto: ChangePasswordDto,
-  ) {
-    return await this.authService.changePassword(userId, dto);
-  }
+	@ApiEndpoint()
+	@Post("password/change")
+	async changePassword(
+		@Payload("userId") userId: UUID,
+		@Body() dto: ChangePasswordDto,
+	) {
+		return await this.authService.changePassword(userId, dto);
+	}
 
-  // TODO auth api
-  // @Post('forgot-password')
-  // async forgotPassword() {
-  //   return 'forgot-password';
-  // }
+	// TODO auth api
+	// @Post('forgot-password')
+	// async forgotPassword() {
+	//   return 'forgot-password';
+	// }
 
-  // @Post('verify/forgot-password')
-  // async verifyForgotPassword() {
-  //   return 'verify-forgot-password';
-  // }
+	// @Post('verify/forgot-password')
+	// async verifyForgotPassword() {
+	//   return 'verify-forgot-password';
+	// }
 
-  // @Get('verify/email')
-  // async verifyEmail() {
-  //   return 'verify-email';
-  // }
+	// @Get('verify/email')
+	// async verifyEmail() {
+	//   return 'verify-email';
+	// }
 
-  // @Post('verify/email/resend')
-  // async resendVerifyEmail() {
-  //   return 'resend-verify-email';
-  // }
+	// @Post('verify/email/resend')
+	// async resendVerifyEmail() {
+	//   return 'resend-verify-email';
+	// }
 }

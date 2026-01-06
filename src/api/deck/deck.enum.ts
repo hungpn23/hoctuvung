@@ -1,16 +1,16 @@
 export enum Visibility {
-  PUBLIC = 'public',
-  PROTECTED = 'protected',
-  PRIVATE = 'private',
+	PUBLIC = "public",
+	PROTECTED = "protected",
+	PRIVATE = "private",
 }
 
 export enum CardStatus {
-  KNOWN = 'known',
-  LEARNING = 'learning',
-  NEW = 'new',
+	KNOWN = "known",
+	LEARNING = "learning",
+	NEW = "new",
 }
 
 export enum Language {
-  ENG = 'english',
-  VIE = 'vietnamese',
+	ENG = "english",
+	VIE = "vietnamese",
 }

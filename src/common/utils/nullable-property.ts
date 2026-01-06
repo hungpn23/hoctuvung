@@ -1,7 +1,7 @@
-import { Property, PropertyOptions } from '@mikro-orm/core';
+import { Property, PropertyOptions } from "@mikro-orm/core";
 
 export function NullableProperty<T extends object>(
-  options?: Omit<PropertyOptions<T>, 'nullable'>,
+	options?: Omit<PropertyOptions<T>, "nullable">,
 ) {
-  return Property({ ...options, nullable: true });
+	return Property({ ...options, nullable: true });
 }

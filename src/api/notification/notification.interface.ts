@@ -1,6 +1,6 @@
-import { NotificationDto } from './notification.dto';
+import { NotificationDto } from "./notification.dto";
 
 export interface ServerToClientEvents {
-  socketConnected: (message: string) => void;
-  notificationAdded: (payload: NotificationDto) => void;
+	socketConnected: (message: string) => void;
+	notificationAdded: (payload: NotificationDto) => void;
 }

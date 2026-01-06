@@ -1,6 +1,6 @@
-import { Controller } from '@nestjs/common';
+import { Controller } from "@nestjs/common";
 
-@Controller('notifications')
+@Controller("notifications")
 export class NotificationController {
-  constructor() {}
+	constructor() {}
 }

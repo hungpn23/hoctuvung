@@ -1,12 +1,12 @@
-import { UUID } from './branded.type';
+import { UUID } from "./branded.type";
 
 export type ImageUploadData = {
-  userId: UUID;
-  filePath: string;
-  fileName: string;
+	userId: UUID;
+	filePath: string;
+	fileName: string;
 };
 
 export type UpdateUserStatsData = {
-  userId: UUID;
-  learnedCount: number;
+	userId: UUID;
+	learnedCount: number;
 };

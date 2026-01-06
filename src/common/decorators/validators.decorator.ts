@@ -1,263 +1,263 @@
-import { applyDecorators } from '@nestjs/common';
-import { ClassConstructor, Type } from 'class-transformer';
+import { applyDecorators } from "@nestjs/common";
+import { ClassConstructor, Type } from "class-transformer";
 import {
-  IsBoolean,
-  IsDate,
-  IsEmail,
-  IsEnum,
-  IsInt,
-  IsNotEmpty,
-  IsNumber,
-  IsPort,
-  IsPositive,
-  IsString,
-  IsUrl,
-  Max,
-  MaxLength,
-  Min,
-  MinLength,
-  ValidateIf,
-  ValidateNested,
-  ValidationOptions,
-  registerDecorator,
-} from 'class-validator';
-import { ToBoolean, ToLowerCase, ToUpperCase } from './transforms.decorator';
+	IsBoolean,
+	IsDate,
+	IsEmail,
+	IsEnum,
+	IsInt,
+	IsNotEmpty,
+	IsNumber,
+	IsPort,
+	IsPositive,
+	IsString,
+	IsUrl,
+	Max,
+	MaxLength,
+	Min,
+	MinLength,
+	ValidateIf,
+	ValidateNested,
+	ValidationOptions,
+	registerDecorator,
+} from "class-validator";
+import { ToBoolean, ToLowerCase, ToUpperCase } from "./transforms.decorator";
 
 type CommonOptions = {
-  required?: boolean;
-  each?: boolean; // if prop is an array --> validate each item in array
+	required?: boolean;
+	each?: boolean; // if prop is an array --> validate each item in array
 };
 
 type NumberOptions = CommonOptions & {
-  isInt?: boolean;
-  isPositive?: boolean;
-  minimum?: number;
-  maximum?: number;
+	isInt?: boolean;
+	isPositive?: boolean;
+	minimum?: number;
+	maximum?: number;
 };
 
 type StringOptions = CommonOptions & {
-  minLength?: number;
-  maxLength?: number;
-  toLowerCase?: boolean;
-  toUpperCase?: boolean;
+	minLength?: number;
+	maxLength?: number;
+	toLowerCase?: boolean;
+	toUpperCase?: boolean;
 };
 
 type UrlOptions = CommonOptions & {
-  require_tld?: boolean;
+	require_tld?: boolean;
 };
 
 // **********************
 // String-like validators
 // **********************
 export function StringValidator(
-  options: StringOptions = {},
+	options: StringOptions = {},
 ): PropertyDecorator {
-  const { each, minLength, maxLength, toLowerCase, toUpperCase } = options;
-  let decorators = [Type(() => String), IsString({ each })];
+	const { each, minLength, maxLength, toLowerCase, toUpperCase } = options;
+	let decorators = [Type(() => String), IsString({ each })];
 
-  decorators = handleCommonOptions(decorators, options);
+	decorators = handleCommonOptions(decorators, options);
 
-  if (minLength) {
-    decorators.push(MinLength(minLength, { each }));
-  }
-  if (maxLength) decorators.push(MaxLength(maxLength, { each }));
-  if (toLowerCase) decorators.push(ToLowerCase());
-  if (toUpperCase) decorators.push(ToUpperCase());
+	if (minLength) {
+		decorators.push(MinLength(minLength, { each }));
+	}
+	if (maxLength) decorators.push(MaxLength(maxLength, { each }));
+	if (toLowerCase) decorators.push(ToLowerCase());
+	if (toUpperCase) decorators.push(ToUpperCase());
 
-  return applyDecorators(...decorators);
+	return applyDecorators(...decorators);
 }
 
 export function StringValidatorOptional(
-  options: Omit<StringOptions, 'required'> = {},
+	options: Omit<StringOptions, "required"> = {},
 ) {
-  return StringValidator({ ...options, required: false });
+	return StringValidator({ ...options, required: false });
 }
 
 export function EmailValidator(options: StringOptions = {}): PropertyDecorator {
-  const decorators = [
-    IsEmail(),
-    StringValidator({ ...options, toLowerCase: true }),
-  ];
+	const decorators = [
+		IsEmail(),
+		StringValidator({ ...options, toLowerCase: true }),
+	];
 
-  return applyDecorators(...decorators);
+	return applyDecorators(...decorators);
 }
 
 export function UrlValidator(options: UrlOptions = {}): PropertyDecorator {
-  const { each, require_tld } = options;
-  let decorators = [
-    Type(() => String),
-    IsString({ each }),
-    IsUrl({ require_tld }, { each }),
-  ];
+	const { each, require_tld } = options;
+	let decorators = [
+		Type(() => String),
+		IsString({ each }),
+		IsUrl({ require_tld }, { each }),
+	];
 
-  decorators = handleCommonOptions(decorators, options);
+	decorators = handleCommonOptions(decorators, options);
 
-  return applyDecorators(...decorators);
+	return applyDecorators(...decorators);
 }
 
 export function PasswordValidator(
-  options: StringOptions = {},
+	options: StringOptions = {},
 ): PropertyDecorator {
-  let decorators = [Type(() => String), IsString(), IsPassword()];
+	let decorators = [Type(() => String), IsString(), IsPassword()];
 
-  decorators = handleCommonOptions(decorators, options);
+	decorators = handleCommonOptions(decorators, options);
 
-  return applyDecorators(...decorators);
+	return applyDecorators(...decorators);
 }
 
 // **********************
 // Number-like validators
 // **********************
 export function NumberValidator(
-  options: NumberOptions = {},
+	options: NumberOptions = {},
 ): PropertyDecorator {
-  const { each, isInt, isPositive, minimum, maximum } = options;
-  let decorators = [Type(() => Number)];
+	const { each, isInt, isPositive, minimum, maximum } = options;
+	let decorators = [Type(() => Number)];
 
-  decorators = handleCommonOptions(decorators, options);
+	decorators = handleCommonOptions(decorators, options);
 
-  if (isInt) {
-    decorators.push(IsInt({ each }));
-  } else {
-    decorators.push(IsNumber({}, { each }));
-  }
+	if (isInt) {
+		decorators.push(IsInt({ each }));
+	} else {
+		decorators.push(IsNumber({}, { each }));
+	}
 
-  if (minimum || minimum === 0) decorators.push(Min(minimum, { each }));
-  if (maximum || maximum === 0) decorators.push(Max(maximum, { each }));
-  if (isPositive) decorators.push(IsPositive({ each }));
+	if (minimum || minimum === 0) decorators.push(Min(minimum, { each }));
+	if (maximum || maximum === 0) decorators.push(Max(maximum, { each }));
+	if (isPositive) decorators.push(IsPositive({ each }));
 
-  return applyDecorators(...decorators);
+	return applyDecorators(...decorators);
 }
 
 export function NumberValidatorOptional(
-  options: Omit<NumberOptions, 'required'> = {},
+	options: Omit<NumberOptions, "required"> = {},
 ): PropertyDecorator {
-  return NumberValidator({ ...options, required: false });
+	return NumberValidator({ ...options, required: false });
 }
 
 export function PortValidator(options: CommonOptions = {}): PropertyDecorator {
-  let decorators = [IsPort({ each: options.each })];
+	let decorators = [IsPort({ each: options.each })];
 
-  decorators = handleCommonOptions(decorators, options);
+	decorators = handleCommonOptions(decorators, options);
 
-  return applyDecorators(...decorators);
+	return applyDecorators(...decorators);
 }
 
 export function PortValidatorOptional(
-  options: Omit<CommonOptions, 'required'> = {},
+	options: Omit<CommonOptions, "required"> = {},
 ): PropertyDecorator {
-  return PortValidator({ ...options, required: false });
+	return PortValidator({ ...options, required: false });
 }
 
 // ****************
 // Other validators
 // ****************
 export function BooleanValidator(
-  options: CommonOptions = {},
+	options: CommonOptions = {},
 ): PropertyDecorator {
-  let decorators = [ToBoolean(), IsBoolean({ each: options.each })];
+	let decorators = [ToBoolean(), IsBoolean({ each: options.each })];
 
-  decorators = handleCommonOptions(decorators, options);
+	decorators = handleCommonOptions(decorators, options);
 
-  return applyDecorators(...decorators);
+	return applyDecorators(...decorators);
 }
 
 export function BooleanValidatorOptional(
-  options: Omit<CommonOptions, 'required'> = {},
+	options: Omit<CommonOptions, "required"> = {},
 ): PropertyDecorator {
-  return BooleanValidator({ ...options, required: false });
+	return BooleanValidator({ ...options, required: false });
 }
 
 export function EnumValidator<T extends object>(
-  entity: T,
-  options: CommonOptions = {},
+	entity: T,
+	options: CommonOptions = {},
 ): PropertyDecorator {
-  let decorators = [IsEnum(entity, { each: options.each })];
+	let decorators = [IsEnum(entity, { each: options.each })];
 
-  decorators = handleCommonOptions(decorators, options);
+	decorators = handleCommonOptions(decorators, options);
 
-  return applyDecorators(...decorators);
+	return applyDecorators(...decorators);
 }
 
 export function EnumValidatorOptional<T extends object>(
-  entity: T,
-  options: Omit<CommonOptions, 'required'> = {},
+	entity: T,
+	options: Omit<CommonOptions, "required"> = {},
 ) {
-  return EnumValidator(entity, { ...options, required: false });
+	return EnumValidator(entity, { ...options, required: false });
 }
 
 export function ClassValidator<T>(
-  className: ClassConstructor<T>,
-  options: CommonOptions = {},
+	className: ClassConstructor<T>,
+	options: CommonOptions = {},
 ): PropertyDecorator {
-  let decorators = [
-    Type(() => className),
-    ValidateNested({ each: options.each }),
-  ];
+	let decorators = [
+		Type(() => className),
+		ValidateNested({ each: options.each }),
+	];
 
-  decorators = handleCommonOptions(decorators, options);
+	decorators = handleCommonOptions(decorators, options);
 
-  return applyDecorators(...decorators);
+	return applyDecorators(...decorators);
 }
 
 export function ClassValidatorOptional<T>(
-  className: ClassConstructor<T>,
-  options: Omit<CommonOptions, 'required'> = {},
+	className: ClassConstructor<T>,
+	options: Omit<CommonOptions, "required"> = {},
 ) {
-  return ClassValidator(className, { ...options, required: false });
+	return ClassValidator(className, { ...options, required: false });
 }
 
 export function DateValidator(options: CommonOptions = {}): PropertyDecorator {
-  const { each } = options;
+	const { each } = options;
 
-  let decorators = [Type(() => Date), IsDate({ each })];
+	let decorators = [Type(() => Date), IsDate({ each })];
 
-  decorators = handleCommonOptions(decorators, options);
+	decorators = handleCommonOptions(decorators, options);
 
-  return applyDecorators(...decorators);
+	return applyDecorators(...decorators);
 }
 
 export function DateValidatorOptional(
-  options: Omit<CommonOptions, 'required'> = {},
+	options: Omit<CommonOptions, "required"> = {},
 ): PropertyDecorator {
-  return DateValidator({ ...options, required: false });
+	return DateValidator({ ...options, required: false });
 }
 
 // *******
 // Helpers
 // *******
 function IsPassword(options?: ValidationOptions): PropertyDecorator {
-  return (target: object, propertyKey: string | symbol) => {
-    registerDecorator({
-      propertyName: propertyKey as string,
-      name: 'IsPassword',
-      target: target.constructor,
-      options,
-      validator: {
-        validate(value: unknown) {
-          if (typeof value !== 'string') return false;
-          return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*@^]).{8,}$/.test(
-            value,
-          );
-        },
-        defaultMessage() {
-          return `$property must contain at least 8 characters, including uppercase, lowercase, number, and special characters`;
-        },
-      },
-    });
-  };
+	return (target: object, propertyKey: string | symbol) => {
+		registerDecorator({
+			propertyName: propertyKey as string,
+			name: "IsPassword",
+			target: target.constructor,
+			options,
+			validator: {
+				validate(value: unknown) {
+					if (typeof value !== "string") return false;
+					return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*@^]).{8,}$/.test(
+						value,
+					);
+				},
+				defaultMessage() {
+					return `$property must contain at least 8 characters, including uppercase, lowercase, number, and special characters`;
+				},
+			},
+		});
+	};
 }
 
 function handleCommonOptions(
-  decorators: PropertyDecorator[],
-  options: CommonOptions = {},
+	decorators: PropertyDecorator[],
+	options: CommonOptions = {},
 ) {
-  const { required, each } = options;
-  if (required === false) {
-    decorators.push(ValidateIf((_obj, value) => !!value));
-  } else {
-    decorators.push(IsNotEmpty({ each }));
-  }
+	const { required, each } = options;
+	if (required === false) {
+		decorators.push(ValidateIf((_obj, value) => !!value));
+	} else {
+		decorators.push(IsNotEmpty({ each }));
+	}
 
-  return decorators;
+	return decorators;
 }

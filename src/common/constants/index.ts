@@ -1,3 +1,3 @@
-import type { UUID } from '@common/types/branded.type';
+import type { UUID } from "@common/types/branded.type";
 
-export const System = 'system' as UUID;
+export const System = "system" as UUID;

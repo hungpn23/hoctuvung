@@ -1,92 +1,92 @@
-import { JobName } from '@common/constants/job-name.enum';
-import { IMAGEKIT_CLIENT } from '@common/constants/provider-token';
-import { QueueName } from '@common/constants/queue-name.enum';
-import { ImageUploadData } from '@common/types/jobs.type';
-import { User } from '@db/entities';
-import ImageKit from '@imagekit/nodejs';
-import { EntityManager } from '@mikro-orm/core';
-import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
-import { Inject, Logger } from '@nestjs/common';
-import { Job } from 'bullmq';
-import fs from 'fs';
+import { JobName } from "@common/constants/job-name.enum";
+import { IMAGEKIT_CLIENT } from "@common/constants/provider-token";
+import { QueueName } from "@common/constants/queue-name.enum";
+import { ImageUploadData } from "@common/types/jobs.type";
+import { User } from "@db/entities";
+import ImageKit from "@imagekit/nodejs";
+import { EntityManager } from "@mikro-orm/core";
+import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
+import { Inject, Logger } from "@nestjs/common";
+import { Job } from "bullmq";
+import fs from "fs";
 
 @Processor(QueueName.IMAGE)
 export class UserProcessor extends WorkerHost {
-  private readonly logger = new Logger(UserProcessor.name);
+	private readonly logger = new Logger(UserProcessor.name);
 
-  constructor(
-    private readonly em: EntityManager,
-    @Inject(IMAGEKIT_CLIENT) private readonly imagekitClient: ImageKit,
-  ) {
-    super();
-  }
+	constructor(
+		private readonly em: EntityManager,
+		@Inject(IMAGEKIT_CLIENT) private readonly imagekitClient: ImageKit,
+	) {
+		super();
+	}
 
-  async process(job: Job<ImageUploadData, void, JobName>) {
-    this.logger.debug(`Processing job ${job.id} of type ${job.name}...`);
+	async process(job: Job<ImageUploadData, void, JobName>) {
+		this.logger.debug(`Processing job ${job.id} of type ${job.name}...`);
 
-    const { userId, filePath, fileName } = job.data;
-    const em = this.em.fork();
-    const userRepository = em.getRepository(User);
+		const { userId, filePath, fileName } = job.data;
+		const em = this.em.fork();
+		const userRepository = em.getRepository(User);
 
-    try {
-      if (job.name === JobName.UPLOAD_USER_AVATAR) {
-        const uploadResult = await this.imagekitClient.files.upload({
-          file: fs.createReadStream(filePath),
-          fileName,
-          folder: 'avatars',
-        });
+		try {
+			if (job.name === JobName.UPLOAD_USER_AVATAR) {
+				const uploadResult = await this.imagekitClient.files.upload({
+					file: fs.createReadStream(filePath),
+					fileName,
+					folder: "avatars",
+				});
 
-        this.logger.debug(`Uploaded to ImageKit, URL: ${uploadResult.url}`);
+				this.logger.debug(`Uploaded to ImageKit, URL: ${uploadResult.url}`);
 
-        const user = await userRepository.findOne(userId);
-        if (!user) throw new Error(`User with ID ${userId} not found`);
+				const user = await userRepository.findOne(userId);
+				if (!user) throw new Error(`User with ID ${userId} not found`);
 
-        user.avatarUrl = uploadResult.url;
-        await em.flush();
-        this.logger.debug(`Updated avatar URL for user ${userId} in DB.`);
+				user.avatarUrl = uploadResult.url;
+				await em.flush();
+				this.logger.debug(`Updated avatar URL for user ${userId} in DB.`);
 
-        fs.unlink(filePath, (err) => {
-          if (err) throw err;
+				fs.unlink(filePath, (err) => {
+					if (err) throw err;
 
-          this.logger.debug(`Deleted local file: ${filePath}`);
-        });
-      }
-    } catch (error) {
-      this.logger.error(`Failed to process avatar for user ${userId}:`, error);
-      throw error;
-    }
-  }
+					this.logger.debug(`Deleted local file: ${filePath}`);
+				});
+			}
+		} catch (error) {
+			this.logger.error(`Failed to process avatar for user ${userId}:`, error);
+			throw error;
+		}
+	}
 
-  @OnWorkerEvent('active')
-  onActive(job: Job) {
-    this.logger.debug(`Job ${job.id} is now active`);
-  }
+	@OnWorkerEvent("active")
+	onActive(job: Job) {
+		this.logger.debug(`Job ${job.id} is now active`);
+	}
 
-  @OnWorkerEvent('progress')
-  onProgress(job: Job) {
-    this.logger.debug(`Job ${job.id} is ${+job.progress}% complete`);
-  }
+	@OnWorkerEvent("progress")
+	onProgress(job: Job) {
+		this.logger.debug(`Job ${job.id} is ${+job.progress}% complete`);
+	}
 
-  @OnWorkerEvent('completed')
-  onCompleted(job: Job) {
-    this.logger.debug(`Job ${job.id} has been completed`);
-  }
+	@OnWorkerEvent("completed")
+	onCompleted(job: Job) {
+		this.logger.debug(`Job ${job.id} has been completed`);
+	}
 
-  @OnWorkerEvent('failed')
-  onFailed(job: Job) {
-    this.logger.error(
-      `Job ${job.id} has failed with reason: ${job.failedReason}`,
-    );
-    this.logger.error(job.stacktrace);
-  }
+	@OnWorkerEvent("failed")
+	onFailed(job: Job) {
+		this.logger.error(
+			`Job ${job.id} has failed with reason: ${job.failedReason}`,
+		);
+		this.logger.error(job.stacktrace);
+	}
 
-  @OnWorkerEvent('stalled')
-  onStalled(job: Job) {
-    this.logger.error(`Job ${job.id} has been stalled`);
-  }
+	@OnWorkerEvent("stalled")
+	onStalled(job: Job) {
+		this.logger.error(`Job ${job.id} has been stalled`);
+	}
 
-  @OnWorkerEvent('error')
-  onError(job: Job, error: Error) {
-    this.logger.error(`Job ${job.id} has failed with error: ${error.message}`);
-  }
+	@OnWorkerEvent("error")
+	onError(job: Job, error: Error) {
+		this.logger.error(`Job ${job.id} has failed with error: ${error.message}`);
+	}
 }

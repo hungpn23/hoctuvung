@@ -1,48 +1,48 @@
-import { UserRole } from '@common/constants/role.enum';
-import type { UUID } from '@common/types/branded.type';
-import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger';
-import { Exclude, Expose } from 'class-transformer';
+import { UserRole } from "@common/constants/role.enum";
+import type { UUID } from "@common/types/branded.type";
+import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
+import { Exclude, Expose } from "class-transformer";
 
 @Exclude()
 export class UserDto {
-  @Expose()
-  @ApiProperty()
-  id!: UUID;
+	@Expose()
+	@ApiProperty()
+	id!: UUID;
 
-  @Expose()
-  @ApiProperty()
-  username!: string;
+	@Expose()
+	@ApiProperty()
+	username!: string;
 
-  @Expose()
-  @ApiPropertyOptional()
-  email?: string | null;
+	@Expose()
+	@ApiPropertyOptional()
+	email?: string | null;
 
-  @Expose()
-  @ApiProperty()
-  emailVerified!: boolean;
+	@Expose()
+	@ApiProperty()
+	emailVerified!: boolean;
 
-  @Expose()
-  @ApiPropertyOptional()
-  avatarUrl?: string | null;
+	@Expose()
+	@ApiPropertyOptional()
+	avatarUrl?: string | null;
 
-  @Expose()
-  @ApiProperty()
-  role!: UserRole;
+	@Expose()
+	@ApiProperty()
+	role!: UserRole;
 
-  @Expose()
-  @ApiProperty()
-  createdAt!: Date;
+	@Expose()
+	@ApiProperty()
+	createdAt!: Date;
 
-  @Expose()
-  @ApiPropertyOptional()
-  updatedAt?: Date | null;
+	@Expose()
+	@ApiPropertyOptional()
+	updatedAt?: Date | null;
 }
 
 @Exclude()
 export class OwnerDto extends PickType(UserDto, [
-  'id',
-  'username',
-  'avatarUrl',
+	"id",
+	"username",
+	"avatarUrl",
 ]) {}
 
 @Exclude()
@@ -50,7 +50,7 @@ export class ActorDto extends OwnerDto {}
 
 @Exclude()
 export class UploadAvatarDto {
-  @Expose()
-  @ApiProperty()
-  status!: string;
+	@Expose()
+	@ApiProperty()
+	status!: string;
 }

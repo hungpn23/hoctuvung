@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class NotificationService {
-  // Notification service logic here
+	// Notification service logic here
 }

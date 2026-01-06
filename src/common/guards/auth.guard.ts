@@ -1,33 +1,33 @@
-import { AuthService } from '@api/auth/auth.service';
-import { MetadataKey } from '@common/constants/metadata.enum';
-import { RequestUser } from '@common/types/auth.type';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { AuthService } from "@api/auth/auth.service";
+import { MetadataKey } from "@common/constants/metadata.enum";
+import { RequestUser } from "@common/types/auth.type";
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(
-    private readonly reflector: Reflector,
-    private readonly authService: AuthService,
-  ) {}
+	constructor(
+		private readonly reflector: Reflector,
+		private readonly authService: AuthService,
+	) {}
 
-  async canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest<RequestUser>();
+	async canActivate(context: ExecutionContext) {
+		const request = context.switchToHttp().getRequest<RequestUser>();
 
-    const hasPublicDecorator = this.reflector.getAllAndOverride<boolean>(
-      MetadataKey.PUBLIC_ROUTE,
-      [context.getClass(), context.getHandler()],
-    );
+		const hasPublicDecorator = this.reflector.getAllAndOverride<boolean>(
+			MetadataKey.PUBLIC_ROUTE,
+			[context.getClass(), context.getHandler()],
+		);
 
-    request.user = await this.authService
-      .verifyAccessToken(request.headers.authorization)
-      .catch((err) => {
-        if (hasPublicDecorator) return undefined;
+		request.user = await this.authService
+			.verifyAccessToken(request.headers.authorization)
+			.catch((err) => {
+				if (hasPublicDecorator) return undefined;
 
-        throw err;
-      });
-    console.log(`🚀 ~ AuthGuard ~ canActivate ~ request.user:`, request.user);
+				throw err;
+			});
+		console.log(`🚀 ~ AuthGuard ~ canActivate ~ request.user:`, request.user);
 
-    return true;
-  }
+		return true;
+	}
 }
