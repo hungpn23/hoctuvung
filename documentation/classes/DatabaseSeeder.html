@@ -165,6 +165,7 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#run" >run</a>
                             </li>
                         </ul>
@@ -192,6 +193,7 @@
                 <td class="col-md-4">
                     <a name="run"></a>
                     <span class="name">
+                            <span class="modifier">Async</span>
                         <span ><b>run</b></span>
                         <a href="#run"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -199,15 +201,16 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>run(em: EntityManager)</code>
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>run(em: EntityManager)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="221"
-                                    class="link-to-prism">src/db/seeders/database.seeder.ts:221</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="219"
+                                    class="link-to-prism">src/db/seeders/database.seeder.ts:219</a></div>
                         </td>
                     </tr>
 
@@ -243,7 +246,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -263,10 +266,8 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Visibility } from &#x27;@api/deck/deck.enum&#x27;;
-import { Card } from &#x27;@api/deck/entities/card.entity&#x27;;
-import { Deck } from &#x27;@api/deck/entities/deck.entity&#x27;;
-import { User } from &#x27;@api/user/entities/user.entity&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Language, Visibility } from &#x27;@api/deck/deck.enum&#x27;;
+import { Card, Deck, User } from &#x27;@db/entities&#x27;;
 import { faker } from &#x27;@faker-js/faker&#x27;;
 import { EntityManager } from &#x27;@mikro-orm/core&#x27;;
 import { Seeder } from &#x27;@mikro-orm/seeder&#x27;;
@@ -482,7 +483,7 @@ const shuffleArray &#x3D; &lt;T&gt;(array: T[]) &#x3D;&gt; {
 };
 
 export class DatabaseSeeder extends Seeder {
-  run(em: EntityManager) {
+  async run(em: EntityManager) {
     console.time(&#x27;🌱 Seeding database&#x27;);
 
     const admin &#x3D; em.create(User, {
@@ -507,18 +508,21 @@ export class DatabaseSeeder extends Seeder {
         deck: deck,
         term: vocab.term,
         definition: vocab.definition,
+        termLanguage: Language.ENG,
+        definitionLanguage: Language.VIE,
       });
     }
 
-    for (let i &#x3D; 0; i &lt; 5; i++) {
+    for (let i &#x3D; 0; i &lt; 200; i++) {
       const user &#x3D; em.create(User, {
         username: faker.internet.username(),
         email: faker.internet.email({ provider: &#x27;example.com&#x27; }),
         password: &#x27;Password@123&#x27;,
         emailVerified: true,
+        avatarUrl: faker.image.avatar(),
       });
 
-      const cardCount &#x3D; faker.number.int({ min: 20, max: 100 });
+      const cardCount &#x3D; faker.number.int({ min: 5, max: 20 });
       const visibility &#x3D; faker.helpers.arrayElement(Object.values(Visibility));
 
       const deck &#x3D; em.create(Deck, {
@@ -535,9 +539,13 @@ export class DatabaseSeeder extends Seeder {
           deck,
           term: vocab.term,
           definition: vocab.definition,
+          termLanguage: Language.ENG,
+          definitionLanguage: Language.VIE,
         });
       }
     }
+
+    await em.flush();
 
     console.timeEnd(&#x27;🌱 Seeding database&#x27;);
   }

@@ -133,29 +133,41 @@
 <text text-anchor="start" x="429.73" y="-15.4" font-family="Times-12" font-size="14.00"> &#160;Exports</text>
 <g id="clust1" class="cluster">
 <title>cluster_AppModule</title>
-<polygon fill="none" stroke="black" stroke-dasharray="1,5" points="192,-70 192,-195 304,-195 304,-70 192,-70"/>
+<polygon fill="none" stroke="black" stroke-dasharray="1,5" points="122.5,-70 122.5,-195 373.5,-195 373.5,-70 122.5,-70"/>
 </g>
 <g id="clust3" class="cluster">
 <title>cluster_AppModule_imports</title>
-<polygon fill="none" stroke="black" points="200,-78 200,-130 296,-130 296,-78 200,-78"/>
+<polygon fill="none" stroke="black" points="130.5,-78 130.5,-130 365.5,-130 365.5,-78 130.5,-78"/>
 </g>
 <!-- ApiModule -->
 <g id="node1" class="node">
 <title>ApiModule</title>
-<polygon fill="#8dd3c7" stroke="black" points="288.05,-122 285.05,-126 264.05,-126 261.05,-122 207.95,-122 207.95,-86 288.05,-86 288.05,-122"/>
-<text text-anchor="middle" x="248" y="-99.8" font-family="Times,serif" font-size="14.00">ApiModule</text>
+<polygon fill="#8dd3c7" stroke="black" points="357.55,-122 354.55,-126 333.55,-126 330.55,-122 277.45,-122 277.45,-86 357.55,-86 357.55,-122"/>
+<text text-anchor="middle" x="317.5" y="-99.8" font-family="Times,serif" font-size="14.00">ApiModule</text>
 </g>
 <!-- AppModule -->
-<g id="node2" class="node">
+<g id="node3" class="node">
 <title>AppModule</title>
-<polygon fill="#8dd3c7" stroke="black" points="289.66,-187 286.66,-191 265.66,-191 262.66,-187 206.34,-187 206.34,-151 289.66,-151 289.66,-187"/>
-<text text-anchor="middle" x="248" y="-164.8" font-family="Times,serif" font-size="14.00">AppModule</text>
+<polygon fill="#8dd3c7" stroke="black" points="299.16,-187 296.16,-191 275.16,-191 272.16,-187 215.84,-187 215.84,-151 299.16,-151 299.16,-187"/>
+<text text-anchor="middle" x="257.5" y="-164.8" font-family="Times,serif" font-size="14.00">AppModule</text>
 </g>
 <!-- ApiModule&#45;&gt;AppModule -->
 <g id="edge1" class="edge">
 <title>ApiModule&#45;&gt;AppModule</title>
-<path fill="none" stroke="black" d="M248,-122.11C248,-122.11 248,-140.99 248,-140.99"/>
-<polygon fill="black" stroke="black" points="244.5,-140.99 248,-150.99 251.5,-140.99 244.5,-140.99"/>
+<path fill="none" stroke="black" d="M288.28,-122.11C288.28,-122.11 288.28,-140.99 288.28,-140.99"/>
+<polygon fill="black" stroke="black" points="284.78,-140.99 288.28,-150.99 291.78,-140.99 284.78,-140.99"/>
+</g>
+<!-- IntegrationModule -->
+<g id="node2" class="node">
+<title>IntegrationModule</title>
+<polygon fill="#8dd3c7" stroke="black" points="258.97,-122 255.97,-126 234.97,-126 231.97,-122 138.03,-122 138.03,-86 258.97,-86 258.97,-122"/>
+<text text-anchor="middle" x="198.5" y="-99.8" font-family="Times,serif" font-size="14.00">IntegrationModule</text>
+</g>
+<!-- IntegrationModule&#45;&gt;AppModule -->
+<g id="edge2" class="edge">
+<title>IntegrationModule&#45;&gt;AppModule</title>
+<path fill="none" stroke="black" d="M237.33,-122.11C237.33,-122.11 237.33,-140.99 237.33,-140.99"/>
+<polygon fill="black" stroke="black" points="233.83,-140.99 237.33,-150.99 240.83,-140.99 233.83,-140.99"/>
 </g>
 </g>
 </svg>
@@ -220,6 +232,9 @@
                         <li class="list-group-item">
                             <a href="../modules/ApiModule.html">ApiModule</a>
                         </li>
+                        <li class="list-group-item">
+                            <a href="../modules/IntegrationModule.html">IntegrationModule</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -232,13 +247,14 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiModule } from &#x27;@api/api.module&#x27;;
 import { AppController } from &#x27;@app.controller&#x27;;
-
 import { appConfig } from &#x27;@config/app.config&#x27;;
 import { authConfig } from &#x27;@config/auth.config&#x27;;
 import { DatabaseConfig, databaseConfig } from &#x27;@config/database.config&#x27;;
 import { googleConfig } from &#x27;@config/google.config&#x27;;
 import { imagekitConfig } from &#x27;@config/imagekit.config&#x27;;
+import { mailConfig } from &#x27;@config/mail.config&#x27;;
 import { RedisConfig, redisConfig } from &#x27;@config/redis.config&#x27;;
+import { IntegrationModule } from &#x27;@integrations/intergration.module&#x27;;
 import KeyvRedis from &#x27;@keyv/redis&#x27;;
 import { MikroOrmModule } from &#x27;@mikro-orm/nestjs&#x27;;
 import { PostgreSqlDriver } from &#x27;@mikro-orm/postgresql&#x27;;
@@ -265,11 +281,12 @@ const isProd &#x3D; process.env.NODE_ENV &#x3D;&#x3D;&#x3D; &#x27;prod&#x27;;
       skipProcessEnv: true,
       load: [
         appConfig,
-        databaseConfig,
         authConfig,
-        redisConfig,
+        databaseConfig,
         googleConfig,
         imagekitConfig,
+        mailConfig,
+        redisConfig,
       ],
     }),
 
@@ -311,6 +328,7 @@ const isProd &#x3D; process.env.NODE_ENV &#x3D;&#x3D;&#x3D; &#x27;prod&#x27;;
     }),
 
     ApiModule,
+    IntegrationModule,
   ],
   controllers: [AppController],
 })

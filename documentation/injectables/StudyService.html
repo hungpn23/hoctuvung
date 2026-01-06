@@ -200,7 +200,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/api/study/study.service.ts:20</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/api/study/study.service.ts:18</a></div>
                             </td>
                         </tr>
 
@@ -313,8 +313,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="35"
-                                    class="link-to-prism">src/api/study/study.service.ts:35</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="33"
+                                    class="link-to-prism">src/api/study/study.service.ts:33</a></div>
                         </td>
                     </tr>
 
@@ -382,8 +382,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="46"
-                                    class="link-to-prism">src/api/study/study.service.ts:46</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="44"
+                                    class="link-to-prism">src/api/study/study.service.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -485,7 +485,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/api/study/study.service.ts:20</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/api/study/study.service.ts:18</a></div>
                         </td>
                     </tr>
 
@@ -499,21 +499,19 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CardStatus } from &#x27;@api/deck/deck.enum&#x27;;
-import { Card } from &#x27;@api/deck/entities/card.entity&#x27;;
-import { Deck } from &#x27;@api/deck/entities/deck.entity&#x27;;
 
 import { JobName } from &#x27;@common/constants/job-name.enum&#x27;;
 import { QueueName } from &#x27;@common/constants/queue-name.enum&#x27;;
 import type { UUID } from &#x27;@common/types/branded.type&#x27;;
 import { UpdateUserStatsData } from &#x27;@common/types/jobs.type&#x27;;
-import { EntityManager, EntityRepository } from &#x27;@mikro-orm/core&#x27;;
+import { Card, Deck, UserStatistic } from &#x27;@db/entities&#x27;;
+import { EntityManager, EntityRepository, wrap } from &#x27;@mikro-orm/core&#x27;;
 import { InjectRepository } from &#x27;@mikro-orm/nestjs&#x27;;
 import { InjectQueue } from &#x27;@nestjs/bullmq&#x27;;
 import { Injectable, Logger, NotFoundException } from &#x27;@nestjs/common&#x27;;
 import { Queue } from &#x27;bullmq&#x27;;
 import { plainToInstance } from &#x27;class-transformer&#x27;;
 import { SaveAnswersDto, UserStatsDto } from &#x27;./dtos/study.dto&#x27;;
-import { UserStatistic } from &#x27;./entities/user-statistics.entity&#x27;;
 
 @Injectable()
 export class StudyService {
@@ -540,7 +538,7 @@ export class StudyService {
       await this.em.flush();
     }
 
-    return plainToInstance(UserStatsDto, stats);
+    return plainToInstance(UserStatsDto, wrap(stats).toPOJO());
   }
 
   async saveAnswers(userId: UUID, deckId: UUID, dto: SaveAnswersDto) {
@@ -573,7 +571,7 @@ export class StudyService {
     let learnedCount &#x3D; 0;
 
     map.forEach((card) &#x3D;&gt; {
-      if (card.status &#x3D;&#x3D;&#x3D; CardStatus.KNOWN) learnedCount +&#x3D; 1;
+      if ((card.status as CardStatus) &#x3D;&#x3D;&#x3D; CardStatus.KNOWN) learnedCount +&#x3D; 1;
     });
 
     await this.studyQueue.add(JobName.UPDATE_USER_STATS, {

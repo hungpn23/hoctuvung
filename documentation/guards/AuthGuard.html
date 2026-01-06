@@ -157,10 +157,6 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#_extractTokenFromHeader" >_extractTokenFromHeader</a>
-                            </li>
-                            <li>
                                     <span class="modifier">Async</span>
                                 <a href="#canActivate" >canActivate</a>
                             </li>
@@ -187,7 +183,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/common/guards/auth.guard.ts:9</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">src/common/guards/auth.guard.ts:8</a></div>
                             </td>
                         </tr>
 
@@ -246,75 +242,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="_extractTokenFromHeader"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>_extractTokenFromHeader</b></span>
-                        <a href="#_extractTokenFromHeader"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>_extractTokenFromHeader(request: ExpressRequest)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="38"
-                                    class="link-to-prism">src/common/guards/auth.guard.ts:38</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>request</td>
-                                            <td>
-                                                        <code>ExpressRequest</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="canActivate"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -333,8 +260,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="15"
-                                    class="link-to-prism">src/common/guards/auth.guard.ts:15</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="14"
+                                    class="link-to-prism">src/common/guards/auth.guard.ts:14</a></div>
                         </td>
                     </tr>
 
@@ -390,7 +317,6 @@ import { MetadataKey } from &#x27;@common/constants/metadata.enum&#x27;;
 import { RequestUser } from &#x27;@common/types/auth.type&#x27;;
 import { CanActivate, ExecutionContext, Injectable } from &#x27;@nestjs/common&#x27;;
 import { Reflector } from &#x27;@nestjs/core&#x27;;
-import { Request as ExpressRequest } from &#x27;express&#x27;;
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -407,24 +333,16 @@ export class AuthGuard implements CanActivate {
       [context.getClass(), context.getHandler()],
     );
 
-    const accessToken &#x3D; this._extractTokenFromHeader(request);
+    request.user &#x3D; await this.authService
+      .verifyAccessToken(request.headers.authorization)
+      .catch((err) &#x3D;&gt; {
+        if (hasPublicDecorator) return undefined;
 
-    if (hasPublicDecorator) {
-      request.user &#x3D; await this.authService
-        .verifyAccessToken(accessToken)
-        .catch(() &#x3D;&gt; undefined);
-
-      return true;
-    }
-
-    request.user &#x3D; await this.authService.verifyAccessToken(accessToken);
+        throw err;
+      });
+    console.log(&#x60;🚀 ~ AuthGuard ~ canActivate ~ request.user:&#x60;, request.user);
 
     return true;
-  }
-
-  private _extractTokenFromHeader(request: ExpressRequest) {
-    const [type, token] &#x3D; request.headers.authorization?.split(&#x27; &#x27;) ?? [];
-    return type &#x3D;&#x3D;&#x3D; &#x27;Bearer&#x27; ? token : &#x27;&#x27;;
   }
 }
 </code></pre>

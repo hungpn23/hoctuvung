@@ -179,6 +179,10 @@
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
+                                <a href="#_extractTokenFromHeader" >_extractTokenFromHeader</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#_verifyRefreshToken" >_verifyRefreshToken</a>
                             </li>
@@ -236,12 +240,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(jwtService: JwtService, em: EntityManager, authConfig: <a href="../undefineds/AuthConfig.html" target="_self">AuthConfig</a>, googleConfig: <a href="../undefineds/GoogleConfig.html" target="_self">GoogleConfig</a>, cacheManager: Cache, sessionRepository: <a href="../entitys/Session.html" target="_self">EntityRepository&lt;Session&gt;</a>, userRepository: <a href="../entitys/User.html" target="_self">EntityRepository&lt;User&gt;</a>)</code>
+<code>constructor(jwtService: JwtService, em: EntityManager, emailQueue: <a href="../undefineds/JobName.html" target="_self">Queue&lt;void | void | JobName&gt;</a>, authConfig: <a href="../undefineds/AuthConfig.html" target="_self">AuthConfig</a>, googleConfig: <a href="../undefineds/GoogleConfig.html" target="_self">GoogleConfig</a>, cacheManager: Cache, sessionRepository: <a href="../entitys/Session.html" target="_self">EntityRepository&lt;Session&gt;</a>, userRepository: <a href="../entitys/User.html" target="_self">EntityRepository&lt;User&gt;</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/api/auth/auth.service.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/api/auth/auth.service.ts:43</a></div>
                             </td>
                         </tr>
 
@@ -275,6 +279,18 @@
                                                   
                                                         <td>
                                                                     <code>EntityManager</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>emailQueue</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../miscellaneous/enumerations.html#JobName" target="_self" >Queue&lt;void | void | JobName&gt;</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -378,8 +394,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="336"
-                                    class="link-to-prism">src/api/auth/auth.service.ts:336</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="349"
+                                    class="link-to-prism">src/api/auth/auth.service.ts:349</a></div>
                         </td>
                     </tr>
 
@@ -418,8 +434,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="299"
-                                    class="link-to-prism">src/api/auth/auth.service.ts:299</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="312"
+                                    class="link-to-prism">src/api/auth/auth.service.ts:312</a></div>
                         </td>
                     </tr>
 
@@ -469,6 +485,75 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="_extractTokenFromHeader"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_extractTokenFromHeader</b></span>
+                        <a href="#_extractTokenFromHeader"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_extractTokenFromHeader(authorizationHeader?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="282"
+                                    class="link-to-prism">src/api/auth/auth.service.ts:282</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authorizationHeader</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="_verifyRefreshToken"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -488,8 +573,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="273"
-                                    class="link-to-prism">src/api/auth/auth.service.ts:273</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="287"
+                                    class="link-to-prism">src/api/auth/auth.service.ts:287</a></div>
                         </td>
                     </tr>
 
@@ -557,8 +642,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="223"
-                                    class="link-to-prism">src/api/auth/auth.service.ts:223</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="230"
+                                    class="link-to-prism">src/api/auth/auth.service.ts:230</a></div>
                         </td>
                     </tr>
 
@@ -638,8 +723,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="106"
-                                    class="link-to-prism">src/api/auth/auth.service.ts:106</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="111"
+                                    class="link-to-prism">src/api/auth/auth.service.ts:111</a></div>
                         </td>
                     </tr>
 
@@ -707,8 +792,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="117"
-                                    class="link-to-prism">src/api/auth/auth.service.ts:117</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="122"
+                                    class="link-to-prism">src/api/auth/auth.service.ts:122</a></div>
                         </td>
                     </tr>
 
@@ -776,8 +861,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="56"
-                                    class="link-to-prism">src/api/auth/auth.service.ts:56</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">src/api/auth/auth.service.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -857,8 +942,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="139"
-                                    class="link-to-prism">src/api/auth/auth.service.ts:139</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="146"
+                                    class="link-to-prism">src/api/auth/auth.service.ts:146</a></div>
                         </td>
                     </tr>
 
@@ -926,8 +1011,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="153"
-                                    class="link-to-prism">src/api/auth/auth.service.ts:153</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="160"
+                                    class="link-to-prism">src/api/auth/auth.service.ts:160</a></div>
                         </td>
                     </tr>
 
@@ -995,8 +1080,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="167"
-                                    class="link-to-prism">src/api/auth/auth.service.ts:167</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="174"
+                                    class="link-to-prism">src/api/auth/auth.service.ts:174</a></div>
                         </td>
                     </tr>
 
@@ -1064,8 +1149,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="123"
-                                    class="link-to-prism">src/api/auth/auth.service.ts:123</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/api/auth/auth.service.ts:128</a></div>
                         </td>
                     </tr>
 
@@ -1126,15 +1211,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>verifyAccessToken(accessToken: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>verifyAccessToken(authorizationHeader?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="247"
-                                    class="link-to-prism">src/api/auth/auth.service.ts:247</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="254"
+                                    class="link-to-prism">src/api/auth/auth.service.ts:254</a></div>
                         </td>
                     </tr>
 
@@ -1155,13 +1240,13 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>accessToken</td>
+                                                <td>authorizationHeader</td>
                                             <td>
                                                             <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                             </td>
 
                                             <td>
-                                                    No
+                                                    Yes
                                             </td>
 
 
@@ -1211,7 +1296,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/api/auth/auth.service.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/api/auth/auth.service.ts:43</a></div>
                         </td>
                     </tr>
 
@@ -1224,8 +1309,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { User } from &#x27;@api/user/entities/user.entity&#x27;;
-import { UserDto } from &#x27;@api/user/user.dto&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { UserDto } from &#x27;@api/user/user.dto&#x27;;
 import { JwtPayload, RefreshTokenPayload } from &#x27;@common/types/auth.type&#x27;;
 import { Milliseconds, UUID } from &#x27;@common/types/branded.type&#x27;;
 import {
@@ -1233,10 +1317,14 @@ import {
   GoogleTokenResponse,
 } from &#x27;@common/types/google.type&#x27;;
 
+import { JobName } from &#x27;@common/constants/job-name.enum&#x27;;
+import { QueueName } from &#x27;@common/constants/queue-name.enum&#x27;;
 import { authConfig, type AuthConfig } from &#x27;@config/auth.config&#x27;;
 import { googleConfig, type GoogleConfig } from &#x27;@config/google.config&#x27;;
-import { EntityManager, EntityRepository } from &#x27;@mikro-orm/core&#x27;;
+import { Session, User } from &#x27;@db/entities&#x27;;
+import { EntityManager, EntityRepository, wrap } from &#x27;@mikro-orm/core&#x27;;
 import { InjectRepository } from &#x27;@mikro-orm/nestjs&#x27;;
+import { InjectQueue } from &#x27;@nestjs/bullmq&#x27;;
 import { CACHE_MANAGER } from &#x27;@nestjs/cache-manager&#x27;;
 import {
   BadRequestException,
@@ -1247,13 +1335,13 @@ import {
 } from &#x27;@nestjs/common&#x27;;
 import { JwtService } from &#x27;@nestjs/jwt&#x27;;
 import argon2 from &#x27;argon2&#x27;;
+import { Queue } from &#x27;bullmq&#x27;;
 import type { Cache } from &#x27;cache-manager&#x27;;
 import { plainToInstance } from &#x27;class-transformer&#x27;;
 import crypto from &#x27;crypto&#x27;;
 import { Response } from &#x27;express&#x27;;
 import ms from &#x27;ms&#x27;;
 import { generateFromEmail } from &#x27;unique-username-generator&#x27;;
-import { Session } from &#x27;./../user/entities/session.entity&#x27;;
 import {
   ChangePasswordDto,
   LoginDto,
@@ -1268,6 +1356,8 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly em: EntityManager,
+    @InjectQueue(QueueName.EMAIL)
+    private readonly emailQueue: Queue&lt;void, void, JobName&gt;,
     @Inject(authConfig.KEY)
     private readonly authConfig: AuthConfig,
     @Inject(googleConfig.KEY)
@@ -1343,7 +1433,7 @@ export class AuthService {
   async getSession(userId: UUID) {
     const user &#x3D; await this.userRepository.findOneOrFail(userId);
 
-    return plainToInstance(UserDto, user);
+    return plainToInstance(UserDto, wrap(user).toPOJO());
   }
 
   async register(dto: RegisterDto) {
@@ -1358,6 +1448,8 @@ export class AuthService {
     const tokenPair &#x3D; await this._createTokenPair(newUser);
 
     await this.em.flush();
+
+    await this.emailQueue.add(JobName.SEND_WELCOME_EMAIL);
 
     return plainToInstance(TokenPairDto, tokenPair);
   }
@@ -1387,7 +1479,7 @@ export class AuthService {
     const sessionRef &#x3D; this.sessionRepository.getReference(sessionId);
     if (!sessionRef) throw new BadRequestException();
 
-    await this.em.removeAndFlush(sessionRef);
+    await this.em.remove(sessionRef).flush();
   }
 
   async refresh(refreshToken: string) {
@@ -1470,7 +1562,9 @@ export class AuthService {
     await this.em.flush();
   }
 
-  async verifyAccessToken(accessToken: string) {
+  async verifyAccessToken(authorizationHeader?: string) {
+    const accessToken &#x3D; this._extractTokenFromHeader(authorizationHeader);
+
     let payload: JwtPayload;
     try {
       payload &#x3D; await this.jwtService.verifyAsync(accessToken, {
@@ -1489,11 +1583,16 @@ export class AuthService {
       const sessions &#x3D; await this.sessionRepository.find({
         user: { id: userId },
       });
-      await this.em.removeAndFlush(sessions);
+      await this.em.remove(sessions).flush();
       throw new UnauthorizedException();
     }
 
     return payload;
+  }
+
+  private _extractTokenFromHeader(authorizationHeader?: string) {
+    const [type, token] &#x3D; authorizationHeader?.split(&#x27; &#x27;) ?? [];
+    return type &#x3D;&#x3D;&#x3D; &#x27;Bearer&#x27; ? token : &#x27;&#x27;;
   }
 
   private async _verifyRefreshToken(refreshToken: string) {
@@ -1511,9 +1610,8 @@ export class AuthService {
         const expiredSession &#x3D; await this.sessionRepository.findOne(
           payload.sessionId,
         );
-        if (expiredSession) {
-          await this.em.removeAndFlush(expiredSession);
-        }
+
+        if (expiredSession) await this.em.remove(expiredSession).flush();
       }
 
       throw new UnauthorizedException(&#x27;Session expired&#x27;);

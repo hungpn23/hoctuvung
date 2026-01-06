@@ -227,12 +227,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(em: EntityManager, deckRepository: <a href="../classes/Deck.html" target="_self">EntityRepository&lt;Deck&gt;</a>, cardRepository: <a href="../entitys/Card.html" target="_self">EntityRepository&lt;Card&gt;</a>)</code>
+<code>constructor(em: EntityManager, notificationGateway: <a href="../classes/NotificationGateway.html" target="_self">NotificationGateway</a>, deckRepository: <a href="../classes/Deck.html" target="_self">EntityRepository&lt;Deck&gt;</a>, cardRepository: <a href="../entitys/Card.html" target="_self">EntityRepository&lt;Card&gt;</a>, userRepository: <a href="../entitys/User.html" target="_self">EntityRepository&lt;User&gt;</a>, notificationRepository: <a href="../entitys/Notification.html" target="_self">EntityRepository&lt;Notification&gt;</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/api/deck/deck.service.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/api/deck/deck.service.ts:40</a></div>
                             </td>
                         </tr>
 
@@ -262,6 +262,18 @@
                                                     
                                                 </tr>
                                                 <tr>
+                                                        <td>notificationGateway</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/NotificationGateway.html" target="_self" >NotificationGateway</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
                                                         <td>deckRepository</td>
                                                   
                                                         <td>
@@ -278,6 +290,30 @@
                                                   
                                                         <td>
                                                                         <code><a href="../entitys/Card.html" target="_self" >EntityRepository&lt;Card&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>userRepository</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../entitys/User.html" target="_self" >EntityRepository&lt;User&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>notificationRepository</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../entitys/Notification.html" target="_self" >EntityRepository&lt;Notification&gt;</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -321,8 +357,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="354"
-                                    class="link-to-prism">src/api/deck/deck.service.ts:354</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="375"
+                                    class="link-to-prism">src/api/deck/deck.service.ts:375</a></div>
                         </td>
                     </tr>
 
@@ -390,8 +426,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="281"
-                                    class="link-to-prism">src/api/deck/deck.service.ts:281</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="298"
+                                    class="link-to-prism">src/api/deck/deck.service.ts:298</a></div>
                         </td>
                     </tr>
 
@@ -483,8 +519,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="155"
-                                    class="link-to-prism">src/api/deck/deck.service.ts:155</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="180"
+                                    class="link-to-prism">src/api/deck/deck.service.ts:180</a></div>
                         </td>
                     </tr>
 
@@ -564,8 +600,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="264"
-                                    class="link-to-prism">src/api/deck/deck.service.ts:264</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="286"
+                                    class="link-to-prism">src/api/deck/deck.service.ts:286</a></div>
                         </td>
                     </tr>
 
@@ -638,15 +674,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getMany(userId: <a href="../undefineds/UUID.html" target="_self">UUID</a>, query: <a href="../classes/DeckQueryDto.html" target="_self">DeckQueryDto</a>)</code>
+                    <code>getMany(userId: <a href="../undefineds/UUID.html" target="_self">UUID</a>, query: <a href="../classes/GetManyQueryDto.html" target="_self">GetManyQueryDto</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="75"
-                                    class="link-to-prism">src/api/deck/deck.service.ts:75</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="81"
+                                    class="link-to-prism">src/api/deck/deck.service.ts:81</a></div>
                         </td>
                     </tr>
 
@@ -681,7 +717,7 @@
                                         <tr>
                                                 <td>query</td>
                                             <td>
-                                                            <code><a href="../classes/DeckQueryDto.html" target="_self" >DeckQueryDto</a></code>
+                                                            <code><a href="../classes/GetManyQueryDto.html" target="_self" >GetManyQueryDto</a></code>
                                             </td>
 
                                             <td>
@@ -719,15 +755,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getOne(deckId: <a href="../undefineds/UUID.html" target="_self">UUID</a>, userId: <a href="../undefineds/UUID.html" target="_self">UUID</a>)</code>
+                    <code>getOne(userId: <a href="../undefineds/UUID.html" target="_self">UUID</a>, deckId: <a href="../undefineds/UUID.html" target="_self">UUID</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="45"
-                                    class="link-to-prism">src/api/deck/deck.service.ts:45</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">src/api/deck/deck.service.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -748,7 +784,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>deckId</td>
+                                                <td>userId</td>
                                             <td>
                                                             <code><a href="../miscellaneous/typealiases.html#UUID" target="_self" >UUID</a></code>
                                             </td>
@@ -760,7 +796,7 @@
 
                                         </tr>
                                         <tr>
-                                                <td>userId</td>
+                                                <td>deckId</td>
                                             <td>
                                                             <code><a href="../miscellaneous/typealiases.html#UUID" target="_self" >UUID</a></code>
                                             </td>
@@ -800,15 +836,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getSharedMany(query: <a href="../classes/GetSharedQueryDto.html" target="_self">GetSharedQueryDto</a>)</code>
+                    <code>getSharedMany(userId: <a href="../undefineds/UUID.html" target="_self">UUID | undefined</a>, query: <a href="../classes/GetManyQueryDto.html" target="_self">GetManyQueryDto</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="111"
-                                    class="link-to-prism">src/api/deck/deck.service.ts:111</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="144"
+                                    class="link-to-prism">src/api/deck/deck.service.ts:144</a></div>
                         </td>
                     </tr>
 
@@ -829,9 +865,21 @@
                                     </thead>
                                     <tbody>
                                         <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#UUID" target="_self" >UUID | undefined</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
                                                 <td>query</td>
                                             <td>
-                                                            <code><a href="../classes/GetSharedQueryDto.html" target="_self" >GetSharedQueryDto</a></code>
+                                                            <code><a href="../classes/GetManyQueryDto.html" target="_self" >GetManyQueryDto</a></code>
                                             </td>
 
                                             <td>
@@ -869,15 +917,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getSharedOne(deckId: <a href="../undefineds/UUID.html" target="_self">UUID</a>, ownerId?: <a href="../undefineds/UUID.html" target="_self">UUID | null</a>)</code>
+                    <code>getSharedOne(userId: <a href="../undefineds/UUID.html" target="_self">UUID | undefined</a>, deckId: <a href="../undefineds/UUID.html" target="_self">UUID</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="109"
-                                    class="link-to-prism">src/api/deck/deck.service.ts:109</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="115"
+                                    class="link-to-prism">src/api/deck/deck.service.ts:115</a></div>
                         </td>
                     </tr>
 
@@ -898,6 +946,18 @@
                                     </thead>
                                     <tbody>
                                         <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#UUID" target="_self" >UUID | undefined</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
                                                 <td>deckId</td>
                                             <td>
                                                             <code><a href="../miscellaneous/typealiases.html#UUID" target="_self" >UUID</a></code>
@@ -909,23 +969,11 @@
 
 
                                         </tr>
-                                        <tr>
-                                                <td>ownerId</td>
-                                            <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#UUID" target="_self" >UUID | null</a></code>
-                                            </td>
-
-                                            <td>
-                                                    Yes
-                                            </td>
-
-
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>    <code>unknown</code>
 
                         </div>
                             <div class="io-description">
@@ -957,8 +1005,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="333"
-                                    class="link-to-prism">src/api/deck/deck.service.ts:333</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="354"
+                                    class="link-to-prism">src/api/deck/deck.service.ts:354</a></div>
                         </td>
                     </tr>
 
@@ -1031,15 +1079,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>update(deckId: <a href="../undefineds/UUID.html" target="_self">UUID</a>, userId: <a href="../undefineds/UUID.html" target="_self">UUID</a>, dto: <a href="../classes/UpdateDeckDto.html" target="_self">UpdateDeckDto</a>)</code>
+                    <code>update(userId: <a href="../undefineds/UUID.html" target="_self">UUID</a>, deckId: <a href="../undefineds/UUID.html" target="_self">UUID</a>, dto: <a href="../classes/UpdateDeckDto.html" target="_self">UpdateDeckDto</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="189"
-                                    class="link-to-prism">src/api/deck/deck.service.ts:189</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="211"
+                                    class="link-to-prism">src/api/deck/deck.service.ts:211</a></div>
                         </td>
                     </tr>
 
@@ -1060,7 +1108,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>deckId</td>
+                                                <td>userId</td>
                                             <td>
                                                             <code><a href="../miscellaneous/typealiases.html#UUID" target="_self" >UUID</a></code>
                                             </td>
@@ -1072,7 +1120,7 @@
 
                                         </tr>
                                         <tr>
-                                                <td>userId</td>
+                                                <td>deckId</td>
                                             <td>
                                                             <code><a href="../miscellaneous/typealiases.html#UUID" target="_self" >UUID</a></code>
                                             </td>
@@ -1141,7 +1189,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/api/deck/deck.service.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/api/deck/deck.service.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -1154,11 +1202,18 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { UserDto } from &#x27;@api/user/user.dto&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { NotificationDto } from &#x27;@api/notification/notification.dto&#x27;;
+import { NotificationGateway } from &#x27;@api/notification/notification.gateway&#x27;;
 import { PaginatedDto } from &#x27;@common/dtos/offset-pagination/offset-pagination.dto&#x27;;
 import { createMetadata } from &#x27;@common/dtos/offset-pagination/utils&#x27;;
 import { UUID } from &#x27;@common/types/branded.type&#x27;;
-import { EntityRepository, FilterQuery, QueryOrder } from &#x27;@mikro-orm/core&#x27;;
+import { Card, Deck, Notification, User } from &#x27;@db/entities&#x27;;
+import {
+  EntityRepository,
+  FilterQuery,
+  QueryOrder,
+  wrap,
+} from &#x27;@mikro-orm/core&#x27;;
 import { InjectRepository } from &#x27;@mikro-orm/nestjs&#x27;;
 import { EntityManager } from &#x27;@mikro-orm/postgresql&#x27;;
 import {
@@ -1168,23 +1223,21 @@ import {
   NotFoundException,
 } from &#x27;@nestjs/common&#x27;;
 import { plainToInstance } from &#x27;class-transformer&#x27;;
-import { pick } from &#x27;lodash&#x27;;
+import { assign, omit, pick } from &#x27;lodash&#x27;;
 import { Visibility } from &#x27;./deck.enum&#x27;;
 import { CardDto } from &#x27;./dtos/card.dto&#x27;;
 import {
   CloneDeckDto,
   CreateDeckDto,
   CreateDeckResDto,
-  DeckQueryDto,
   DeckStatsDto,
+  GetManyQueryDto,
   GetManyResDto,
   GetOneResDto,
-  GetSharedQueryDto,
-  PublicDeckDto,
+  GetSharedManyResDto,
+  GetSharedOneResDto,
   UpdateDeckDto,
 } from &#x27;./dtos/deck.dto&#x27;;
-import { Card } from &#x27;./entities/card.entity&#x27;;
-import { Deck } from &#x27;./entities/deck.entity&#x27;;
 
 @Injectable()
 export class DeckService {
@@ -1192,13 +1245,18 @@ export class DeckService {
 
   constructor(
     private readonly em: EntityManager,
+    private readonly notificationGateway: NotificationGateway,
     @InjectRepository(Deck)
     private readonly deckRepository: EntityRepository&lt;Deck&gt;,
     @InjectRepository(Card)
     private readonly cardRepository: EntityRepository&lt;Card&gt;,
+    @InjectRepository(User)
+    private readonly userRepository: EntityRepository&lt;User&gt;,
+    @InjectRepository(Notification)
+    private readonly notificationRepository: EntityRepository&lt;Notification&gt;,
   ) {}
 
-  async getOne(deckId: UUID, userId: UUID) {
+  async getOne(userId: UUID, deckId: UUID) {
     const deck &#x3D; await this.deckRepository.findOne(
       {
         id: deckId,
@@ -1206,7 +1264,6 @@ export class DeckService {
       },
       {
         populate: [&#x27;cards&#x27;],
-        fields: [&#x27;id&#x27;, &#x27;name&#x27;, &#x27;slug&#x27;, &#x27;description&#x27;, &#x27;cards&#x27;],
         orderBy: { cards: { term: QueryOrder.ASC_NULLS_LAST } },
       },
     );
@@ -1219,16 +1276,13 @@ export class DeckService {
 
     await this.em.flush();
 
-    const cards &#x3D; plainToInstance(CardDto, deck.cards.toArray());
+    const plainDeck &#x3D; wrap(deck).toPOJO();
+    const cards &#x3D; plainDeck.cards.map((c) &#x3D;&gt; omit(c, [&#x27;deck&#x27;]));
 
-    return plainToInstance(GetOneResDto, {
-      ...deck,
-      cards,
-      stats: this._getDeckStats(cards.map((c) &#x3D;&gt; pick(c, &#x27;status&#x27;))),
-    });
+    return plainToInstance(GetOneResDto, assign(plainDeck, { cards }));
   }
 
-  async getMany(userId: UUID, query: DeckQueryDto) {
+  async getMany(userId: UUID, query: GetManyQueryDto) {
     const { limit, offset, search, orderBy, order } &#x3D; query;
 
     const where: FilterQuery&lt;Deck&gt; &#x3D; { owner: userId };
@@ -1241,17 +1295,17 @@ export class DeckService {
         limit,
         offset,
         orderBy: { [orderBy]: order },
-
         populate: [&#x27;cards&#x27;],
-        fields: [&#x27;name&#x27;, &#x27;slug&#x27;, &#x27;visibility&#x27;, &#x27;openedAt&#x27;, &#x27;cards.status&#x27;],
       },
     );
 
     const deckWithCards &#x3D; decks.map((d) &#x3D;&gt; {
+      const plainDeck &#x3D; wrap(d).toPOJO();
+
       return plainToInstance(GetManyResDto, {
-        ...d,
+        ...plainDeck,
         stats: this._getDeckStats(
-          d.cards.toArray().map((c) &#x3D;&gt; pick(c, &#x27;status&#x27;)),
+          plainDeck.cards.map((c) &#x3D;&gt; pick(c, &#x27;status&#x27;)),
         ),
       });
     });
@@ -1262,16 +1316,44 @@ export class DeckService {
     });
   }
 
-  async getSharedOne(deckId: UUID, ownerId?: UUID | null) {}
+  async getSharedOne(userId: UUID | undefined, deckId: UUID) {
+    const where: FilterQuery&lt;Deck&gt; &#x3D; {
+      id: deckId,
+      visibility: [Visibility.PUBLIC, Visibility.PROTECTED],
+    };
 
-  async getSharedMany(query: GetSharedQueryDto) {
-    const { limit, offset, search, orderBy, order, ownerId } &#x3D; query;
+    if (userId) where.owner &#x3D; { $ne: userId };
+
+    const deck &#x3D; await this.deckRepository.findOne(where, {
+      populate: [&#x27;owner&#x27;, &#x27;cards&#x27;],
+      orderBy: { cards: { term: QueryOrder.ASC_NULLS_LAST } },
+    });
+
+    if (!deck) {
+      throw new NotFoundException(&#x60;Deck with id &quot;${deckId}&quot; not found.&#x60;);
+    }
+
+    deck.viewCount++;
+
+    await this.em.flush();
+
+    const plainDeck &#x3D; wrap(deck).toPOJO();
+
+    return plainToInstance(GetSharedOneResDto, {
+      ...plainDeck,
+      totalCards: plainDeck.cards.length,
+    });
+  }
+
+  async getSharedMany(userId: UUID | undefined, query: GetManyQueryDto) {
+    console.log(&#x60;🚀 ~ DeckService ~ getSharedMany ~ userId:&#x60;, userId);
+    const { limit, offset, search, orderBy, order } &#x3D; query;
 
     const where: FilterQuery&lt;Deck&gt; &#x3D; {
       visibility: [Visibility.PUBLIC, Visibility.PROTECTED],
     };
 
-    if (ownerId) where.owner &#x3D; { $ne: ownerId };
+    if (userId) where.owner &#x3D; { $ne: userId };
     if (search &amp;&amp; search.trim() !&#x3D;&#x3D; &#x27;&#x27;) where.name &#x3D; { $ilike: &#x60;%${search}%&#x60; };
 
     const [decks, totalRecords] &#x3D; await this.deckRepository.findAndCount(
@@ -1280,30 +1362,21 @@ export class DeckService {
         limit,
         offset,
         orderBy: { [orderBy]: order },
-        populate: [&#x27;owner&#x27;, &#x27;cards:ref&#x27;],
-        fields: [
-          &#x27;name&#x27;,
-          &#x27;visibility&#x27;,
-          &#x27;learnerCount&#x27;,
-          &#x27;slug&#x27;,
-          &#x27;createdAt&#x27;,
-          &#x27;owner.username&#x27;,
-          &#x27;owner.avatarUrl&#x27;,
-          &#x27;cards.id&#x27;,
-        ],
+        populate: [&#x27;owner&#x27;, &#x27;cards&#x27;],
       },
     );
 
-    const publicDecks &#x3D; decks.map((d) &#x3D;&gt; {
-      return plainToInstance(PublicDeckDto, {
-        ...d,
-        totalCards: d.cards.length,
-        owner: plainToInstance(UserDto, d.owner.unwrap()),
+    const data &#x3D; decks.map((d) &#x3D;&gt; {
+      const plainDeck &#x3D; wrap(d).toPOJO();
+
+      return plainToInstance(GetSharedManyResDto, {
+        ...plainDeck,
+        totalCards: plainDeck.cards.length,
       });
     });
 
-    return plainToInstance(PaginatedDto&lt;PublicDeckDto&gt;, {
-      data: publicDecks,
+    return plainToInstance(PaginatedDto&lt;GetSharedManyResDto&gt;, {
+      data,
       metadata: createMetadata(totalRecords, query),
     });
   }
@@ -1336,13 +1409,10 @@ export class DeckService {
 
     await this.em.flush();
 
-    return plainToInstance(CreateDeckResDto, {
-      id: newDeck.id,
-      slug: newDeck.slug,
-    });
+    return plainToInstance(CreateDeckResDto, pick(newDeck, [&#x27;id&#x27;, &#x27;slug&#x27;]));
   }
 
-  async update(deckId: UUID, userId: UUID, dto: UpdateDeckDto) {
+  async update(userId: UUID, deckId: UUID, dto: UpdateDeckDto) {
     const deck &#x3D; await this.deckRepository.findOne(
       { id: deckId, owner: userId },
       { populate: [&#x27;cards&#x27;] },
@@ -1418,27 +1488,21 @@ export class DeckService {
   }
 
   async delete(userId: UUID, deckId: UUID) {
-    const deck &#x3D; await this.deckRepository.findOne({
-      id: deckId,
-      owner: userId,
-    });
+    const deck &#x3D; await this.deckRepository.findOne(
+      { id: deckId, owner: userId },
+      { populate: [&#x27;cards&#x27;] },
+    );
 
     if (!deck)
       throw new NotFoundException(&#x60;Deck with id &quot;${deckId}&quot; not found.&#x60;);
 
-    this.deckRepository.assign(deck, {
-      deletedAt: new Date(),
-      deletedBy: userId,
-    });
-
-    await this.em.flush();
+    await this.em.remove(deck).flush();
   }
 
   async clone(userId: UUID, deckId: UUID, dto: CloneDeckDto) {
-    const originalDeck &#x3D; await this.deckRepository.findOne(
-      { id: deckId },
-      { populate: [&#x27;cards&#x27;] },
-    );
+    const originalDeck &#x3D; await this.deckRepository.findOne(deckId, {
+      populate: [&#x27;owner&#x27;, &#x27;cards&#x27;],
+    });
 
     if (!originalDeck)
       throw new NotFoundException(&#x60;Deck with id &quot;${deckId}&quot; not found.&#x60;);
@@ -1453,19 +1517,8 @@ export class DeckService {
       if (!dto.passcode || dto.passcode !&#x3D;&#x3D; originalDeck.passcode)
         throw new BadRequestException(&#x27;Invalid passcode.&#x27;);
 
-    const newDeckName &#x3D; &#x60;${originalDeck.name} (Clone)&#x60;;
-    const existingClonedDeck &#x3D; await this.deckRepository.findOne({
-      name: newDeckName,
-      owner: { id: userId },
-    });
-
-    if (existingClonedDeck)
-      throw new BadRequestException(
-        &#x60;You have already cloned this deck as &quot;${newDeckName}&quot;. Please rename it before cloning again.&#x60;,
-      );
-
     const newDeck &#x3D; this.deckRepository.create({
-      name: newDeckName,
+      name: &#x60;${originalDeck.name} (Clone) ${Date.now()}&#x60;,
       description: originalDeck.description,
       visibility: Visibility.PRIVATE,
       owner: userId,
@@ -1473,17 +1526,33 @@ export class DeckService {
       clonedFrom: originalDeck.id,
     });
 
-    originalDeck.cards.getItems().forEach((card) &#x3D;&gt;
-      this.cardRepository.create({
+    originalDeck.cards.toArray().forEach((card) &#x3D;&gt; {
+      return this.cardRepository.create({
+        ...pick(card, [
+          &#x27;term&#x27;,
+          &#x27;termLanguage&#x27;,
+          &#x27;definition&#x27;,
+          &#x27;definitionLanguage&#x27;,
+          &#x27;phonetic&#x27;,
+        ]),
         deck: newDeck.id,
-        term: card.term,
-        definition: card.definition,
-      }),
-    );
+      });
+    });
 
     originalDeck.learnerCount++;
 
+    const notification &#x3D; this.notificationRepository.create({
+      entityId: originalDeck.id,
+      content: &#x60;Your deck &quot;${originalDeck.name}&quot; has been cloned by an user.&#x60;,
+      actor: userId,
+      recipient: originalDeck.owner.id,
+    });
+
     await this.em.flush();
+
+    this.notificationGateway.sendNotification(
+      plainToInstance(NotificationDto, wrap(notification).toPOJO()),
+    );
   }
 
   async restart(userId: UUID, deckId: UUID) {

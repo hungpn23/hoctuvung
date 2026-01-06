@@ -211,7 +211,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/api/user/user.dto.ts:45</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/api/user/user.dto.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -232,7 +232,7 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { UserRole } from &#x27;@common/constants/role.enum&#x27;;
 import type { UUID } from &#x27;@common/types/branded.type&#x27;;
-import { ApiProperty, ApiPropertyOptional } from &#x27;@nestjs/swagger&#x27;;
+import { ApiProperty, ApiPropertyOptional, PickType } from &#x27;@nestjs/swagger&#x27;;
 import { Exclude, Expose } from &#x27;class-transformer&#x27;;
 
 @Exclude()
@@ -269,6 +269,16 @@ export class UserDto {
   @ApiPropertyOptional()
   updatedAt?: Date | null;
 }
+
+@Exclude()
+export class OwnerDto extends PickType(UserDto, [
+  &#x27;id&#x27;,
+  &#x27;username&#x27;,
+  &#x27;avatarUrl&#x27;,
+]) {}
+
+@Exclude()
+export class ActorDto extends OwnerDto {}
 
 @Exclude()
 export class UploadAvatarDto {

@@ -146,10 +146,9 @@
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                            <code><a href="../entitys/Deck.html" target="_self" >OmitType(CreateDeckDto, [
-  &#x27;name&#x27;,
-  &#x27;visibility&#x27;,
-  &#x27;cards&#x27;,
+                            <code><a href="../entitys/Deck.html" target="_self" >PickType(CreateDeckDto, [
+  &#x27;description&#x27;,
+  &#x27;passcode&#x27;,
 ])</a></code>
             </p>
 
@@ -220,7 +219,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../entitys/Card.html" target="_self" >UpdateCardDto[] | null</a></code>
+                        <i>Type : </i>        <code><a href="../entitys/Card.html" target="_self" >UpdateCardDto[]</a></code>
 
                     </td>
                 </tr>
@@ -235,7 +234,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/api/deck/dtos/deck.dto.ts:66</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/api/deck/dtos/deck.dto.ts:65</a></div>
                         </td>
                     </tr>
 
@@ -258,7 +257,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code>string | null</code>
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
                     </td>
                 </tr>
@@ -273,7 +272,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/api/deck/dtos/deck.dto.ts:58</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/api/deck/dtos/deck.dto.ts:57</a></div>
                         </td>
                     </tr>
 
@@ -296,7 +295,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#Visibility" target="_self" >Visibility | null</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#Visibility" target="_self" >Visibility</a></code>
 
                     </td>
                 </tr>
@@ -311,7 +310,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/api/deck/dtos/deck.dto.ts:62</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/api/deck/dtos/deck.dto.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -330,7 +329,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { UserDto } from &#x27;@api/user/user.dto&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { OwnerDto } from &#x27;@api/user/user.dto&#x27;;
 import { DeckOrderBy } from &#x27;@common/constants/order.enum&#x27;;
 import {
   ClassValidator,
@@ -342,16 +341,16 @@ import {
 } from &#x27;@common/decorators/validators.decorator&#x27;;
 import { QueryDto } from &#x27;@common/dtos/offset-pagination/offset-pagination.dto&#x27;;
 import type { UUID } from &#x27;@common/types/branded.type&#x27;;
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  OmitType,
-  PickType,
-} from &#x27;@nestjs/swagger&#x27;;
+import { ApiProperty, ApiPropertyOptional, PickType } from &#x27;@nestjs/swagger&#x27;;
 import { Exclude, Expose } from &#x27;class-transformer&#x27;;
 import { ArrayMinSize, ValidateIf } from &#x27;class-validator&#x27;;
 import { Visibility } from &#x27;../deck.enum&#x27;;
-import { CardDto, CreateCardDto, UpdateCardDto } from &#x27;./card.dto&#x27;;
+import {
+  CardDto,
+  CreateCardDto,
+  PreviewCardDto,
+  UpdateCardDto,
+} from &#x27;./card.dto&#x27;;
 
 export class CreateDeckDto {
   @ApiProperty()
@@ -380,22 +379,21 @@ export class CreateDeckDto {
   cards!: CreateCardDto[];
 }
 
-export class UpdateDeckDto extends OmitType(CreateDeckDto, [
-  &#x27;name&#x27;,
-  &#x27;visibility&#x27;,
-  &#x27;cards&#x27;,
+export class UpdateDeckDto extends PickType(CreateDeckDto, [
+  &#x27;description&#x27;,
+  &#x27;passcode&#x27;,
 ]) {
   @ApiPropertyOptional()
   @StringValidatorOptional({ minLength: 3 })
-  name?: string | null;
+  name?: string;
 
   @ApiPropertyOptional({ enum: Visibility })
   @EnumValidatorOptional(Visibility)
-  visibility?: Visibility | null;
+  visibility?: Visibility;
 
   @ApiPropertyOptional({ type: [UpdateCardDto] })
   @ClassValidatorOptional(UpdateCardDto, { each: true })
-  cards?: UpdateCardDto[] | null;
+  cards?: UpdateCardDto[];
 }
 
 export class CloneDeckDto {
@@ -403,22 +401,16 @@ export class CloneDeckDto {
     description: &#x27;Bắt buộc nếu deck có visibility là PROTECTED.&#x27;,
   })
   @StringValidatorOptional()
-  passcode?: string | null;
+  passcode?: string;
 }
 
-export class DeckQueryDto extends QueryDto {
+export class GetManyQueryDto extends QueryDto {
   @ApiPropertyOptional({
     enum: DeckOrderBy,
     default: DeckOrderBy.OPENED_AT,
   })
   @EnumValidatorOptional(DeckOrderBy)
   orderBy: DeckOrderBy &#x3D; DeckOrderBy.OPENED_AT;
-}
-
-export class GetSharedQueryDto extends DeckQueryDto {
-  @ApiPropertyOptional()
-  @StringValidatorOptional()
-  ownerId?: UUID;
 }
 
 @Exclude()
@@ -442,6 +434,10 @@ export class DeckDto {
   @Expose()
   @ApiProperty({ enum: Visibility })
   visibility!: Visibility;
+
+  @Expose()
+  @ApiProperty()
+  viewCount!: number;
 
   @Expose()
   @ApiProperty()
@@ -489,25 +485,7 @@ export class GetOneResDto extends PickType(DeckDto, [
   @Expose()
   @ApiProperty({ type: [CardDto] })
   cards!: CardDto[];
-
-  @Expose()
-  @ApiProperty({ type: DeckStatsDto })
-  stats!: DeckStatsDto;
 }
-
-@Exclude()
-export class PublicDeckDto extends DeckDto {
-  @Expose()
-  @ApiProperty()
-  totalCards!: number;
-
-  @Expose()
-  @ApiProperty()
-  owner!: UserDto;
-}
-
-@Exclude()
-export class CreateDeckResDto extends PickType(DeckDto, [&#x27;id&#x27;, &#x27;slug&#x27;]) {}
 
 @Exclude()
 export class GetManyResDto extends PickType(DeckDto, [
@@ -523,11 +501,32 @@ export class GetManyResDto extends PickType(DeckDto, [
 }
 
 @Exclude()
+export class GetSharedOneResDto extends PickType(DeckDto, [
+  &#x27;id&#x27;,
+  &#x27;name&#x27;,
+  &#x27;description&#x27;,
+  &#x27;visibility&#x27;,
+]) {
+  @Expose()
+  @ApiProperty()
+  totalCards!: number;
+
+  @Expose()
+  @ApiProperty({ type: OwnerDto })
+  owner!: OwnerDto;
+
+  @Expose()
+  @ApiProperty({ type: [PreviewCardDto] })
+  cards!: PreviewCardDto[];
+}
+
+@Exclude()
 export class GetSharedManyResDto extends PickType(DeckDto, [
   &#x27;id&#x27;,
   &#x27;name&#x27;,
   &#x27;slug&#x27;,
   &#x27;visibility&#x27;,
+  &#x27;viewCount&#x27;,
   &#x27;learnerCount&#x27;,
   &#x27;createdAt&#x27;,
 ]) {
@@ -536,9 +535,12 @@ export class GetSharedManyResDto extends PickType(DeckDto, [
   totalCards!: number;
 
   @Expose()
-  @ApiProperty()
-  owner!: Pick&lt;UserDto, &#x27;id&#x27; | &#x27;username&#x27; | &#x27;avatarUrl&#x27;&gt;;
+  @ApiProperty({ type: OwnerDto })
+  owner!: OwnerDto;
 }
+
+@Exclude()
+export class CreateDeckResDto extends PickType(DeckDto, [&#x27;id&#x27;, &#x27;slug&#x27;]) {}
 </code></pre>
     </div>
 </div>

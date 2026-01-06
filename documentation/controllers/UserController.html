@@ -160,12 +160,6 @@
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier">Async</span>
-                                <a href="#getMe" >getMe</a>
-                            </li>
-                            <li>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#uploadAvatar" >uploadAvatar</a>
@@ -187,84 +181,6 @@
     <h3 id="methods">
         Methods
     </h3>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getMe"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier">Async</span>
-                        <span ><b>getMe</b></span>
-                        <a href="#getMe"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getMe(userId: <a href="../undefineds/UUID.html" target="_self">UUID</a>)</code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@ApiEndpoint({type: UserDto})<br />@Get(&#x27;me&#x27;)<br /></code>
-                </td>
-            </tr>
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="17"
-                                    class="link-to-prism">src/api/user/user.controller.ts:17</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>userId</td>
-                                            <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#UUID" target="_self" >UUID</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>unknown</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -297,8 +213,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="24"
-                                    class="link-to-prism">src/api/user/user.controller.ts:24</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="18"
+                                    class="link-to-prism">src/api/user/user.controller.ts:18</a></div>
                         </td>
                     </tr>
 
@@ -366,19 +282,13 @@ import { Payload } from &#x27;@common/decorators/jwt-payload.decorator&#x27;;
 import { validateImagePipe } from &#x27;@common/pipes/validate-image.pipe&#x27;;
 import type { UUID } from &#x27;@common/types/branded.type&#x27;;
 import { multerStorage } from &#x27;@common/utils/multer-storage&#x27;;
-import { Controller, Get, Post, UploadedFile } from &#x27;@nestjs/common&#x27;;
-import { UploadAvatarDto, UserDto } from &#x27;./user.dto&#x27;;
+import { Controller, Post, UploadedFile } from &#x27;@nestjs/common&#x27;;
+import { UploadAvatarDto } from &#x27;./user.dto&#x27;;
 import { UserService } from &#x27;./user.service&#x27;;
 
 @Controller(&#x27;users&#x27;)
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @ApiEndpoint({ type: UserDto })
-  @Get(&#x27;me&#x27;)
-  async getMe(@Payload(&#x27;userId&#x27;) userId: UUID) {
-    return await this.userService.getMe(userId);
-  }
 
   @ApiFile(&#x27;avatar&#x27;, { storage: multerStorage() })
   @ApiEndpoint({ type: UploadAvatarDto })

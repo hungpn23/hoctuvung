@@ -221,7 +221,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/common/dtos/error.dto.ts:31</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/common/dtos/error.dto.ts:12</a></div>
                         </td>
                     </tr>
 
@@ -258,7 +258,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/common/dtos/error.dto.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/common/dtos/error.dto.ts:16</a></div>
                         </td>
                     </tr>
 
@@ -295,7 +295,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/common/dtos/error.dto.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">src/common/dtos/error.dto.ts:8</a></div>
                         </td>
                     </tr>
 
@@ -318,25 +318,6 @@
 import { Exclude, Expose } from &#x27;class-transformer&#x27;;
 
 @Exclude()
-export class ErrorDto {
-  @Expose()
-  @ApiProperty()
-  timestamp!: string;
-
-  @Expose()
-  @ApiProperty()
-  statusCode!: number;
-
-  @Expose()
-  @ApiProperty()
-  message!: string;
-
-  @Expose()
-  @ApiPropertyOptional({ type: () &#x3D;&gt; [ErrorDetailDto] })
-  details?: ErrorDetailDto[] | null;
-}
-
-@Exclude()
 export class ErrorDetailDto {
   @Expose()
   @ApiProperty()
@@ -349,6 +330,29 @@ export class ErrorDetailDto {
   @Expose()
   @ApiProperty()
   message!: string;
+}
+
+@Exclude()
+export class ErrorDto {
+  @Expose()
+  @ApiProperty()
+  timestamp!: string;
+
+  @Expose()
+  @ApiProperty()
+  statusCode!: number;
+
+  @Expose()
+  @ApiPropertyOptional()
+  statusMessage?: string;
+
+  @Expose()
+  @ApiProperty()
+  message!: string;
+
+  @Expose()
+  @ApiPropertyOptional({ type: [ErrorDetailDto] })
+  details?: ErrorDetailDto[] | null;
 }
 </code></pre>
     </div>

@@ -169,6 +169,10 @@
                             </li>
                             <li>
                                     <span class="modifier"></span>
+                                <a href="#notifications" >notifications</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
                                 <a href="#password" >password</a>
                             </li>
                             <li>
@@ -231,7 +235,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/api/user/entities/user.entity.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/api/user/entities/user.entity.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -272,7 +276,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/api/user/entities/user.entity.ts:44</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/api/user/entities/user.entity.ts:43</a></div>
                         </td>
                     </tr>
 
@@ -309,7 +313,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/api/user/entities/user.entity.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/api/user/entities/user.entity.ts:25</a></div>
                         </td>
                     </tr>
 
@@ -350,7 +354,48 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/api/user/entities/user.entity.ts:29</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/api/user/entities/user.entity.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="notifications"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>notifications</b></span>
+                        <a href="#notifications"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Collection&lt;Notification, User&gt;(this)</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @OneToMany(undefined, &#x27;recipient&#x27;, {orphanRemoval: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/api/user/entities/user.entity.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -386,7 +431,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/api/user/entities/user.entity.ts:32</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/api/user/entities/user.entity.ts:31</a></div>
                         </td>
                     </tr>
 
@@ -427,7 +472,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/api/user/entities/user.entity.ts:38</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/api/user/entities/user.entity.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -468,7 +513,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/api/user/entities/user.entity.ts:41</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/api/user/entities/user.entity.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -504,7 +549,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/api/user/entities/user.entity.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/api/user/entities/user.entity.ts:22</a></div>
                         </td>
                     </tr>
 
@@ -516,10 +561,10 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Deck } from &#x27;@api/deck/entities/deck.entity&#x27;;
-import { UserRole } from &#x27;@common/constants/role.enum&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { UserRole } from &#x27;@common/constants/role.enum&#x27;;
 import { HiddenProperty } from &#x27;@common/utils/hidden-property&#x27;;
 import { NullableProperty } from &#x27;@common/utils/nullable-property&#x27;;
+import { Deck, Notification, Session } from &#x27;@db/entities&#x27;;
 import { BaseEntity } from &#x27;@db/entities/base.entity&#x27;;
 import {
   BeforeCreate,
@@ -533,7 +578,6 @@ import {
   type Opt,
 } from &#x27;@mikro-orm/core&#x27;;
 import argon2 from &#x27;argon2&#x27;;
-import { Session } from &#x27;./session.entity&#x27;;
 
 @Entity()
 export class User extends BaseEntity {
@@ -560,6 +604,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() &#x3D;&gt; Deck, &#x27;owner&#x27;, { orphanRemoval: true })
   decks &#x3D; new Collection&lt;Deck, User&gt;(this);
+
+  @OneToMany(() &#x3D;&gt; Notification, &#x27;recipient&#x27;, { orphanRemoval: true })
+  notifications &#x3D; new Collection&lt;Notification, User&gt;(this);
 
   @BeforeCreate()
   @BeforeUpdate()

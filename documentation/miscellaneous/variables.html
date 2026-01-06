@@ -166,6 +166,9 @@
                             <a href="#isProd" title="src/app.module.ts" ><b>isProd</b>&nbsp;&nbsp;&nbsp;(src/.../app.module.ts)</a>
                         </li>
                         <li>
+                            <a href="#mailConfig" title="src/config/mail.config.ts" ><b>mailConfig</b>&nbsp;&nbsp;&nbsp;(src/.../mail.config.ts)</a>
+                        </li>
+                        <li>
                             <a href="#MAX_REVIEW_CARDS_PER_SESSION" title="src/api/study/study.const.ts" ><b>MAX_REVIEW_CARDS_PER_SESSION</b>&nbsp;&nbsp;&nbsp;(src/.../study.const.ts)</a>
                         </li>
                         <li>
@@ -173,6 +176,9 @@
                         </li>
                         <li>
                             <a href="#redisConfig" title="src/config/redis.config.ts" ><b>redisConfig</b>&nbsp;&nbsp;&nbsp;(src/.../redis.config.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#sampleData" title="src/integrations/langchain/store.service.ts" ><b>sampleData</b>&nbsp;&nbsp;&nbsp;(src/.../store.service.ts)</a>
                         </li>
                         <li>
                             <a href="#shuffleArray" title="src/db/seeders/database.seeder.ts" ><b>shuffleArray</b>&nbsp;&nbsp;&nbsp;(src/.../database.seeder.ts)</a>
@@ -658,7 +664,7 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>registerAs(&#x27;database&#x27;, () &#x3D;&gt; {
-  const config &#x3D; validateConfig&lt;DatabaseEnvVariables&gt;(DatabaseEnvVariables);
+  const config &#x3D; validateConfig(DatabaseEnvVariables);
 
   return {
     host: config.DB_HOST,
@@ -805,6 +811,47 @@
         </tbody>
     </table>
 </section>
+    <h3>src/config/mail.config.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mailConfig"></a>
+                    <span class="name">
+                        <span ><b>mailConfig</b></span>
+                        <a href="#mailConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>registerAs(&#x27;mail&#x27;, () &#x3D;&gt; {
+  const config &#x3D; validateConfig(MailEnvVariables);
+
+  return {
+    resendApiKey: config.RESEND_API_KEY,
+    host: config.MAIL_HOST,
+    port: config.MAIL_PORT,
+    secure: config.MAIL_SECURE,
+    user: config.MAIL_AUTH_USER,
+    pass: config.MAIL_AUTH_PASS,
+    from: config.MAIL_FROM,
+  };
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
     <h3>src/api/study/study.const.ts</h3>
     <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
@@ -927,6 +974,76 @@
     password: config.REDIS_PASSWORD,
   };
 })</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/integrations/langchain/store.service.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sampleData"></a>
+                    <span class="name">
+                        <span ><b>sampleData</b></span>
+                        <a href="#sampleData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#EntryRecord" target="_self" >EntryRecord[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    id: &#x27;bank_word_1&#x27;,
+    type: &#x27;word&#x27;,
+    term: &#x27;bank&#x27;,
+    termLang: &#x27;english&#x27;,
+    definitionEnglish:
+      &#x27;A financial institution that accepts deposits and provides loans.&#x27;,
+    definitionVietnamese:
+      &#x27;Ngân hàng là tổ chức tài chính nhận tiền gửi và cung cấp các khoản vay.&#x27;,
+    pos: &#x27;noun&#x27;,
+    senseId: &#x27;financial_institution&#x27;,
+    exampleEnglish: &#x27;I deposited some money in the bank.&#x27;,
+    source: &#x27;manual&#x27;,
+  },
+  {
+    id: &#x27;be_willing_to_phrase_1&#x27;,
+    type: &#x27;phrase&#x27;,
+    term: &#x27;be willing to&#x27;,
+    termLang: &#x27;english&#x27;,
+    definitionEnglish:
+      &#x27;To be ready or prepared to do something, showing a positive attitude or intention.&#x27;,
+    definitionVietnamese:
+      &#x27;Sẵn sàng làm điều gì đó, thể hiện thái độ hoặc ý định tích cực.&#x27;,
+    grammar: &#x27;be willing to + verb&#x27;,
+    exampleEnglish: &#x27;She is willing to help her teammates.&#x27;,
+    source: &#x27;manual&#x27;,
+  },
+  {
+    id: &#x27;break_the_ice_idiom_1&#x27;,
+    type: &#x27;phrase&#x27;,
+    term: &#x27;break the ice&#x27;,
+    termLang: &#x27;english&#x27;,
+    definitionEnglish:
+      &#x27;To do or say something that makes people feel more relaxed in a social situation.&#x27;,
+    definitionVietnamese:
+      &#x27;Phá vỡ sự ngượng ngùng hoặc căng thẳng ban đầu trong giao tiếp.&#x27;,
+    usage: &#x27;Often used in social situations or first meetings.&#x27;,
+    exampleEnglish: &#x27;He told a joke to break the ice at the meeting.&#x27;,
+    source: &#x27;manual&#x27;,
+  },
+]</code>
                     </td>
                 </tr>
 

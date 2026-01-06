@@ -160,6 +160,7 @@
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#id" >id</a>
                             </li>
                             <li>
@@ -199,6 +200,7 @@
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>id</b></span>
                         <a href="#id"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -215,13 +217,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty()<br />@StringValidator()<br />
+                            @ApiProperty()<br />@StringValidator()<br />@IsUUID()<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/api/deck/dtos/card.dto.ts:30</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/api/deck/dtos/card.dto.ts:42</a></div>
                         </td>
                     </tr>
 
@@ -258,7 +260,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/api/deck/dtos/card.dto.ts:38</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/api/deck/dtos/card.dto.ts:50</a></div>
                         </td>
                     </tr>
 
@@ -295,7 +297,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/api/deck/dtos/card.dto.ts:34</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/api/deck/dtos/card.dto.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -316,33 +318,45 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
   DateValidator,
+  EnumValidator,
   NumberValidator,
   StringValidator,
 } from &#x27;@common/decorators/validators.decorator&#x27;;
 import type { UUID } from &#x27;@common/types/branded.type&#x27;;
-import { ApiProperty, ApiPropertyOptional } from &#x27;@nestjs/swagger&#x27;;
+import { ApiProperty, ApiPropertyOptional, PickType } from &#x27;@nestjs/swagger&#x27;;
 import { Exclude, Expose } from &#x27;class-transformer&#x27;;
-import { CardStatus } from &#x27;../deck.enum&#x27;;
+import { IsUUID } from &#x27;class-validator&#x27;;
+import { CardStatus, Language } from &#x27;../deck.enum&#x27;;
 
 export class CreateCardDto {
   @ApiProperty()
   @StringValidator()
   term!: string;
 
+  @ApiProperty({ enum: Language })
+  @EnumValidator(Language)
+  termLanguage!: Language;
+
   @ApiProperty()
   @StringValidator()
   definition!: string;
+
+  @ApiProperty({ enum: Language })
+  @EnumValidator(Language)
+  definitionLanguage!: Language;
 }
 
 export class UpdateCardDto extends CreateCardDto {
   @ApiProperty()
   @StringValidator()
+  @IsUUID()
   id!: UUID;
 }
 
 export class CardAnswerDto {
   @ApiProperty()
   @StringValidator()
+  @IsUUID()
   id!: UUID;
 
   @ApiProperty()
@@ -365,8 +379,20 @@ export class CardDto {
   term!: string;
 
   @Expose()
+  @ApiProperty({ enum: Language })
+  termLanguage!: Language;
+
+  @Expose()
   @ApiProperty()
   definition!: string;
+
+  @Expose()
+  @ApiProperty({ enum: Language })
+  definitionLanguage!: Language;
+
+  @Expose()
+  @ApiPropertyOptional()
+  phonetic?: string;
 
   @Expose()
   @ApiProperty()
@@ -380,6 +406,14 @@ export class CardDto {
   @ApiProperty()
   status!: CardStatus;
 }
+
+@Exclude()
+export class PreviewCardDto extends PickType(CardDto, [
+  &#x27;id&#x27;,
+  &#x27;term&#x27;,
+  &#x27;definition&#x27;,
+  &#x27;phonetic&#x27;,
+]) {}
 </code></pre>
     </div>
 </div>

@@ -113,7 +113,7 @@
 
 <ol class="breadcrumb">
   <li class="breadcrumb-item">Classes</li>
-  <li class="breadcrumb-item" >PublicDeckDto</li>
+  <li class="breadcrumb-item" >OwnerDto</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -137,7 +137,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/api/deck/dtos/deck.dto.ts</code>
+            <code>src/api/user/user.dto.ts</code>
         </p>
 
 
@@ -145,122 +145,8 @@
 
 
 
-            <section data-compodoc="block-index">
-    <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <h6><b>Properties</b></h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <ul class="index-list">
-                            <li>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                <a href="#owner" >owner</a>
-                            </li>
-                            <li>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                <a href="#totalCards" >totalCards</a>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
 
 
-
-
-
-
-        </tbody>
-    </table>
-</section>
-
-
-            <section data-compodoc="block-properties">
-    
-    <h3 id="inputs">
-        Properties
-    </h3>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="owner"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                        <span ><b>owner</b></span>
-                        <a href="#owner"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../classes/UserDto.html" target="_self" >UserDto</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @Expose()<br />@ApiProperty()<br />
-                        </code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="174" class="link-to-prism">src/api/deck/dtos/deck.dto.ts:174</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="totalCards"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                        <span ><b>totalCards</b></span>
-                        <a href="#totalCards"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @Expose()<br />@ApiProperty()<br />
-                        </code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="170" class="link-to-prism">src/api/deck/dtos/deck.dto.ts:170</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-</section>
 
 
 
@@ -272,214 +158,61 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { UserDto } from &#x27;@api/user/user.dto&#x27;;
-import { DeckOrderBy } from &#x27;@common/constants/order.enum&#x27;;
-import {
-  ClassValidator,
-  ClassValidatorOptional,
-  EnumValidator,
-  EnumValidatorOptional,
-  StringValidator,
-  StringValidatorOptional,
-} from &#x27;@common/decorators/validators.decorator&#x27;;
-import { QueryDto } from &#x27;@common/dtos/offset-pagination/offset-pagination.dto&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { UserRole } from &#x27;@common/constants/role.enum&#x27;;
 import type { UUID } from &#x27;@common/types/branded.type&#x27;;
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  OmitType,
-  PickType,
-} from &#x27;@nestjs/swagger&#x27;;
+import { ApiProperty, ApiPropertyOptional, PickType } from &#x27;@nestjs/swagger&#x27;;
 import { Exclude, Expose } from &#x27;class-transformer&#x27;;
-import { ArrayMinSize, ValidateIf } from &#x27;class-validator&#x27;;
-import { Visibility } from &#x27;../deck.enum&#x27;;
-import { CardDto, CreateCardDto, UpdateCardDto } from &#x27;./card.dto&#x27;;
-
-export class CreateDeckDto {
-  @ApiProperty()
-  @StringValidator({ minLength: 3 })
-  name!: string;
-
-  @ApiPropertyOptional()
-  @StringValidatorOptional()
-  description?: string | null;
-
-  @ApiProperty({ enum: Visibility })
-  @EnumValidator(Visibility)
-  visibility!: Visibility;
-
-  @ApiPropertyOptional({
-    description:
-      &#x27;Required if visibility is PROTECTED. Must be 4-20 characters.&#x27;,
-  })
-  @ValidateIf((o) &#x3D;&gt; (o as CreateDeckDto).visibility &#x3D;&#x3D;&#x3D; Visibility.PROTECTED)
-  @StringValidator({ minLength: 4, maxLength: 20 })
-  passcode?: string | null;
-
-  @ApiProperty({ type: () &#x3D;&gt; [CreateCardDto], minItems: 4 })
-  @ArrayMinSize(4)
-  @ClassValidator(CreateCardDto, { each: true })
-  cards!: CreateCardDto[];
-}
-
-export class UpdateDeckDto extends OmitType(CreateDeckDto, [
-  &#x27;name&#x27;,
-  &#x27;visibility&#x27;,
-  &#x27;cards&#x27;,
-]) {
-  @ApiPropertyOptional()
-  @StringValidatorOptional({ minLength: 3 })
-  name?: string | null;
-
-  @ApiPropertyOptional({ enum: Visibility })
-  @EnumValidatorOptional(Visibility)
-  visibility?: Visibility | null;
-
-  @ApiPropertyOptional({ type: [UpdateCardDto] })
-  @ClassValidatorOptional(UpdateCardDto, { each: true })
-  cards?: UpdateCardDto[] | null;
-}
-
-export class CloneDeckDto {
-  @ApiPropertyOptional({
-    description: &#x27;Bắt buộc nếu deck có visibility là PROTECTED.&#x27;,
-  })
-  @StringValidatorOptional()
-  passcode?: string | null;
-}
-
-export class DeckQueryDto extends QueryDto {
-  @ApiPropertyOptional({
-    enum: DeckOrderBy,
-    default: DeckOrderBy.OPENED_AT,
-  })
-  @EnumValidatorOptional(DeckOrderBy)
-  orderBy: DeckOrderBy &#x3D; DeckOrderBy.OPENED_AT;
-}
-
-export class GetSharedQueryDto extends DeckQueryDto {
-  @ApiPropertyOptional()
-  @StringValidatorOptional()
-  ownerId?: UUID;
-}
 
 @Exclude()
-export class DeckDto {
+export class UserDto {
   @Expose()
   @ApiProperty()
   id!: UUID;
 
   @Expose()
   @ApiProperty()
-  name!: string;
-
-  @Expose()
-  @ApiProperty()
-  slug!: string;
+  username!: string;
 
   @Expose()
   @ApiPropertyOptional()
-  description?: string | null;
-
-  @Expose()
-  @ApiProperty({ enum: Visibility })
-  visibility!: Visibility;
+  email?: string | null;
 
   @Expose()
   @ApiProperty()
-  learnerCount!: number;
-
-  @Expose()
-  @ApiPropertyOptional({ type: () &#x3D;&gt; DeckDto })
-  clonedFrom?: Pick&lt;DeckDto, &#x27;id&#x27; | &#x27;name&#x27;&gt; | null;
+  emailVerified!: boolean;
 
   @Expose()
   @ApiPropertyOptional()
-  openedAt?: Date | null;
+  avatarUrl?: string | null;
+
+  @Expose()
+  @ApiProperty()
+  role!: UserRole;
 
   @Expose()
   @ApiProperty()
   createdAt!: Date;
+
+  @Expose()
+  @ApiPropertyOptional()
+  updatedAt?: Date | null;
 }
 
 @Exclude()
-export class DeckStatsDto {
-  @Expose()
-  @ApiProperty()
-  total!: number;
-
-  @Expose()
-  @ApiProperty()
-  known!: number;
-
-  @Expose()
-  @ApiProperty()
-  learning!: number;
-
-  @Expose()
-  @ApiProperty()
-  new!: number;
-}
-
-@Exclude()
-export class GetOneResDto extends PickType(DeckDto, [
+export class OwnerDto extends PickType(UserDto, [
   &#x27;id&#x27;,
-  &#x27;name&#x27;,
-  &#x27;slug&#x27;,
-  &#x27;description&#x27;,
-]) {
-  @Expose()
-  @ApiProperty({ type: [CardDto] })
-  cards!: CardDto[];
-
-  @Expose()
-  @ApiProperty({ type: DeckStatsDto })
-  stats!: DeckStatsDto;
-}
+  &#x27;username&#x27;,
+  &#x27;avatarUrl&#x27;,
+]) {}
 
 @Exclude()
-export class PublicDeckDto extends DeckDto {
-  @Expose()
-  @ApiProperty()
-  totalCards!: number;
-
-  @Expose()
-  @ApiProperty()
-  owner!: UserDto;
-}
+export class ActorDto extends OwnerDto {}
 
 @Exclude()
-export class CreateDeckResDto extends PickType(DeckDto, [&#x27;id&#x27;, &#x27;slug&#x27;]) {}
-
-@Exclude()
-export class GetManyResDto extends PickType(DeckDto, [
-  &#x27;id&#x27;,
-  &#x27;name&#x27;,
-  &#x27;slug&#x27;,
-  &#x27;visibility&#x27;,
-  &#x27;openedAt&#x27;,
-]) {
-  @Expose()
-  @ApiProperty({ type: DeckStatsDto })
-  stats!: DeckStatsDto;
-}
-
-@Exclude()
-export class GetSharedManyResDto extends PickType(DeckDto, [
-  &#x27;id&#x27;,
-  &#x27;name&#x27;,
-  &#x27;slug&#x27;,
-  &#x27;visibility&#x27;,
-  &#x27;learnerCount&#x27;,
-  &#x27;createdAt&#x27;,
-]) {
+export class UploadAvatarDto {
   @Expose()
   @ApiProperty()
-  totalCards!: number;
-
-  @Expose()
-  @ApiProperty()
-  owner!: Pick&lt;UserDto, &#x27;id&#x27; | &#x27;username&#x27; | &#x27;avatarUrl&#x27;&gt;;
+  status!: string;
 }
 </code></pre>
     </div>
@@ -519,7 +252,7 @@ export class GetSharedManyResDto extends PickType(DeckDto, [
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'PublicDeckDto.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'OwnerDto.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

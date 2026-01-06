@@ -413,7 +413,7 @@ class DatabaseEnvVariables {
 }
 
 export const databaseConfig &#x3D; registerAs(&#x27;database&#x27;, () &#x3D;&gt; {
-  const config &#x3D; validateConfig&lt;DatabaseEnvVariables&gt;(DatabaseEnvVariables);
+  const config &#x3D; validateConfig(DatabaseEnvVariables);
 
   return {
     host: config.DB_HOST,

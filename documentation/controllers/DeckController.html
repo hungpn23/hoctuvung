@@ -259,8 +259,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="85"
-                                    class="link-to-prism">src/api/deck/deck.controller.ts:85</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="98"
+                                    class="link-to-prism">src/api/deck/deck.controller.ts:98</a></div>
                         </td>
                     </tr>
 
@@ -361,8 +361,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="63"
-                                    class="link-to-prism">src/api/deck/deck.controller.ts:63</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="73"
+                                    class="link-to-prism">src/api/deck/deck.controller.ts:73</a></div>
                         </td>
                     </tr>
 
@@ -451,8 +451,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="79"
-                                    class="link-to-prism">src/api/deck/deck.controller.ts:79</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="89"
+                                    class="link-to-prism">src/api/deck/deck.controller.ts:89</a></div>
                         </td>
                     </tr>
 
@@ -527,7 +527,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getMany(userId: <a href="../undefineds/UUID.html" target="_self">UUID</a>, query: <a href="../classes/DeckQueryDto.html" target="_self">DeckQueryDto</a>)</code>
+                    <code>getMany(userId: <a href="../undefineds/UUID.html" target="_self">UUID</a>, query: <a href="../classes/GetManyQueryDto.html" target="_self">GetManyQueryDto</a>)</code>
                 </td>
             </tr>
 
@@ -541,8 +541,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="51"
-                                    class="link-to-prism">src/api/deck/deck.controller.ts:51</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">src/api/deck/deck.controller.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -577,7 +577,7 @@
                                         <tr>
                                                 <td>query</td>
                                             <td>
-                                                            <code><a href="../classes/DeckQueryDto.html" target="_self" >DeckQueryDto</a></code>
+                                                            <code><a href="../classes/GetManyQueryDto.html" target="_self" >GetManyQueryDto</a></code>
                                             </td>
 
                                             <td>
@@ -631,8 +631,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="57"
-                                    class="link-to-prism">src/api/deck/deck.controller.ts:57</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="64"
+                                    class="link-to-prism">src/api/deck/deck.controller.ts:64</a></div>
                         </td>
                     </tr>
 
@@ -707,7 +707,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getSharedMany(query: <a href="../classes/GetSharedQueryDto.html" target="_self">GetSharedQueryDto</a>)</code>
+                    <code>getSharedMany(userId: <a href="../undefineds/UUID.html" target="_self">UUID | undefined</a>, query: <a href="../classes/GetManyQueryDto.html" target="_self">GetManyQueryDto</a>)</code>
                 </td>
             </tr>
 
@@ -721,8 +721,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="36"
-                                    class="link-to-prism">src/api/deck/deck.controller.ts:36</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="37"
+                                    class="link-to-prism">src/api/deck/deck.controller.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -743,9 +743,21 @@
                                     </thead>
                                     <tbody>
                                         <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#UUID" target="_self" >UUID | undefined</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
                                                 <td>query</td>
                                             <td>
-                                                            <code><a href="../classes/GetSharedQueryDto.html" target="_self" >GetSharedQueryDto</a></code>
+                                                            <code><a href="../classes/GetManyQueryDto.html" target="_self" >GetManyQueryDto</a></code>
                                             </td>
 
                                             <td>
@@ -793,14 +805,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@ApiPublicEndpoint({type: GetOneResDto})<br />@Get(&#x27;shared/:deckId&#x27;)<br /></code>
+                    <code>@ApiPublicEndpoint({type: GetSharedOneResDto})<br />@Get(&#x27;shared/:deckId&#x27;)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="42"
-                                    class="link-to-prism">src/api/deck/deck.controller.ts:42</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="46"
+                                    class="link-to-prism">src/api/deck/deck.controller.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -889,8 +901,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="95"
-                                    class="link-to-prism">src/api/deck/deck.controller.ts:95</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="108"
+                                    class="link-to-prism">src/api/deck/deck.controller.ts:108</a></div>
                         </td>
                     </tr>
 
@@ -979,8 +991,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="69"
-                                    class="link-to-prism">src/api/deck/deck.controller.ts:69</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="79"
+                                    class="link-to-prism">src/api/deck/deck.controller.ts:79</a></div>
                         </td>
                     </tr>
 
@@ -1066,6 +1078,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -1075,11 +1088,11 @@ import {
   CloneDeckDto,
   CreateDeckDto,
   DeckDto,
-  DeckQueryDto,
+  GetManyQueryDto,
   GetManyResDto,
   GetOneResDto,
   GetSharedManyResDto,
-  GetSharedQueryDto,
+  GetSharedOneResDto,
   UpdateDeckDto,
 } from &#x27;./dtos/deck.dto&#x27;;
 
@@ -1089,29 +1102,38 @@ export class DeckController {
 
   @ApiPublicEndpoint({ type: GetSharedManyResDto, isPaginated: true })
   @Get(&#x27;shared&#x27;)
-  async getSharedMany(@Query() query: GetSharedQueryDto) {
-    return await this.deckService.getSharedMany(query);
+  async getSharedMany(
+    @Payload(&#x27;userId&#x27;) userId: UUID | undefined,
+    @Query() query: GetManyQueryDto,
+  ) {
+    return await this.deckService.getSharedMany(userId, query);
   }
 
-  @ApiPublicEndpoint({ type: GetOneResDto })
+  @ApiPublicEndpoint({ type: GetSharedOneResDto })
   @Get(&#x27;shared/:deckId&#x27;)
   async getSharedOne(
     @Payload(&#x27;userId&#x27;) userId: UUID | undefined,
-    @Param(&#x27;deckId&#x27;) deckId: UUID,
+    @Param(&#x27;deckId&#x27;, ParseUUIDPipe) deckId: UUID,
   ) {
-    return await this.deckService.getSharedOne(deckId, userId);
+    return await this.deckService.getSharedOne(userId, deckId);
   }
 
   @ApiEndpoint({ type: GetManyResDto, isPaginated: true })
   @Get()
-  async getMany(@Payload(&#x27;userId&#x27;) userId: UUID, @Query() query: DeckQueryDto) {
+  async getMany(
+    @Payload(&#x27;userId&#x27;) userId: UUID,
+    @Query() query: GetManyQueryDto,
+  ) {
     return await this.deckService.getMany(userId, query);
   }
 
   @ApiEndpoint({ type: GetOneResDto })
   @Get(&#x27;:deckId&#x27;)
-  async getOne(@Payload(&#x27;userId&#x27;) userId: UUID, @Param(&#x27;deckId&#x27;) deckId: UUID) {
-    return await this.deckService.getOne(deckId, userId);
+  async getOne(
+    @Payload(&#x27;userId&#x27;) userId: UUID,
+    @Param(&#x27;deckId&#x27;, ParseUUIDPipe) deckId: UUID,
+  ) {
+    return await this.deckService.getOne(userId, deckId);
   }
 
   @ApiEndpoint({ type: DeckDto })
@@ -1124,15 +1146,18 @@ export class DeckController {
   @Patch(&#x27;:deckId&#x27;)
   async update(
     @Payload(&#x27;userId&#x27;) userId: UUID,
-    @Param(&#x27;deckId&#x27;) deckId: UUID,
+    @Param(&#x27;deckId&#x27;, ParseUUIDPipe) deckId: UUID,
     @Body() dto: UpdateDeckDto,
   ) {
-    return await this.deckService.update(deckId, userId, dto);
+    return await this.deckService.update(userId, deckId, dto);
   }
 
   @ApiEndpoint()
   @Delete(&#x27;:deckId&#x27;)
-  async delete(@Payload(&#x27;userId&#x27;) userId: UUID, @Param(&#x27;deckId&#x27;) deckId: UUID) {
+  async delete(
+    @Payload(&#x27;userId&#x27;) userId: UUID,
+    @Param(&#x27;deckId&#x27;, ParseUUIDPipe) deckId: UUID,
+  ) {
     return await this.deckService.delete(userId, deckId);
   }
 
@@ -1140,7 +1165,7 @@ export class DeckController {
   @Post(&#x27;clone/:deckId&#x27;)
   async clone(
     @Payload(&#x27;userId&#x27;) userId: UUID,
-    @Param(&#x27;deckId&#x27;) deckId: UUID,
+    @Param(&#x27;deckId&#x27;, ParseUUIDPipe) deckId: UUID,
     @Body() dto: CloneDeckDto,
   ) {
     return await this.deckService.clone(userId, deckId, dto);
@@ -1150,7 +1175,7 @@ export class DeckController {
   @Post(&#x27;restart/:deckId&#x27;)
   async restart(
     @Payload(&#x27;userId&#x27;) userId: UUID,
-    @Param(&#x27;deckId&#x27;) deckId: UUID,
+    @Param(&#x27;deckId&#x27;, ParseUUIDPipe) deckId: UUID,
   ) {
     return await this.deckService.restart(userId, deckId);
   }

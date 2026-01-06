@@ -229,13 +229,11 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Card } from &#x27;@api/deck/entities/card.entity&#x27;;
-import { Deck } from &#x27;@api/deck/entities/deck.entity&#x27;;
-import { QueueName } from &#x27;@common/constants/queue-name.enum&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { QueueName } from &#x27;@common/constants/queue-name.enum&#x27;;
+import { Card, Deck, UserStatistic } from &#x27;@db/entities&#x27;;
 import { MikroOrmModule } from &#x27;@mikro-orm/nestjs&#x27;;
 import { BullModule } from &#x27;@nestjs/bullmq&#x27;;
 import { Module } from &#x27;@nestjs/common&#x27;;
-import { UserStatistic } from &#x27;./entities/user-statistics.entity&#x27;;
 import { StudyController } from &#x27;./study.controller&#x27;;
 import { StudyProcessor } from &#x27;./study.processor&#x27;;
 import { StudyService } from &#x27;./study.service&#x27;;

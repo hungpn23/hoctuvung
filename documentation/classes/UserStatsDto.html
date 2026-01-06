@@ -226,7 +226,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/api/study/dtos/study.dto.ts:77</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/api/study/dtos/study.dto.ts:16</a></div>
                         </td>
                     </tr>
 
@@ -263,7 +263,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/api/study/dtos/study.dto.ts:81</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/api/study/dtos/study.dto.ts:20</a></div>
                         </td>
                     </tr>
 
@@ -300,7 +300,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="89" class="link-to-prism">src/api/study/dtos/study.dto.ts:89</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/api/study/dtos/study.dto.ts:28</a></div>
                         </td>
                     </tr>
 
@@ -337,7 +337,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="85" class="link-to-prism">src/api/study/dtos/study.dto.ts:85</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/api/study/dtos/study.dto.ts:24</a></div>
                         </td>
                     </tr>
 
@@ -356,76 +356,15 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CardAnswerDto, CardDto } from &#x27;@api/deck/dtos/card.dto&#x27;;
-import {
-  BooleanValidator,
-  ClassValidator,
-  StringValidator,
-} from &#x27;@common/decorators/validators.decorator&#x27;;
-import type { UUID } from &#x27;@common/types/branded.type&#x27;;
-import { ApiProperty, ApiPropertyOptional } from &#x27;@nestjs/swagger&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CardAnswerDto } from &#x27;@api/deck/dtos/card.dto&#x27;;
+import { ClassValidator } from &#x27;@common/decorators/validators.decorator&#x27;;
+import { ApiProperty } from &#x27;@nestjs/swagger&#x27;;
 import { Exclude, Expose } from &#x27;class-transformer&#x27;;
-
-export class SubmitReviewDto {
-  @ApiProperty()
-  @StringValidator()
-  sessionId!: UUID;
-
-  @ApiProperty()
-  @StringValidator()
-  cardId!: UUID;
-
-  @ApiProperty()
-  @BooleanValidator()
-  wasCorrect!: boolean;
-}
 
 export class SaveAnswersDto {
   @ApiProperty()
   @ClassValidator(CardAnswerDto, { each: true })
   answers!: CardAnswerDto[];
-}
-
-@Exclude()
-export class StudySessionStateDto {
-  @Expose()
-  @ApiPropertyOptional({ type: CardDto })
-  currentCard?: CardDto | null;
-
-  @Expose()
-  @ApiProperty({ type: [CardDto] })
-  cardsToReview!: CardDto[];
-
-  @Expose()
-  @ApiProperty({ type: [CardDto] })
-  correctCards!: CardDto[];
-
-  @Expose()
-  @ApiProperty({ type: [CardDto] })
-  incorrectCards!: CardDto[];
-
-  @Expose()
-  @ApiProperty()
-  totalCount!: number;
-}
-
-@Exclude()
-export class StudySessionDto {
-  @Expose()
-  @ApiProperty()
-  sessionId!: string;
-
-  @Expose()
-  @ApiProperty()
-  state!: StudySessionStateDto;
-
-  @Expose()
-  @ApiProperty()
-  remainingCount!: number;
-
-  @Expose()
-  @ApiProperty()
-  isCompleted!: boolean;
 }
 
 @Exclude()
