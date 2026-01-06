@@ -13,7 +13,7 @@ import {
 import { NestFactory, Reflector } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { SocketIOAdapter } from "@socket-io.adapter";
-import type { ValidationError } from "class-validator";
+import { ValidationError } from "class-validator";
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);

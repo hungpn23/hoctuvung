@@ -2,11 +2,11 @@ import { NotificationDto } from "@api/notification/notification.dto";
 import { NotificationGateway } from "@api/notification/notification.gateway";
 import { PaginatedDto } from "@common/dtos/offset-pagination/offset-pagination.dto";
 import { createMetadata } from "@common/dtos/offset-pagination/utils";
-import type { UUID } from "@common/types/branded.type";
+import { UUID } from "@common/types/branded.type";
 import { Card, Deck, Notification } from "@db/entities";
 import {
-	type EntityRepository,
-	type FilterQuery,
+	EntityRepository,
+	FilterQuery,
 	QueryOrder,
 	wrap,
 } from "@mikro-orm/core";
@@ -20,18 +20,18 @@ import {
 import { plainToInstance } from "class-transformer";
 import { assign, omit, pick } from "lodash";
 import { Visibility } from "./deck.enum";
-import type { CardDto } from "./dtos/card.dto";
+import { CardDto } from "./dtos/card.dto";
 import {
-	type CloneDeckDto,
-	type CreateDeckDto,
+	CloneDeckDto,
+	CreateDeckDto,
 	CreateDeckResDto,
-	type DeckStatsDto,
-	type GetManyQueryDto,
+	DeckStatsDto,
+	GetManyQueryDto,
 	GetManyResDto,
 	GetOneResDto,
 	GetSharedManyResDto,
 	GetSharedOneResDto,
-	type UpdateDeckDto,
+	UpdateDeckDto,
 } from "./dtos/deck.dto";
 
 @Injectable()

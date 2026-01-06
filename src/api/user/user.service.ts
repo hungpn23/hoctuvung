@@ -1,10 +1,10 @@
 import { JobName } from "@common/constants/job-name.enum";
 import { QueueName } from "@common/constants/queue-name.enum";
-import type { UUID } from "@common/types/branded.type";
-import type { ImageUploadData } from "@common/types/jobs.type";
+import { UUID } from "@common/types/branded.type";
+import { ImageUploadData } from "@common/types/jobs.type";
 import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable } from "@nestjs/common";
-import type { Queue } from "bullmq";
+import { Queue } from "bullmq";
 import { plainToInstance } from "class-transformer";
 import { UploadAvatarDto } from "./user.dto";
 

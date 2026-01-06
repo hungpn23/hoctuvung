@@ -1,17 +1,16 @@
 import { CardStatus } from "@api/deck/deck.enum";
-
 import { JobName } from "@common/constants/job-name.enum";
 import { QueueName } from "@common/constants/queue-name.enum";
-import type { UUID } from "@common/types/branded.type";
-import type { UpdateUserStatsData } from "@common/types/jobs.type";
+import { UUID } from "@common/types/branded.type";
+import { UpdateUserStatsData } from "@common/types/jobs.type";
 import { Card, Deck, UserStatistic } from "@db/entities";
-import { EntityManager, type EntityRepository, wrap } from "@mikro-orm/core";
+import { EntityManager, EntityRepository, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import type { Queue } from "bullmq";
+import { Queue } from "bullmq";
 import { plainToInstance } from "class-transformer";
-import { type SaveAnswersDto, UserStatsDto } from "./dtos/study.dto";
+import { SaveAnswersDto, UserStatsDto } from "./dtos/study.dto";
 
 @Injectable()
 export class StudyService {

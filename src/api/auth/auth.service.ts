@@ -2,16 +2,16 @@ import crypto from "node:crypto";
 import { UserDto } from "@api/user/user.dto";
 import { JobName } from "@common/constants/job-name.enum";
 import { QueueName } from "@common/constants/queue-name.enum";
-import type { JwtPayload, RefreshTokenPayload } from "@common/types/auth.type";
-import type { Milliseconds, UUID } from "@common/types/branded.type";
-import type {
+import { JwtPayload, RefreshTokenPayload } from "@common/types/auth.type";
+import { Milliseconds, UUID } from "@common/types/branded.type";
+import {
 	GoogleJwtPayload,
 	GoogleTokenResponse,
 } from "@common/types/google.type";
 import { type AuthConfig, authConfig } from "@config/auth.config";
 import { type GoogleConfig, googleConfig } from "@config/google.config";
 import { Session, User } from "@db/entities";
-import { EntityManager, type EntityRepository, wrap } from "@mikro-orm/core";
+import { EntityManager, EntityRepository, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { InjectQueue } from "@nestjs/bullmq";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
@@ -24,16 +24,16 @@ import {
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import argon2 from "argon2";
-import type { Queue } from "bullmq";
+import { Queue } from "bullmq";
 import type { Cache } from "cache-manager";
 import { plainToInstance } from "class-transformer";
-import type { Response } from "express";
+import { Response } from "express";
 import ms from "ms";
 import { generateFromEmail } from "unique-username-generator";
 import {
-	type ChangePasswordDto,
-	type LoginDto,
-	type RegisterDto,
+	ChangePasswordDto,
+	LoginDto,
+	RegisterDto,
 	TokenPairDto,
 } from "./auth.dto";
 
@@ -144,6 +144,10 @@ export class AuthService {
 
 	async login(dto: LoginDto) {
 		const { username, password } = dto;
+		console.log(`🚀 ~ AuthService ~ login ~ { username, password }:`, {
+			username,
+			password,
+		});
 		const user = await this.userRepository.findOne({ username });
 
 		const isValid = user && (await argon2.verify(user.password, password));

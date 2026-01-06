@@ -11,7 +11,7 @@ import {
 	Filter,
 	ManyToOne,
 	OneToMany,
-	type Opt,
+	Opt,
 	Property,
 	type Ref,
 	t,

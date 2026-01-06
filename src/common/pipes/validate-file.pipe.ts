@@ -1,7 +1,7 @@
 import {
-	type FileTypeValidatorOptions,
-	type MaxFileSizeValidatorOptions,
-	type ParseFileOptions,
+	FileTypeValidatorOptions,
+	MaxFileSizeValidatorOptions,
+	ParseFileOptions,
 	ParseFilePipeBuilder,
 } from "@nestjs/common";
 

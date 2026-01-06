@@ -1,8 +1,8 @@
 import { AuthService } from "@api/auth/auth.service";
-import type { SocketUser } from "@common/types/auth.type";
-import type { INestApplication, UnauthorizedException } from "@nestjs/common";
+import { SocketUser } from "@common/types/auth.type";
+import { INestApplication, UnauthorizedException } from "@nestjs/common";
 import { IoAdapter } from "@nestjs/platform-socket.io";
-import type { ExtendedError, Server, ServerOptions, Socket } from "socket.io";
+import { ExtendedError, Server, ServerOptions, Socket } from "socket.io";
 
 export class SocketIOAdapter extends IoAdapter {
 	constructor(

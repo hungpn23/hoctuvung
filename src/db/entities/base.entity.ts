@@ -1,6 +1,6 @@
-import type { UUID } from "@common/types/branded.type";
+import { UUID } from "@common/types/branded.type";
 import { NullableProperty } from "@common/utils/nullable-property";
-import { type Opt, PrimaryKey, Property, t } from "@mikro-orm/core";
+import { Opt, PrimaryKey, Property, t } from "@mikro-orm/core";
 import { v4 } from "uuid";
 
 export abstract class BaseEntity {

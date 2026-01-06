@@ -2,7 +2,7 @@ import {
 	PortValidator,
 	StringValidator,
 } from "@common/decorators/validators.decorator";
-import { type ConfigType, registerAs } from "@nestjs/config";
+import { ConfigType, registerAs } from "@nestjs/config";
 import { validateConfig } from "./validate-config";
 
 class RedisEnvVariables {

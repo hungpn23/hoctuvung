@@ -9,11 +9,11 @@ import type { UUID } from "@common/types/branded.type";
 import { Body, Controller, Get, Post, Query, Res } from "@nestjs/common";
 import type { Response } from "express";
 import {
-	type ChangePasswordDto,
-	type ExchangeTokenDto,
-	type LoginDto,
-	type RefreshTokenDto,
-	type RegisterDto,
+	ChangePasswordDto,
+	ExchangeTokenDto,
+	LoginDto,
+	RefreshTokenDto,
+	RegisterDto,
 	TokenPairDto,
 } from "./auth.dto";
 import { AuthService } from "./auth.service";

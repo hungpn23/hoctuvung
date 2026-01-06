@@ -1,4 +1,4 @@
-import { type ClassConstructor, plainToInstance } from "class-transformer";
+import { ClassConstructor, plainToInstance } from "class-transformer";
 import { validateSync } from "class-validator";
 
 export function validateConfig<T extends object>(

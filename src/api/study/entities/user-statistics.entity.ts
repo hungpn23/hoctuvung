@@ -1,7 +1,7 @@
-import type { UUID } from "node:crypto";
+import { UUID } from "@common/types/branded.type";
 import { NullableProperty } from "@common/utils/nullable-property";
 import { User } from "@db/entities";
-import type { Opt, Ref } from "@mikro-orm/core";
+import { Opt, type Ref } from "@mikro-orm/core";
 import { Entity, OneToOne, PrimaryKey, Property, t } from "@mikro-orm/core";
 import { v4 } from "uuid";
 

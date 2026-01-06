@@ -1,4 +1,4 @@
-import type { UUID } from "./branded.type";
+import { UUID } from "./branded.type";
 
 export type ImageUploadData = {
 	userId: UUID;

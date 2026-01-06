@@ -1,5 +1,5 @@
 import { MetadataKey } from "@common/constants/metadata.enum";
-import type { UserRole } from "@common/constants/role.enum";
+import { UserRole } from "@common/constants/role.enum";
 import { SetMetadata } from "@nestjs/common";
 
 export const ApplyRole = (role: UserRole) =>

@@ -6,7 +6,7 @@ import {
 	HttpCode,
 	HttpStatus,
 	SerializeOptions,
-	type Type,
+	Type,
 } from "@nestjs/common";
 import {
 	ApiBearerAuth,

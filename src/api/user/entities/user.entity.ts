@@ -9,9 +9,9 @@ import {
 	Collection,
 	Entity,
 	Enum,
-	type Hidden,
+	Hidden,
 	OneToMany,
-	type Opt,
+	Opt,
 	Property,
 } from "@mikro-orm/core";
 import argon2 from "argon2";

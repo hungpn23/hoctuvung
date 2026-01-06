@@ -1,5 +1,5 @@
 import { applyDecorators } from "@nestjs/common";
-import { type ClassConstructor, Type } from "class-transformer";
+import { ClassConstructor, Type } from "class-transformer";
 import {
 	IsBoolean,
 	IsDate,
@@ -19,7 +19,7 @@ import {
 	registerDecorator,
 	ValidateIf,
 	ValidateNested,
-	type ValidationOptions,
+	ValidationOptions,
 } from "class-validator";
 import { ToBoolean, ToLowerCase, ToUpperCase } from "./transforms.decorator";
 

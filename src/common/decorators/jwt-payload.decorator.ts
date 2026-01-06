@@ -1,5 +1,5 @@
-import type { JwtPayload, RequestUser } from "@common/types/auth.type";
-import { createParamDecorator, type ExecutionContext } from "@nestjs/common";
+import { JwtPayload, RequestUser } from "@common/types/auth.type";
+import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 
 export const Payload = createParamDecorator(
 	(data: keyof JwtPayload | undefined, context: ExecutionContext) => {
