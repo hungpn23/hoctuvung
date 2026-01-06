@@ -1,6 +1,5 @@
 import {
 	DateValidator,
-	EnumValidator,
 	NumberValidator,
 	StringValidator,
 } from "@common/decorators/validators.decorator";
@@ -8,24 +7,25 @@ import type { UUID } from "@common/types/branded.type";
 import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 import { IsUUID } from "class-validator";
-import { CardStatus, Language } from "../deck.enum";
+import { CardStatus } from "../deck.enum";
+import type { LanguageCode } from "@common/types";
 
 export class CreateCardDto {
 	@ApiProperty()
 	@StringValidator()
 	term!: string;
 
-	@ApiProperty({ enum: Language })
-	@EnumValidator(Language)
-	termLanguage!: Language;
+	@ApiProperty()
+	@StringValidator()
+	termLanguage!: LanguageCode;
 
 	@ApiProperty()
 	@StringValidator()
 	definition!: string;
 
-	@ApiProperty({ enum: Language })
-	@EnumValidator(Language)
-	definitionLanguage!: Language;
+	@ApiProperty()
+	@StringValidator()
+	definitionLanguage!: LanguageCode;
 }
 
 export class UpdateCardDto extends CreateCardDto {
@@ -60,17 +60,17 @@ export class CardDto {
 	@ApiProperty()
 	term!: string;
 
-	@Expose()
-	@ApiProperty({ enum: Language })
-	termLanguage!: Language;
+	@ApiProperty()
+	@StringValidator()
+	termLanguage!: LanguageCode;
 
 	@Expose()
 	@ApiProperty()
 	definition!: string;
 
-	@Expose()
-	@ApiProperty({ enum: Language })
-	definitionLanguage!: Language;
+	@ApiProperty()
+	@StringValidator()
+	definitionLanguage!: LanguageCode;
 
 	@Expose()
 	@ApiPropertyOptional()

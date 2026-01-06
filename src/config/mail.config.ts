@@ -8,9 +8,6 @@ import { ConfigType, registerAs } from "@nestjs/config";
 import { validateConfig } from "./validate-config";
 
 class MailEnvVariables {
-	@StringValidator()
-	RESEND_API_KEY!: string;
-
 	@StringValidatorOptional()
 	MAIL_HOST?: string;
 
@@ -34,7 +31,6 @@ export const mailConfig = registerAs("mail", () => {
 	const config = validateConfig(MailEnvVariables);
 
 	return {
-		resendApiKey: config.RESEND_API_KEY,
 		host: config.MAIL_HOST,
 		port: config.MAIL_PORT,
 		secure: config.MAIL_SECURE,

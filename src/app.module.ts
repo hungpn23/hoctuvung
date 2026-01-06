@@ -5,7 +5,6 @@ import { appConfig } from "@config/app.config";
 import { authConfig } from "@config/auth.config";
 import { DatabaseConfig, databaseConfig } from "@config/database.config";
 import { googleConfig } from "@config/google.config";
-import { imagekitConfig } from "@config/imagekit.config";
 import { mailConfig } from "@config/mail.config";
 import { RedisConfig, redisConfig } from "@config/redis.config";
 import { IntegrationModule } from "@integrations/intergration.module";
@@ -19,6 +18,8 @@ import { Logger, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { config } from "dotenv";
 import * as entities from "./db/entities";
+import { integrationConfig } from "@config/integration.config";
+import { vectorDbConfig } from "@config/vector-db.config";
 
 config({ path: path.resolve(process.cwd(), ".env.local") });
 
@@ -37,9 +38,10 @@ const isProd = process.env.NODE_ENV === "prod";
 				authConfig,
 				databaseConfig,
 				googleConfig,
-				imagekitConfig,
+				integrationConfig,
 				mailConfig,
 				redisConfig,
+				vectorDbConfig,
 			],
 		}),
 

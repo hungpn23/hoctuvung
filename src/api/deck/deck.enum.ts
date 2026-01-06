@@ -9,8 +9,3 @@ export enum CardStatus {
 	LEARNING = "learning",
 	NEW = "new",
 }
-
-export enum Language {
-	ENG = "english",
-	VIE = "vietnamese",
-}

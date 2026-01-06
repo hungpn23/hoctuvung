@@ -55,6 +55,7 @@
 		"@langchain/classic": "^1.0.7",
 		"@langchain/cohere": "^1.0.1",
 		"@langchain/core": "^1.1.8",
+		"@langchain/qdrant": "^1.0.1",
 		"@mikro-orm/cli": "^6.6.2",
 		"@mikro-orm/core": "^6.6.2",
 		"@mikro-orm/migrations": "^6.6.2",

@@ -1,28 +1,26 @@
-export type EntryType = "word" | "phrase";
+import { LanguageCode } from "@common/types";
 
-export type SourceType = "manual";
+export type EntryType = "word" | "phrase";
 
 export type VocabularyRecord = {
 	id: string;
-	type: EntryType;
 	term: string;
-	termLang: string;
-	definitionEnglish: string;
-	definitionVietnamese: string;
-	exampleEnglish: string;
-	source?: SourceType;
+	termLanguageCode: LanguageCode;
+	definitionEn: string;
+	definitionVi: string;
+	exampleEn: string;
+	pos?: string;
 };
 
 export type WordRecord = VocabularyRecord & {
 	type: "word";
-	pos: string;
 	senseId: string;
+	collocation?: string;
 };
 
 export type PhraseRecord = VocabularyRecord & {
 	type: "phrase";
-	grammar?: string;
-	usage?: string;
+	usageOrGrammar?: string;
 };
 
 export type EntryRecord = WordRecord | PhraseRecord;

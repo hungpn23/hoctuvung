@@ -1,5 +1,8 @@
 import { IMAGEKIT_CLIENT } from "@common/constants/provider-token";
-import { ImageKitConfig, imagekitConfig } from "@config/imagekit.config";
+import {
+	IntegrationConfig,
+	integrationConfig,
+} from "@config/integration.config";
 import ImageKit from "@imagekit/nodejs";
 import { Module } from "@nestjs/common";
 
@@ -7,9 +10,11 @@ import { Module } from "@nestjs/common";
 	providers: [
 		{
 			provide: IMAGEKIT_CLIENT,
-			inject: [imagekitConfig.KEY],
-			useFactory: (imagekitConfig: ImageKitConfig) =>
-				new ImageKit(imagekitConfig),
+			inject: [integrationConfig.KEY],
+			useFactory: (integrationConfig: IntegrationConfig) =>
+				new ImageKit({
+					privateKey: integrationConfig.imagekitPrivateKey,
+				}),
 		},
 	],
 	exports: [IMAGEKIT_CLIENT],

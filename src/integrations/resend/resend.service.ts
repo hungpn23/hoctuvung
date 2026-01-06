@@ -1,3 +1,7 @@
+import {
+	type IntegrationConfig,
+	integrationConfig,
+} from "@config/integration.config";
 import { type MailConfig, mailConfig } from "@config/mail.config";
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { Resend } from "resend";
@@ -8,10 +12,12 @@ export class ResendService {
 	private readonly resend;
 
 	constructor(
+		@Inject(integrationConfig.KEY)
+		private readonly integrationConf: IntegrationConfig,
 		@Inject(mailConfig.KEY)
 		private readonly mailConf: MailConfig,
 	) {
-		this.resend = new Resend(this.mailConf.resendApiKey);
+		this.resend = new Resend(this.integrationConf.resendApiKey);
 	}
 
 	async sendEmail() {

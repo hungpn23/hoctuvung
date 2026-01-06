@@ -1,4 +1,5 @@
 import { AuthService } from "@api/auth/auth.service";
+import { SuggestionService } from "@api/suggestion/suggestion.service";
 import { AppModule } from "@app.module";
 import { GlobalExceptionFilter } from "@common/filters/global-exception.filter";
 import { AuthGuard } from "@common/guards/auth.guard";
@@ -58,10 +59,14 @@ async function bootstrap() {
 
 	const appUrl = `http://${host}:${port}/${apiPrefix}`;
 
+	const suggestionService = app.get(SuggestionService);
+	await suggestionService.init();
+
 	await app.listen(port, host, () => {
-		logger.log(`🌱 Environment: ${nodeEnv}`);
-		logger.log(`🚀 API live at: ${appUrl}`);
-		logger.log(`📚 Swagger docs at: ${appUrl}/docs`);
+		logger.debug(`Environment: ${nodeEnv}`);
+		logger.debug(`API live at: ${appUrl}`);
+		logger.debug(`Swagger docs at: ${appUrl}/docs`);
+		logger.debug(`Qdrant Dashboard: http://localhost:6333/dashboard`);
 	});
 }
 

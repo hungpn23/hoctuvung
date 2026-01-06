@@ -1,5 +1,5 @@
 // src/db/seeders/database.seeder.ts
-import { Language, Visibility } from "@api/deck/deck.enum";
+import { Visibility } from "@api/deck/deck.enum";
 import { Card, Deck, User } from "@db/entities";
 import { faker } from "@faker-js/faker";
 import { EntityManager } from "@mikro-orm/core";
@@ -241,8 +241,8 @@ export class DatabaseSeeder extends Seeder {
 				deck: deck,
 				term: vocab.term,
 				definition: vocab.definition,
-				termLanguage: Language.ENG,
-				definitionLanguage: Language.VIE,
+				termLanguage: "en",
+				definitionLanguage: "vi",
 			});
 		}
 
@@ -272,8 +272,8 @@ export class DatabaseSeeder extends Seeder {
 					deck,
 					term: vocab.term,
 					definition: vocab.definition,
-					termLanguage: Language.ENG,
-					definitionLanguage: Language.VIE,
+					termLanguage: "en",
+					definitionLanguage: "vi",
 				});
 			}
 		}
