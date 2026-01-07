@@ -10,7 +10,7 @@ import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Queue } from "bullmq";
 import { plainToInstance } from "class-transformer";
-import { SaveAnswersDto, UserStatsDto } from "./dtos/study.dto";
+import { SaveAnswersDto, UserStatsDto } from "./study.dto";
 
 @Injectable()
 export class StudyService {
