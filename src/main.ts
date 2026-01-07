@@ -59,8 +59,7 @@ async function bootstrap() {
 
 	const appUrl = `http://${host}:${port}/${apiPrefix}`;
 
-	const suggestionService = app.get(SuggestionService);
-	await suggestionService.init();
+	await app.get(SuggestionService).connectToStore();
 
 	await app.listen(port, host, () => {
 		logger.debug(`Environment: ${nodeEnv}`);

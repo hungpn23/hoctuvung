@@ -1,3 +1,4 @@
+import type { LanguageCode } from "@common/types";
 import { UUID } from "@common/types/branded.type";
 import { NullableProperty } from "@common/utils/nullable-property";
 import { Deck } from "@db/entities";
@@ -15,7 +16,6 @@ import {
 } from "@mikro-orm/core";
 import { v4 } from "uuid";
 import { CardStatus } from "../deck.enum";
-import type { LanguageCode } from "@common/types";
 
 @Entity()
 export class Card {

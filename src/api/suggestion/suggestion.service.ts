@@ -2,6 +2,7 @@ import {
 	type IntegrationConfig,
 	integrationConfig,
 } from "@config/integration.config";
+import { type VectorDbConfig, vectorDbConfig } from "@config/vector-db.config";
 import { CohereEmbeddings } from "@langchain/cohere";
 import { Document } from "@langchain/core/documents";
 import { QdrantVectorStore } from "@langchain/qdrant";
@@ -12,7 +13,6 @@ import {
 	Logger,
 } from "@nestjs/common";
 import { EntryRecord } from "./suggestion.type";
-import { type VectorDbConfig, vectorDbConfig } from "@config/vector-db.config";
 
 const sampleData: EntryRecord[] = [
 	{
@@ -82,7 +82,7 @@ export class SuggestionService {
 		return this._store;
 	}
 
-	async init() {
+	async connectToStore() {
 		const { host, port, collectionName } = this.vectorDbConf;
 
 		this._store = await QdrantVectorStore.fromExistingCollection(this.model, {
@@ -90,7 +90,7 @@ export class SuggestionService {
 			collectionName,
 		});
 
-		this.logger.debug("VectorStore initialized.");
+		this.logger.debug("Connected to VectorStore.");
 	}
 
 	async ingestData() {

@@ -5,8 +5,10 @@ import { appConfig } from "@config/app.config";
 import { authConfig } from "@config/auth.config";
 import { DatabaseConfig, databaseConfig } from "@config/database.config";
 import { googleConfig } from "@config/google.config";
+import { integrationConfig } from "@config/integration.config";
 import { mailConfig } from "@config/mail.config";
 import { RedisConfig, redisConfig } from "@config/redis.config";
+import { vectorDbConfig } from "@config/vector-db.config";
 import { IntegrationModule } from "@integrations/intergration.module";
 import KeyvRedis from "@keyv/redis";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
@@ -18,8 +20,6 @@ import { Logger, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { config } from "dotenv";
 import * as entities from "./db/entities";
-import { integrationConfig } from "@config/integration.config";
-import { vectorDbConfig } from "@config/vector-db.config";
 
 config({ path: path.resolve(process.cwd(), ".env.local") });
 

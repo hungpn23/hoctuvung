@@ -3,12 +3,12 @@ import {
 	NumberValidator,
 	StringValidator,
 } from "@common/decorators/validators.decorator";
+import type { LanguageCode } from "@common/types";
 import type { UUID } from "@common/types/branded.type";
 import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 import { IsUUID } from "class-validator";
 import { CardStatus } from "../deck.enum";
-import type { LanguageCode } from "@common/types";
 
 export class CreateCardDto {
 	@ApiProperty()

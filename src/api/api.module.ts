@@ -3,8 +3,8 @@ import { AuthModule } from "./auth/auth.module";
 import { DeckModule } from "./deck/deck.module";
 import { NotificationModule } from "./notification/notification.module";
 import { StudyModule } from "./study/study.module";
-import { UserModule } from "./user/user.module";
 import { SuggestionModule } from "./suggestion/suggestion.module";
+import { UserModule } from "./user/user.module";
 
 @Module({
 	imports: [

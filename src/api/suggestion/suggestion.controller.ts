@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from "@nestjs/common";
-import { SuggestionService } from "./suggestion.service";
 import { ApiPublicEndpoint } from "@common/decorators/api-endpoint.decorator";
+import { SuggestionService } from "./suggestion.service";
 
 @Controller("suggestion")
 export class SuggestionController {
