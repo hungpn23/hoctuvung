@@ -1,3 +1,5 @@
+import * as fs from "node:fs";
+import * as path from "node:path";
 import {
 	type IntegrationConfig,
 	integrationConfig,
@@ -12,48 +14,8 @@ import {
 	Injectable,
 	Logger,
 } from "@nestjs/common";
+import StreamArray from "stream-json/streamers/StreamArray";
 import { EntryRecord } from "./suggestion.type";
-
-const sampleData: EntryRecord[] = [
-	{
-		id: "bank_word_1",
-		type: "word",
-		term: "bank",
-		termLanguageCode: "en",
-		definitionEn:
-			"A financial institution that accepts deposits and provides loans.",
-		definitionVi:
-			"Ngân hàng là tổ chức tài chính nhận tiền gửi và cung cấp các khoản vay.",
-		exampleEn: "I deposited some money in the bank.",
-		pos: "noun",
-		senseId: "financial_institution",
-		collocation: "bank account",
-	},
-	{
-		id: "be_willing_to_phrase_1",
-		type: "phrase",
-		term: "be willing to",
-		termLanguageCode: "en",
-		definitionEn:
-			"To be ready or prepared to do something, showing a positive attitude or intention.",
-		definitionVi:
-			"Sẵn sàng làm điều gì đó, thể hiện thái độ hoặc ý định tích cực.",
-		exampleEn: "She is willing to help her teammates.",
-		usageOrGrammar: "be willing to + verb",
-	},
-	{
-		id: "break_the_ice_idiom_1",
-		type: "phrase",
-		term: "break the ice",
-		termLanguageCode: "en",
-		definitionEn:
-			"To do or say something that makes people feel more relaxed in a social situation.",
-		definitionVi:
-			"Phá vỡ sự ngượng ngùng hoặc căng thẳng ban đầu trong giao tiếp.",
-		exampleEn: "He told a joke to break the ice at the meeting.",
-		usageOrGrammar: "Often used in social situations or first meetings.",
-	},
-];
 
 @Injectable()
 export class SuggestionService {
@@ -94,11 +56,62 @@ export class SuggestionService {
 	}
 
 	async ingestData() {
-		const documents = sampleData.map((d) => this._buildDocument(d));
+		const filePath = path.join(process.cwd(), "data.json");
+		const stream = fs.createReadStream(filePath);
+		const jsonStream = StreamArray.withParser();
+		let batch: EntryRecord[] = [];
+		const BATCH_SIZE = 1000;
+		let count = 0;
 
-		await this.store.addDocuments(documents);
+		return new Promise<void>((resolve, reject) => {
+			stream.pipe(jsonStream);
 
-		this.logger.debug("Data ingestion completed.");
+			jsonStream.on("data", async ({ value }: { value: EntryRecord }) => {
+				batch.push(value);
+				if (batch.length >= BATCH_SIZE) {
+					// Pause to handle async ingestion
+					stream.pause();
+					jsonStream.pause();
+
+					try {
+						const documents = batch.map((d) => this._buildDocument(d));
+						await this.store.addDocuments(documents);
+						count += batch.length;
+						this.logger.debug(`Ingested ${count} documents...`);
+						batch = [];
+					} catch (err) {
+						this.logger.error("Error ingesting batch", err);
+						reject(err);
+						return;
+					}
+
+					jsonStream.resume();
+					stream.resume();
+				}
+			});
+
+			jsonStream.on("end", async () => {
+				if (batch.length > 0) {
+					try {
+						const documents = batch.map((d) => this._buildDocument(d));
+						await this.store.addDocuments(documents);
+						count += batch.length;
+						this.logger.debug(`Ingested ${count} documents.`);
+					} catch (err) {
+						this.logger.error("Error ingesting final batch", err);
+						reject(err);
+						return;
+					}
+				}
+				this.logger.debug("Data ingestion completed.");
+				resolve();
+			});
+
+			jsonStream.on("error", (err) => {
+				this.logger.error("Stream error", err);
+				reject(err);
+			});
+		});
 	}
 
 	async suggest(query: string, k: number = 1) {
@@ -106,18 +119,25 @@ export class SuggestionService {
 	}
 
 	private _buildDocument(record: EntryRecord) {
-		const { term, termLanguageCode, definitionEn, definitionVi, exampleEn } =
-			record;
+		const {
+			term,
+			termLanguageCode,
+			definitionEn,
+			definitionVi,
+			exampleEn,
+			pos,
+		} = record;
 
 		const parts: string[] = [];
 
 		parts.push(`Term (${termLanguageCode}): ${term}.`);
-		parts.push(`Definition (English): ${definitionEn}`);
-		parts.push(`Definition (Vietnamese): ${definitionVi}`);
-		parts.push(`Example (English): ${exampleEn}`);
+		parts.push(`Definition (English): ${definitionEn}.`);
+		parts.push(`Definition (Vietnamese): ${definitionVi}.`);
+		parts.push(`Example (English): ${exampleEn}.`);
+		if (pos) parts.push(`Part of Speech: ${pos}.`);
 
 		return new Document({
-			pageContent: parts.join("\n\t"),
+			pageContent: parts.join("\n"),
 			metadata: record,
 		});
 	}

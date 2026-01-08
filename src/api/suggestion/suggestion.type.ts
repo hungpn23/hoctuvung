@@ -4,6 +4,7 @@ export type EntryType = "word" | "phrase";
 
 export type VocabularyRecord = {
 	id: string;
+	type: EntryType;
 	term: string;
 	termLanguageCode: LanguageCode;
 	definitionEn: string;
@@ -14,13 +15,12 @@ export type VocabularyRecord = {
 
 export type WordRecord = VocabularyRecord & {
 	type: "word";
-	senseId: string;
-	collocation?: string;
+	pronunciation: string;
 };
 
 export type PhraseRecord = VocabularyRecord & {
 	type: "phrase";
-	usageOrGrammar?: string;
+	usageOrGrammar: string;
 };
 
 export type EntryRecord = WordRecord | PhraseRecord;

@@ -7,13 +7,13 @@ export class SuggestionController {
 	constructor(private readonly suggestionService: SuggestionService) {}
 
 	@ApiPublicEndpoint()
-	@Get("ingest")
+	@Post("ingest")
 	async ingestData() {
 		return await this.suggestionService.ingestData();
 	}
 
 	@ApiPublicEndpoint()
-	@Post("suggest")
+	@Get("suggest")
 	async suggest(@Body() body: { query: string }) {
 		return await this.suggestionService.suggest(body.query, 1);
 	}

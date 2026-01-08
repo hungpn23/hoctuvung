@@ -6,7 +6,13 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"includes": ["**", "!documentation", "!dist", "!node_modules"],
+		"includes": [
+			"**",
+			"!documentation",
+			"!dist",
+			"!node_modules",
+			"!data.json"
+		],
 		"ignoreUnknown": false
 	},
 	"formatter": {
