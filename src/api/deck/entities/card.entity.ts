@@ -1,4 +1,3 @@
-import type { LanguageCode } from "@common/types";
 import { UUID } from "@common/types/branded.type";
 import { NullableProperty } from "@common/utils/nullable-property";
 import { Deck } from "@db/entities";
@@ -16,6 +15,7 @@ import {
 } from "@mikro-orm/core";
 import { v4 } from "uuid";
 import { CardStatus } from "../deck.enum";
+import type { LanguageCode } from "../deck.type";
 
 @Entity()
 export class Card {
@@ -34,8 +34,17 @@ export class Card {
 	@Property()
 	definitionLanguage!: LanguageCode;
 
-	@NullableProperty({ type: t.text })
-	phonetic?: string;
+	@Property()
+	pronunciation!: string;
+
+	@Property()
+	partOfSpeech!: string;
+
+	@Property()
+	usageOrGrammar!: string;
+
+	@Property()
+	example!: string;
 
 	@Property()
 	streak: Opt<number> = 0;
@@ -51,7 +60,7 @@ export class Card {
 
 	@BeforeCreate()
 	@BeforeUpdate()
-	getStatus() {
+	updateStatus() {
 		const today = new Date();
 
 		if (!this.reviewDate) {

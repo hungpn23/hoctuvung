@@ -243,6 +243,10 @@ export class DatabaseSeeder extends Seeder {
 				definition: vocab.definition,
 				termLanguage: "en",
 				definitionLanguage: "vi",
+				pronunciation: "",
+				partOfSpeech: "",
+				usageOrGrammar: "",
+				example: "",
 			});
 		}
 
@@ -263,7 +267,7 @@ export class DatabaseSeeder extends Seeder {
 				name: `${cardCount} Basic English Words by ${user.username}`,
 				description: `A collection of ${cardCount} fundamental English vocabulary words.`,
 				visibility,
-				passcode: visibility === Visibility.PROTECTED ? "123456" : null,
+				passcode: visibility === Visibility.PROTECTED ? "1234" : null,
 				createdBy: user.id,
 			});
 
@@ -274,6 +278,10 @@ export class DatabaseSeeder extends Seeder {
 					definition: vocab.definition,
 					termLanguage: "en",
 					definitionLanguage: "vi",
+					pronunciation: "",
+					partOfSpeech: "",
+					usageOrGrammar: "",
+					example: "",
 				});
 			}
 		}

@@ -3,12 +3,12 @@ import {
 	NumberValidator,
 	StringValidator,
 } from "@common/decorators/validators.decorator";
-import type { LanguageCode } from "@common/types";
 import type { UUID } from "@common/types/branded.type";
 import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 import { IsUUID } from "class-validator";
 import { CardStatus } from "../deck.enum";
+import type { LanguageCode } from "../deck.type";
 
 export class CreateCardDto {
 	@ApiProperty()
@@ -26,6 +26,22 @@ export class CreateCardDto {
 	@ApiProperty()
 	@StringValidator()
 	definitionLanguage!: LanguageCode;
+
+	@ApiProperty()
+	@StringValidator()
+	pronunciation!: string;
+
+	@ApiProperty()
+	@StringValidator()
+	partOfSpeech!: string;
+
+	@ApiProperty()
+	@StringValidator()
+	usageOrGrammar!: string;
+
+	@ApiProperty()
+	@StringValidator()
+	example!: string;
 }
 
 export class UpdateCardDto extends CreateCardDto {
@@ -60,21 +76,33 @@ export class CardDto {
 	@ApiProperty()
 	term!: string;
 
+	@Expose()
 	@ApiProperty()
-	@StringValidator()
 	termLanguage!: LanguageCode;
 
 	@Expose()
 	@ApiProperty()
 	definition!: string;
 
+	@Expose()
 	@ApiProperty()
-	@StringValidator()
 	definitionLanguage!: LanguageCode;
 
 	@Expose()
-	@ApiPropertyOptional()
-	phonetic?: string;
+	@ApiProperty()
+	pronunciation!: string;
+
+	@Expose()
+	@ApiProperty()
+	partOfSpeech!: string;
+
+	@Expose()
+	@ApiProperty()
+	usageOrGrammar!: string;
+
+	@Expose()
+	@ApiProperty()
+	example!: string;
 
 	@Expose()
 	@ApiProperty()
@@ -94,5 +122,8 @@ export class PreviewCardDto extends PickType(CardDto, [
 	"id",
 	"term",
 	"definition",
-	"phonetic",
+	"pronunciation",
+	"partOfSpeech",
+	"usageOrGrammar",
+	"example",
 ]) {}

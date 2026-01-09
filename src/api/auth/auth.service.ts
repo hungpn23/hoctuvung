@@ -144,10 +144,6 @@ export class AuthService {
 
 	async login(dto: LoginDto) {
 		const { username, password } = dto;
-		console.log(`🚀 ~ AuthService ~ login ~ { username, password }:`, {
-			username,
-			password,
-		});
 		const user = await this.userRepository.findOne({ username });
 
 		const isValid = user && (await argon2.verify(user.password, password));

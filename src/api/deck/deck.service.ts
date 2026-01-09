@@ -137,7 +137,6 @@ export class DeckService {
 	}
 
 	async getSharedMany(userId: UUID | undefined, query: GetManyQueryDto) {
-		console.log(`🚀 ~ DeckService ~ getSharedMany ~ userId:`, userId);
 		const { limit, offset, search, orderBy, order } = query;
 
 		const where: FilterQuery<Deck> = {
@@ -292,52 +291,49 @@ export class DeckService {
 	}
 
 	async clone(userId: UUID, deckId: UUID, dto: CloneDeckDto) {
-		const originalDeck = await this.deckRepository.findOne(deckId, {
-			populate: ["owner", "cards"],
-		});
+		const originalDeck = await this.deckRepository.findOne(
+			{
+				id: deckId,
+				owner: { $ne: userId },
+				visibility: { $ne: Visibility.PRIVATE },
+			},
+			{
+				populate: ["owner", "cards"],
+			},
+		);
 
 		if (!originalDeck)
 			throw new NotFoundException(`Deck with id "${deckId}" not found.`);
 
-		if (originalDeck.owner.id === userId)
-			throw new BadRequestException("You cannot clone your own deck.");
+		const { id, visibility, passcode, name, description, owner, cards } =
+			originalDeck;
 
-		if (originalDeck.visibility === Visibility.PRIVATE)
-			throw new BadRequestException("You cannot clone a private deck.");
+		if (visibility === Visibility.PROTECTED && dto.passcode !== passcode)
+			throw new BadRequestException("Invalid passcode.");
 
-		if (originalDeck.visibility === Visibility.PROTECTED)
-			if (!dto.passcode || dto.passcode !== originalDeck.passcode)
-				throw new BadRequestException("Invalid passcode.");
-
-		const newDeck = this.deckRepository.create({
-			name: `${originalDeck.name} (Clone) ${Date.now()}`,
-			description: originalDeck.description,
+		const clonedDeck = this.deckRepository.create({
+			name: `${name} (Clone)`,
+			description,
 			visibility: Visibility.PRIVATE,
 			owner: userId,
-			createdBy: originalDeck.owner.id,
-			clonedFrom: originalDeck.id,
+			createdBy: owner.id,
+			clonedFrom: id,
 		});
 
-		for (const card of originalDeck.cards.toArray()) {
+		for (const card of cards.toArray()) {
 			this.cardRepository.create({
-				...pick(card, [
-					"term",
-					"termLanguage",
-					"definition",
-					"definitionLanguage",
-					"phonetic",
-				]),
-				deck: newDeck.id,
+				...omit(card, ["id", "streak", "reviewDate", "status"]),
+				deck: clonedDeck.id,
 			});
 		}
 
 		originalDeck.learnerCount++;
 
 		const notification = this.notificationRepository.create({
-			entityId: originalDeck.id,
-			content: `Your deck "${originalDeck.name}" has been cloned by an user.`,
+			entityId: id,
+			content: `Your deck "${name}" has been cloned by an user.`,
 			actor: userId,
-			recipient: originalDeck.owner.id,
+			recipient: owner.id,
 		});
 
 		await this.em.flush();

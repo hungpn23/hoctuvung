@@ -1,4 +1,4 @@
-import { LanguageCode } from "@common/types";
+import { LanguageCode } from "@api/deck/deck.type";
 
 export type EntryType = "word" | "phrase";
 
