@@ -2,6 +2,7 @@ import {
 	DateValidator,
 	NumberValidator,
 	StringValidator,
+	StringValidatorOptional,
 } from "@common/decorators/validators.decorator";
 import type { UUID } from "@common/types/branded.type";
 import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
@@ -27,21 +28,21 @@ export class CreateCardDto {
 	@StringValidator()
 	definitionLanguage!: LanguageCode;
 
-	@ApiProperty()
-	@StringValidator()
-	pronunciation!: string;
+	@ApiPropertyOptional()
+	@StringValidatorOptional()
+	pronunciation?: string;
 
-	@ApiProperty()
-	@StringValidator()
-	partOfSpeech!: string;
+	@ApiPropertyOptional()
+	@StringValidatorOptional()
+	partOfSpeech?: string;
 
-	@ApiProperty()
-	@StringValidator()
-	usageOrGrammar!: string;
+	@ApiPropertyOptional()
+	@StringValidatorOptional()
+	usageOrGrammar?: string;
 
-	@ApiProperty()
-	@StringValidator()
-	example!: string;
+	@ApiPropertyOptional()
+	@StringValidatorOptional()
+	example?: string;
 }
 
 export class UpdateCardDto extends CreateCardDto {
@@ -89,20 +90,20 @@ export class CardDto {
 	definitionLanguage!: LanguageCode;
 
 	@Expose()
-	@ApiProperty()
-	pronunciation!: string;
+	@ApiPropertyOptional()
+	pronunciation?: string;
 
 	@Expose()
-	@ApiProperty()
-	partOfSpeech!: string;
+	@ApiPropertyOptional()
+	partOfSpeech?: string;
 
 	@Expose()
-	@ApiProperty()
-	usageOrGrammar!: string;
+	@ApiPropertyOptional()
+	usageOrGrammar?: string;
 
 	@Expose()
-	@ApiProperty()
-	example!: string;
+	@ApiPropertyOptional()
+	example?: string;
 
 	@Expose()
 	@ApiProperty()

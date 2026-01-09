@@ -40,7 +40,7 @@ export class CreateDeckDto {
 	})
 	@ValidateIf((o) => (o as CreateDeckDto).visibility === Visibility.PROTECTED)
 	@StringValidator({ minLength: 4, maxLength: 20 })
-	passcode?: string | null;
+	passcode?: string;
 
 	@ApiProperty({ type: () => [CreateCardDto], minItems: 4 })
 	@ArrayMinSize(4)

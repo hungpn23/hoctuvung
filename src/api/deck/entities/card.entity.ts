@@ -34,17 +34,17 @@ export class Card {
 	@Property()
 	definitionLanguage!: LanguageCode;
 
-	@Property()
-	pronunciation!: string;
+	@NullableProperty()
+	pronunciation?: string;
 
-	@Property()
-	partOfSpeech!: string;
+	@NullableProperty()
+	partOfSpeech?: string;
 
-	@Property()
-	usageOrGrammar!: string;
+	@NullableProperty()
+	usageOrGrammar?: string;
 
-	@Property()
-	example!: string;
+	@NullableProperty()
+	example?: string;
 
 	@Property()
 	streak: Opt<number> = 0;

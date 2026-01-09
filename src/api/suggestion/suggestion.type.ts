@@ -10,12 +10,12 @@ export type VocabularyRecord = {
 	definitionEn: string;
 	definitionVi: string;
 	exampleEn: string;
-	pos?: string;
 };
 
 export type WordRecord = VocabularyRecord & {
 	type: "word";
-	pronunciation: string;
+	pos?: string;
+	pronunciation?: string;
 };
 
 export type PhraseRecord = VocabularyRecord & {

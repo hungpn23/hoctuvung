@@ -119,14 +119,8 @@ export class SuggestionService {
 	}
 
 	private _buildDocument(record: EntryRecord) {
-		const {
-			term,
-			termLanguageCode,
-			definitionEn,
-			definitionVi,
-			exampleEn,
-			pos,
-		} = record;
+		const { term, termLanguageCode, definitionEn, definitionVi, exampleEn } =
+			record;
 
 		const parts: string[] = [];
 
@@ -134,7 +128,8 @@ export class SuggestionService {
 		parts.push(`Definition (English): ${definitionEn}.`);
 		parts.push(`Definition (Vietnamese): ${definitionVi}.`);
 		parts.push(`Example (English): ${exampleEn}.`);
-		if (pos) parts.push(`Part of Speech: ${pos}.`);
+		if (record.type === "word" && record.pos)
+			parts.push(`Part of Speech: ${record.pos}.`);
 
 		return new Document({
 			pageContent: parts.join("\n"),
