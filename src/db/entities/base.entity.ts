@@ -13,3 +13,8 @@ export abstract class BaseEntity {
 	@NullableProperty({ type: t.datetime, onUpdate: () => new Date() })
 	updatedAt?: Date | null;
 }
+
+export abstract class SoftDeleteBaseEntity extends BaseEntity {
+	@NullableProperty()
+	deletedAt?: Date | null;
+}

@@ -1,5 +1,4 @@
 import { AuthService } from "@api/auth/auth.service";
-import { SuggestionService } from "@api/suggestion/suggestion.service";
 import { AppModule } from "@app.module";
 import { GlobalExceptionFilter } from "@common/filters/global-exception.filter";
 import { AuthGuard } from "@common/guards/auth.guard";
@@ -58,8 +57,6 @@ async function bootstrap() {
 	SwaggerModule.setup("docs", app, documentFactory, { useGlobalPrefix: true });
 
 	const appUrl = `http://${host}:${port}/${apiPrefix}`;
-
-	await app.get(SuggestionService).connectToStore();
 
 	await app.listen(port, host, () => {
 		logger.debug(`Environment: ${nodeEnv}`);

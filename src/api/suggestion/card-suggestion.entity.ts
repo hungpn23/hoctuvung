@@ -30,6 +30,6 @@ export class CardSuggestion {
 	@NullableProperty()
 	usageOrGrammar?: string;
 
-	@NullableProperty({ type: t.array })
-	examples?: string[];
+	@Property({ type: t.array })
+	examples!: string[];
 }

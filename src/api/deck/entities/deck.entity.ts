@@ -1,7 +1,7 @@
 import type { UUID } from "@common/types/branded.type";
 import { NullableProperty } from "@common/utils/nullable-property";
 import { Card, User } from "@db/entities";
-import { SoftDeleteBaseEntity } from "@db/entities/soft-delete.base.entity";
+import { SoftDeleteBaseEntity } from "@db/entities/base.entity";
 import {
 	BeforeCreate,
 	BeforeUpdate,
