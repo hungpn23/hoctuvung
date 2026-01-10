@@ -40,9 +40,9 @@ export class CreateCardDto {
 	@StringValidatorOptional()
 	usageOrGrammar?: string;
 
-	@ApiPropertyOptional()
-	@StringValidatorOptional()
-	example?: string;
+	@ApiProperty({ isArray: true })
+	@StringValidator({ each: true })
+	examples!: string[];
 }
 
 export class UpdateCardDto extends CreateCardDto {
@@ -102,8 +102,8 @@ export class CardDto {
 	usageOrGrammar?: string;
 
 	@Expose()
-	@ApiPropertyOptional()
-	example?: string;
+	@ApiProperty({ isArray: true })
+	examples!: string[];
 
 	@Expose()
 	@ApiProperty()
@@ -126,5 +126,5 @@ export class PreviewCardDto extends PickType(CardDto, [
 	"pronunciation",
 	"partOfSpeech",
 	"usageOrGrammar",
-	"example",
+	"examples",
 ]) {}

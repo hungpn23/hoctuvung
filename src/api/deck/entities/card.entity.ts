@@ -43,8 +43,8 @@ export class Card {
 	@NullableProperty()
 	usageOrGrammar?: string;
 
-	@NullableProperty()
-	example?: string;
+	@Property({ type: t.array })
+	examples!: string[];
 
 	@Property()
 	streak: Opt<number> = 0;

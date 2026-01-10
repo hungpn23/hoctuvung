@@ -243,6 +243,7 @@ export class DatabaseSeeder extends Seeder {
 				definition: vocab.definition,
 				termLanguage: "en",
 				definitionLanguage: "vi",
+				examples: [],
 			});
 		}
 
@@ -274,6 +275,7 @@ export class DatabaseSeeder extends Seeder {
 					definition: vocab.definition,
 					termLanguage: "en",
 					definitionLanguage: "vi",
+					examples: [],
 				});
 			}
 		}

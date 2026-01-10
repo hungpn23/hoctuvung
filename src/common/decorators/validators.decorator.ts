@@ -23,28 +23,31 @@ import {
 } from "class-validator";
 import { ToBoolean, ToLowerCase, ToUpperCase } from "./transforms.decorator";
 
-type CommonOptions = {
-	required?: boolean;
-	each?: boolean; // if prop is an array --> validate each item in array
-};
+type CommonOptions = Partial<{
+	required: boolean;
+	each: boolean; // if prop is an array --> validate each item in array
+}>;
 
-type NumberOptions = CommonOptions & {
-	isInt?: boolean;
-	isPositive?: boolean;
-	minimum?: number;
-	maximum?: number;
-};
+type NumberOptions = CommonOptions &
+	Partial<{
+		isInt: boolean;
+		isPositive: boolean;
+		minimum: number;
+		maximum: number;
+	}>;
 
-type StringOptions = CommonOptions & {
-	minLength?: number;
-	maxLength?: number;
-	toLowerCase?: boolean;
-	toUpperCase?: boolean;
-};
+type StringOptions = CommonOptions &
+	Partial<{
+		minLength: number;
+		maxLength: number;
+		toLowerCase: boolean;
+		toUpperCase: boolean;
+	}>;
 
-type UrlOptions = CommonOptions & {
-	require_tld?: boolean;
-};
+type UrlOptions = CommonOptions &
+	Partial<{
+		require_tld: boolean;
+	}>;
 
 // **********************
 // String-like validators
@@ -253,6 +256,7 @@ function handleCommonOptions(
 	options: CommonOptions = {},
 ) {
 	const { required, each } = options;
+
 	if (required === false) {
 		decorators.push(ValidateIf((_obj, value) => !!value));
 	} else {
