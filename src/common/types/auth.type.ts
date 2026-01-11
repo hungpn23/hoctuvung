@@ -1,4 +1,4 @@
-import { UserRole } from "@common/constants/role.enum";
+import { UserRole } from "@common/enums";
 import { Request as ExpressRequest } from "express";
 import { Socket } from "socket.io";
 import { Seconds, UUID } from "./branded.type";

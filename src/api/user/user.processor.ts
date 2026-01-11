@@ -1,10 +1,9 @@
 import fs from "node:fs";
-import { JobName } from "@common/constants/job-name.enum";
-import { IMAGEKIT_CLIENT } from "@common/constants/provider-token";
-import { QueueName } from "@common/constants/queue-name.enum";
+import { JobName, QueueName } from "@common/enums";
 import { ImageUploadData } from "@common/types/jobs.type";
 import { User } from "@db/entities";
 import ImageKit from "@imagekit/nodejs";
+import { IMAGEKIT_CLIENT } from "@integrations/imagekit/imagekit.provider-token";
 import { EntityManager } from "@mikro-orm/core";
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Inject, Logger } from "@nestjs/common";

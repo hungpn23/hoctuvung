@@ -1,4 +1,4 @@
-import { ApiPublicEndpoint } from "@common/decorators/api-endpoint.decorator";
+import { ApiEndpoint } from "@common/decorators/api-endpoint.decorator";
 import { Body, Controller, Post } from "@nestjs/common";
 import { CardSuggestionDto, GetCardSuggestionDto } from "./suggestion.dto";
 import { SuggestionService } from "./suggestion.service";
@@ -7,7 +7,7 @@ import { SuggestionService } from "./suggestion.service";
 export class SuggestionController {
 	constructor(private readonly suggestionService: SuggestionService) {}
 
-	@ApiPublicEndpoint({ type: CardSuggestionDto })
+	@ApiEndpoint({ type: CardSuggestionDto })
 	@Post("card")
 	async getCardSuggestion(@Body() dto: GetCardSuggestionDto) {
 		return await this.suggestionService.getCardSuggestion(dto);

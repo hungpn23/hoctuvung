@@ -18,11 +18,11 @@ import { ValidationError } from "class-validator";
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	const logger = new Logger("Bootstrap");
-	const { apiPrefix, host, port, nodeEnv } = getAppConfig();
+	const { apiPrefix, host, port, nodeEnv, frontendUrl } = getAppConfig();
 	const authService = app.get(AuthService);
 
 	app.enableCors({
-		origin: "*",
+		origin: frontendUrl,
 		methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 		allowedHeaders: ["Content-Type", "Authorization"],
 		credentials: true,
@@ -61,8 +61,8 @@ async function bootstrap() {
 	await app.listen(port, host, () => {
 		logger.debug(`Environment: ${nodeEnv}`);
 		logger.debug(`API live at: ${appUrl}`);
+		logger.debug(`Health check: ${appUrl}/hello`);
 		logger.debug(`Swagger docs at: ${appUrl}/docs`);
-		logger.debug(`Qdrant Dashboard: http://localhost:6333/dashboard`);
 	});
 }
 

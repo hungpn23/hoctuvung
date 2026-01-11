@@ -1,4 +1,5 @@
 import { AuthService } from "@api/auth/auth.service";
+import { Namespace } from "@common/enums";
 import { SocketUser } from "@common/types/auth.type";
 import { INestApplication, UnauthorizedException } from "@nestjs/common";
 import { IoAdapter } from "@nestjs/platform-socket.io";
@@ -16,7 +17,7 @@ export class SocketIOAdapter extends IoAdapter {
 		const server = super.createIOServer(port, options) as Server;
 
 		server
-			.of("notifications")
+			.of(Namespace.NOTIFICATIONS)
 			.use((socket: Socket, next: (err?: ExtendedError) => void) => {
 				this.authService
 					.verifyAccessToken(socket.handshake.headers.authorization)

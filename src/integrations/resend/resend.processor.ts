@@ -1,5 +1,4 @@
-import { JobName } from "@common/constants/job-name.enum";
-import { QueueName } from "@common/constants/queue-name.enum";
+import { JobName, QueueName } from "@common/enums";
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Logger } from "@nestjs/common";
 import { Job } from "bullmq";

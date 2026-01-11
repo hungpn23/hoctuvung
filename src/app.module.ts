@@ -1,4 +1,3 @@
-import path from "node:path";
 import { ApiModule } from "@api/api.module";
 import { AppController } from "@app.controller";
 import { appConfig } from "@config/app.config";
@@ -8,7 +7,6 @@ import { googleConfig } from "@config/google.config";
 import { integrationConfig } from "@config/integration.config";
 import { mailConfig } from "@config/mail.config";
 import { RedisConfig, redisConfig } from "@config/redis.config";
-import { vectorDbConfig } from "@config/vector-db.config";
 import { IntegrationModule } from "@integrations/intergration.module";
 import KeyvRedis from "@keyv/redis";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
@@ -18,10 +16,8 @@ import { BullModule } from "@nestjs/bullmq";
 import { CacheModule } from "@nestjs/cache-manager";
 import { Logger, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { config } from "dotenv";
+import "dotenv/config";
 import * as entities from "./db/entities";
-
-config({ path: path.resolve(process.cwd(), ".env.local") });
 
 const isProd = process.env.NODE_ENV === "prod";
 
@@ -29,7 +25,7 @@ const isProd = process.env.NODE_ENV === "prod";
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
-			envFilePath: isProd ? ".env" : ".env.local",
+			envFilePath: isProd ? ".env" : ".env",
 			cache: true,
 			expandVariables: true, // support ${<ENV_KEY>} in .env file
 			skipProcessEnv: true,
@@ -41,7 +37,6 @@ const isProd = process.env.NODE_ENV === "prod";
 				integrationConfig,
 				mailConfig,
 				redisConfig,
-				vectorDbConfig,
 			],
 		}),
 

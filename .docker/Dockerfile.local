@@ -1,0 +1,10 @@
+FROM node:24-alpine3.23
+
+RUN npm add -g @nestjs/cli
+RUN corepack enable
+
+WORKDIR /app
+
+COPY --chown=node:node . .
+
+USER node

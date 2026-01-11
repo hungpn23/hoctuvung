@@ -3,9 +3,7 @@ import * as entities from "@db/entities";
 import { Migrator } from "@mikro-orm/migrations";
 import { defineConfig } from "@mikro-orm/postgresql";
 import { SeedManager } from "@mikro-orm/seeder";
-import { config } from "dotenv";
-
-config({ path: path.resolve(process.cwd(), ".env.local") });
+import "dotenv/config";
 
 export default defineConfig({
 	host: process.env.DB_HOST,

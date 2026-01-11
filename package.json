@@ -10,7 +10,7 @@
 		"start": "nest start",
 		"start:dev": "nest start --watch",
 		"start:debug": "nest start --debug --watch",
-		"start:prod": "node dist/main",
+		"start:prod": "node dist/src/main",
 		"format": "pnpm exec biome format",
 		"format:fix": "pnpm exec biome format --fix",
 		"lint": "pnpm exec biome lint",
@@ -41,7 +41,8 @@
 		"migration:check": "npx mikro-orm migration:check",
 		"migration:pending": "npx mikro-orm migration:pending",
 		"migration:fresh": "npx mikro-orm migration:fresh",
-		"docs:serve": "npx @compodoc/compodoc -p tsconfig.json --serve"
+		"docs:serve": "npx @compodoc/compodoc -p tsconfig.json --serve",
+		"prepare": "node .husky/install.mjs"
 	},
 	"dependencies": {
 		"@angular/common": "^21.0.6",
@@ -52,10 +53,6 @@
 		"@faker-js/faker": "^10.1.0",
 		"@imagekit/nodejs": "^7.1.1",
 		"@keyv/redis": "^5.1.5",
-		"@langchain/classic": "^1.0.7",
-		"@langchain/cohere": "^1.0.1",
-		"@langchain/core": "^1.1.8",
-		"@langchain/qdrant": "^1.0.1",
 		"@mikro-orm/cli": "^6.6.2",
 		"@mikro-orm/core": "^6.6.2",
 		"@mikro-orm/migrations": "^6.6.2",
@@ -122,6 +119,7 @@
 		"tsconfig-paths": "^4.2.0",
 		"typescript": "^5.9.3"
 	},
+	"packageManager": "pnpm@10.28.0",
 	"mikro-orm": {
 		"useTsNode": true,
 		"configPaths": [

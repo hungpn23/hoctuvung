@@ -1,13 +1,13 @@
 import crypto from "node:crypto";
 import { UserDto } from "@api/user/user.dto";
-import { JobName } from "@common/constants/job-name.enum";
-import { QueueName } from "@common/constants/queue-name.enum";
+import { JobName, QueueName } from "@common/enums";
 import { JwtPayload, RefreshTokenPayload } from "@common/types/auth.type";
 import { Milliseconds, UUID } from "@common/types/branded.type";
 import {
 	GoogleJwtPayload,
 	GoogleTokenResponse,
 } from "@common/types/google.type";
+import { type AppConfig, appConfig } from "@config/app.config";
 import { type AuthConfig, authConfig } from "@config/auth.config";
 import { type GoogleConfig, googleConfig } from "@config/google.config";
 import { Session, User } from "@db/entities";
@@ -48,6 +48,8 @@ export class AuthService {
 		private readonly emailQueue: Queue<void, void, JobName>,
 		@Inject(authConfig.KEY)
 		private readonly authConf: AuthConfig,
+		@Inject(appConfig.KEY)
+		private readonly appConf: AppConfig,
 		@Inject(googleConfig.KEY)
 		private readonly googleConf: GoogleConfig,
 		@Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
@@ -58,7 +60,7 @@ export class AuthService {
 	) {}
 
 	async googleCallback(code: string, res: Response) {
-		const frontendUrl = this.authConf.clientDomain;
+		const frontendUrl = this.appConf.frontendUrl;
 
 		const params = new URLSearchParams({
 			code,

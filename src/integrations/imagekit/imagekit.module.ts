@@ -1,10 +1,10 @@
-import { IMAGEKIT_CLIENT } from "@common/constants/provider-token";
 import {
 	IntegrationConfig,
 	integrationConfig,
 } from "@config/integration.config";
 import ImageKit from "@imagekit/nodejs";
 import { Module } from "@nestjs/common";
+import { IMAGEKIT_CLIENT } from "./imagekit.provider-token";
 
 @Module({
 	providers: [

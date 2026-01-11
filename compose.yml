@@ -1,6 +1,26 @@
-# docker compose -f compose.local.yml --env-file .env.local up -d
-# docker compose -f compose.local.yml --env-file .env.local down
+name: vocabify
+
 services:
+  node:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile.local
+    container_name: node
+    ports:
+      - '${APP_PORT}:${APP_PORT}'
+    volumes:
+      - ${PWD}:/app
+    tty: true
+    working_dir: /app
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    networks:
+      - default
+
   db:
     image: postgres:18-alpine
     container_name: db
@@ -8,13 +28,15 @@ services:
       - '5432:5432'
     volumes:
       - ${PWD}/.docker/volumes/pg_data:/var/lib/postgresql/data
-    networks:
-      - hoctuvung
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}
-
+    env_file:
+      - .env
+    networks:
+      - default
+    
   redis:
     image: redis:8-alpine
     container_name: redis
@@ -22,24 +44,15 @@ services:
       - '6379:6379'
     volumes:
       - ${PWD}/.docker/volumes/redis_data:/data
-    networks:
-      - hoctuvung
     command: ['redis-server', '--requirepass', '${REDIS_PASSWORD}']
-
-  qdrant:
-    image: qdrant/qdrant:dev
-    container_name: qdrant
-    ports:
-      - '6333:6333'
+    env_file:
+      - .env
     networks:
-      - hoctuvung
-    volumes:
-      - ${PWD}/.docker/volumes/qdrant_data:/qdrant/storage
+      - default
 
 volumes:
   pg_data:
   redis_data:
-  qdrant_data:
 
 networks:
-  hoctuvung:
+  default:

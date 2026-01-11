@@ -1,3 +1,7 @@
 onlyBuiltDependencies:
   - '@compodoc/compodoc'
   - '@nestjs/core'
+  - '@scarf/scarf'
+  - argon2
+  - msgpackr-extract
+  - unrs-resolver

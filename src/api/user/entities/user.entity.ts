@@ -1,4 +1,4 @@
-import { UserRole } from "@common/constants/role.enum";
+import { UserRole } from "@common/enums";
 import { HiddenProperty } from "@common/utils/hidden-property";
 import { NullableProperty } from "@common/utils/nullable-property";
 import { Deck, Notification, Session } from "@db/entities";

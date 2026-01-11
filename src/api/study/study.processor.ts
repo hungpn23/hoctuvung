@@ -1,6 +1,5 @@
 import { CardStatus } from "@api/deck/deck.enum";
-import { JobName } from "@common/constants/job-name.enum";
-import { QueueName } from "@common/constants/queue-name.enum";
+import { JobName, QueueName } from "@common/enums";
 import { UpdateUserStatsData } from "@common/types/jobs.type";
 import { Card, UserStatistic } from "@db/entities";
 import { EntityManager } from "@mikro-orm/core";

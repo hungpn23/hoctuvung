@@ -1,11 +1,10 @@
-import { Environment } from "@common/constants/env.enum";
 import {
 	EnumValidator,
 	PortValidator,
 	StringValidator,
 	UrlValidator,
 } from "@common/decorators/validators.decorator";
-
+import { Environment } from "@common/enums";
 import { ConfigType, registerAs } from "@nestjs/config";
 import { validateConfig } from "./validate-config";
 
@@ -21,6 +20,9 @@ class AppEnvVariables {
 
 	@StringValidator()
 	API_PREFIX!: string;
+
+	@UrlValidator({ require_tld: false })
+	FRONTEND_URL!: string;
 }
 
 export const getAppConfig = () => {
@@ -31,6 +33,7 @@ export const getAppConfig = () => {
 		host: config.APP_HOST,
 		port: config.APP_PORT,
 		apiPrefix: config.API_PREFIX,
+		frontendUrl: config.FRONTEND_URL,
 	};
 };
 

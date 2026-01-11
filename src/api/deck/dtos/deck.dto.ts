@@ -1,5 +1,4 @@
 import { OwnerDto } from "@api/user/user.dto";
-import { DeckOrderBy } from "@common/constants/order.enum";
 import {
 	ClassValidator,
 	ClassValidatorOptional,
@@ -13,7 +12,7 @@ import type { UUID } from "@common/types/branded.type";
 import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 import { ArrayMinSize, ValidateIf } from "class-validator";
-import { Visibility } from "../deck.enum";
+import { DeckOrderBy, Visibility } from "../deck.enum";
 import {
 	CardDto,
 	CreateCardDto,

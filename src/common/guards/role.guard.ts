@@ -1,5 +1,4 @@
-import { MetadataKey } from "@common/constants/metadata.enum";
-import { UserRole } from "@common/constants/role.enum";
+import { MetadataKey, UserRole } from "@common/enums";
 import { RequestUser } from "@common/types/auth.type";
 import {
 	type CanActivate,
