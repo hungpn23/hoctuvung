@@ -1,11 +1,19 @@
+build:
+	docker compose up -d --build
 up:
 	docker compose up -d
 down:
 	docker compose down
-stop:
-	docker compose stop
 db:
 	docker compose exec db bash
+node:
+	docker compose exec node sh
+install:
+	docker compose exec node pnpm install
+buildApp:
+	docker compose exec node pnpm build
+schemaFresh:
+	docker compose exec node pnpm schema:fresh
 migrate:
 	docker compose exec node pnpm migration:up
 dev:

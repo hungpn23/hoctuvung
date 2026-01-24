@@ -9,8 +9,9 @@ export class SuggestionSeeder extends Seeder {
 	async run(em: EntityManager) {
 		console.time("🌱 Seeding card suggestion");
 
-		const filePath = path.join(process.cwd(), "data.json");
-		const jsonData = fs.readFileSync(filePath, "utf-8");
+		const DATA_PATH = path.join(process.cwd(), "data.json");
+
+		const jsonData = fs.readFileSync(DATA_PATH, "utf-8");
 		const data = JSON.parse(jsonData) as EntryRecord[];
 
 		const batchSize = 1000;
