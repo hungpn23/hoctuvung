@@ -1,8 +1,8 @@
+import { CardSuggestion } from "@db";
 import { EntityRepository, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
-import { CardSuggestion } from "./card-suggestion.entity";
 import { CardSuggestionDto, GetCardSuggestionDto } from "./suggestion.dto";
 
 @Injectable()

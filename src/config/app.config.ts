@@ -1,10 +1,10 @@
 import {
 	EnumValidator,
+	Environment,
 	PortValidator,
 	StringValidator,
 	UrlValidator,
-} from "@common/decorators/validators.decorator";
-import { Environment } from "@common/enums";
+} from "@common";
 import { ConfigType, registerAs } from "@nestjs/config";
 import { validateConfig } from "./validate-config";
 

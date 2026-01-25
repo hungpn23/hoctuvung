@@ -14,14 +14,9 @@ export default defineConfig({
 	entities: Object.values(entities),
 
 	extensions: [SeedManager, Migrator],
-	seeder: {
-		path: path.join(process.cwd(), "dist/db/seeders"),
-		pathTs: path.join(process.cwd(), "src/db/seeders"),
-		defaultSeeder: "DatabaseSeeder",
-		glob: "!(*.d).{js,ts}",
-		emit: "ts", // seeder generation mode
-	},
+	seeder: { pathTs: path.join(process.cwd(), "src/db/seeders") },
 	migrations: {
-		path: path.join(process.cwd(), "src/db/migrations"),
+		path: path.join(process.cwd(), "dist/db/migrations"),
+		pathTs: path.join(process.cwd(), "src/db/migrations"),
 	},
 });

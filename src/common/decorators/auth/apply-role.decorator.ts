@@ -1,4 +1,4 @@
-import { MetadataKey, UserRole } from "@common/enums";
+import { MetadataKey, UserRole } from "@common";
 import { SetMetadata } from "@nestjs/common";
 
 export const ApplyRole = (role: UserRole) =>

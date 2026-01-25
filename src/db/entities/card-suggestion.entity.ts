@@ -1,6 +1,5 @@
 import type { LanguageCode } from "@api/deck/deck.type";
-import { UUID } from "@common/types/branded.type";
-import { NullableProperty } from "@common/utils/nullable-property";
+import { NullableProperty, type UUID } from "@common";
 import { Entity, Opt, PrimaryKey, Property, t } from "@mikro-orm/core";
 import { v4 } from "uuid";
 

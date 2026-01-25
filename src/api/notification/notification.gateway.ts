@@ -1,6 +1,5 @@
-import { Namespace } from "@common/enums";
-import { SocketUser } from "@common/types/auth.type";
-import { getAppConfig } from "@config/app.config";
+import { Namespace, SocketUser } from "@common";
+import { getAppConfig } from "@config";
 import { Logger } from "@nestjs/common";
 import {
 	OnGatewayConnection,

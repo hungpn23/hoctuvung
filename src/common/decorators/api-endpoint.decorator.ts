@@ -1,6 +1,5 @@
 import { STATUS_CODES } from "node:http";
-import { ErrorDto } from "@common/dtos/error.dto";
-import { PaginatedDto } from "@common/dtos/offset-pagination/offset-pagination.dto";
+import { ErrorDto, PaginatedDto } from "@common/dtos";
 import {
 	applyDecorators,
 	HttpCode,

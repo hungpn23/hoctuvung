@@ -13,6 +13,111 @@
 					"nullable": false,
 					"mappedType": "uuid"
 				},
+				"term": {
+					"name": "term",
+					"type": "text",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"mappedType": "text"
+				},
+				"term_language": {
+					"name": "term_language",
+					"type": "varchar(255)",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"length": 255,
+					"mappedType": "string"
+				},
+				"definition": {
+					"name": "definition",
+					"type": "text",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"mappedType": "text"
+				},
+				"definition_language": {
+					"name": "definition_language",
+					"type": "varchar(255)",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"length": 255,
+					"mappedType": "string"
+				},
+				"pronunciation": {
+					"name": "pronunciation",
+					"type": "varchar(255)",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": true,
+					"length": 255,
+					"mappedType": "string"
+				},
+				"part_of_speech": {
+					"name": "part_of_speech",
+					"type": "varchar(255)",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": true,
+					"length": 255,
+					"mappedType": "string"
+				},
+				"usage_or_grammar": {
+					"name": "usage_or_grammar",
+					"type": "varchar(255)",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": true,
+					"length": 255,
+					"mappedType": "string"
+				},
+				"examples": {
+					"name": "examples",
+					"type": "text[]",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"mappedType": "array"
+				}
+			},
+			"name": "card_suggestion",
+			"schema": "public",
+			"indexes": [
+				{
+					"keyName": "card_suggestion_pkey",
+					"columnNames": ["id"],
+					"composite": false,
+					"constraint": true,
+					"primary": true,
+					"unique": true
+				}
+			],
+			"checks": [],
+			"foreignKeys": {},
+			"nativeEnums": {}
+		},
+		{
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"mappedType": "uuid"
+				},
 				"created_at": {
 					"name": "created_at",
 					"type": "timestamptz",
@@ -25,13 +130,13 @@
 				},
 				"updated_at": {
 					"name": "updated_at",
-					"type": "varchar(255)",
+					"type": "timestamptz",
 					"unsigned": false,
 					"autoincrement": false,
 					"primary": false,
 					"nullable": true,
-					"length": 255,
-					"mappedType": "string"
+					"length": 6,
+					"mappedType": "datetime"
 				},
 				"username": {
 					"name": "username",
@@ -149,13 +254,13 @@
 				},
 				"updated_at": {
 					"name": "updated_at",
-					"type": "varchar(255)",
+					"type": "timestamptz",
 					"unsigned": false,
 					"autoincrement": false,
 					"primary": false,
 					"nullable": true,
-					"length": 255,
-					"mappedType": "string"
+					"length": 6,
+					"mappedType": "datetime"
 				},
 				"signature": {
 					"name": "signature",
@@ -235,26 +340,129 @@
 				},
 				"updated_at": {
 					"name": "updated_at",
-					"type": "varchar(255)",
+					"type": "timestamptz",
 					"unsigned": false,
 					"autoincrement": false,
 					"primary": false,
 					"nullable": true,
+					"length": 6,
+					"mappedType": "datetime"
+				},
+				"entity_id": {
+					"name": "entity_id",
+					"type": "uuid",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"mappedType": "uuid"
+				},
+				"content": {
+					"name": "content",
+					"type": "varchar(255)",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
 					"length": 255,
 					"mappedType": "string"
+				},
+				"read_at": {
+					"name": "read_at",
+					"type": "timestamptz",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": true,
+					"length": 6,
+					"mappedType": "datetime"
+				},
+				"actor_id": {
+					"name": "actor_id",
+					"type": "uuid",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": true,
+					"mappedType": "uuid"
+				},
+				"recipient_id": {
+					"name": "recipient_id",
+					"type": "uuid",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"mappedType": "uuid"
+				}
+			},
+			"name": "notification",
+			"schema": "public",
+			"indexes": [
+				{
+					"keyName": "notification_pkey",
+					"columnNames": ["id"],
+					"composite": false,
+					"constraint": true,
+					"primary": true,
+					"unique": true
+				}
+			],
+			"checks": [],
+			"foreignKeys": {
+				"notification_actor_id_foreign": {
+					"constraintName": "notification_actor_id_foreign",
+					"columnNames": ["actor_id"],
+					"localTableName": "public.notification",
+					"referencedColumnNames": ["id"],
+					"referencedTableName": "public.user",
+					"deleteRule": "set null",
+					"updateRule": "cascade"
+				},
+				"notification_recipient_id_foreign": {
+					"constraintName": "notification_recipient_id_foreign",
+					"columnNames": ["recipient_id"],
+					"localTableName": "public.notification",
+					"referencedColumnNames": ["id"],
+					"referencedTableName": "public.user",
+					"updateRule": "cascade"
+				}
+			},
+			"nativeEnums": {}
+		},
+		{
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"mappedType": "uuid"
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamptz",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"length": 6,
+					"mappedType": "datetime"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamptz",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": true,
+					"length": 6,
+					"mappedType": "datetime"
 				},
 				"deleted_at": {
 					"name": "deleted_at",
-					"type": "varchar(255)",
-					"unsigned": false,
-					"autoincrement": false,
-					"primary": false,
-					"nullable": true,
-					"length": 255,
-					"mappedType": "string"
-				},
-				"deleted_by": {
-					"name": "deleted_by",
 					"type": "varchar(255)",
 					"unsigned": false,
 					"autoincrement": false,
@@ -300,7 +508,7 @@
 					"autoincrement": false,
 					"primary": false,
 					"nullable": false,
-					"enumItems": ["Everyone", "People with a passcode", "Just me"],
+					"enumItems": ["public", "protected", "private"],
 					"mappedType": "enum"
 				},
 				"passcode": {
@@ -314,6 +522,16 @@
 					"default": "''",
 					"mappedType": "string"
 				},
+				"view_count": {
+					"name": "view_count",
+					"type": "int",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"default": "0",
+					"mappedType": "integer"
+				},
 				"learner_count": {
 					"name": "learner_count",
 					"type": "int",
@@ -326,13 +544,13 @@
 				},
 				"opened_at": {
 					"name": "opened_at",
-					"type": "varchar(255)",
+					"type": "timestamptz",
 					"unsigned": false,
 					"autoincrement": false,
 					"primary": false,
 					"nullable": true,
-					"length": 255,
-					"mappedType": "string"
+					"length": 6,
+					"mappedType": "datetime"
 				},
 				"cloned_from_id": {
 					"name": "cloned_from_id",
@@ -379,6 +597,14 @@
 				{
 					"keyName": "deck_slug_owner_id_unique",
 					"columnNames": ["slug", "owner_id"],
+					"composite": true,
+					"constraint": true,
+					"primary": false,
+					"unique": true
+				},
+				{
+					"keyName": "deck_name_owner_id_unique",
+					"columnNames": ["name", "owner_id"],
 					"composite": true,
 					"constraint": true,
 					"primary": false,
@@ -435,6 +661,16 @@
 					"nullable": false,
 					"mappedType": "text"
 				},
+				"term_language": {
+					"name": "term_language",
+					"type": "varchar(255)",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"length": 255,
+					"mappedType": "string"
+				},
 				"definition": {
 					"name": "definition",
 					"type": "text",
@@ -443,6 +679,55 @@
 					"primary": false,
 					"nullable": false,
 					"mappedType": "text"
+				},
+				"definition_language": {
+					"name": "definition_language",
+					"type": "varchar(255)",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"length": 255,
+					"mappedType": "string"
+				},
+				"pronunciation": {
+					"name": "pronunciation",
+					"type": "varchar(255)",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": true,
+					"length": 255,
+					"mappedType": "string"
+				},
+				"part_of_speech": {
+					"name": "part_of_speech",
+					"type": "varchar(255)",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": true,
+					"length": 255,
+					"mappedType": "string"
+				},
+				"usage_or_grammar": {
+					"name": "usage_or_grammar",
+					"type": "varchar(255)",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": true,
+					"length": 255,
+					"mappedType": "string"
+				},
+				"examples": {
+					"name": "examples",
+					"type": "text[]",
+					"unsigned": false,
+					"autoincrement": false,
+					"primary": false,
+					"nullable": false,
+					"mappedType": "array"
 				},
 				"streak": {
 					"name": "streak",

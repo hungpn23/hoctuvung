@@ -1,28 +1,34 @@
-import {
-	PortValidator,
-	StringValidator,
-} from "@common/decorators/validators.decorator";
+import { PortValidatorOptional, StringValidatorOptional } from "@common";
 import { ConfigType, registerAs } from "@nestjs/config";
+import { ValidateIf } from "class-validator";
 import { validateConfig } from "./validate-config";
 
 class RedisEnvVariables {
-	@StringValidator()
-	REDIS_HOST!: string;
+	@StringValidatorOptional()
+	REDIS_CONNECTION_STRING?: string;
 
-	@PortValidator()
-	REDIS_PORT!: number;
+	@ValidateIf((obj: RedisEnvVariables) => !obj.REDIS_CONNECTION_STRING)
+	@StringValidatorOptional()
+	REDIS_HOST?: string;
 
-	@StringValidator()
-	REDIS_USERNAME!: string;
+	@ValidateIf((obj: RedisEnvVariables) => !obj.REDIS_CONNECTION_STRING)
+	@PortValidatorOptional()
+	REDIS_PORT?: number;
 
-	@StringValidator()
-	REDIS_PASSWORD!: string;
+	@ValidateIf((obj: RedisEnvVariables) => !obj.REDIS_CONNECTION_STRING)
+	@StringValidatorOptional()
+	REDIS_USERNAME?: string;
+
+	@ValidateIf((obj: RedisEnvVariables) => !obj.REDIS_CONNECTION_STRING)
+	@StringValidatorOptional()
+	REDIS_PASSWORD?: string;
 }
 
 export const redisConfig = registerAs("redis", () => {
 	const config = validateConfig(RedisEnvVariables);
 
 	return {
+		connectionString: config.REDIS_CONNECTION_STRING,
 		host: config.REDIS_HOST,
 		port: config.REDIS_PORT,
 		username: config.REDIS_USERNAME,

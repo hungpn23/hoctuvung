@@ -1,9 +1,7 @@
 import { NotificationDto } from "@api/notification/notification.dto";
 import { NotificationGateway } from "@api/notification/notification.gateway";
-import { PaginatedDto } from "@common/dtos/offset-pagination/offset-pagination.dto";
-import { createMetadata } from "@common/dtos/offset-pagination/utils";
-import { UUID } from "@common/types/branded.type";
-import { Card, Deck, Notification } from "@db/entities";
+import { createMetadata, PaginatedDto, UUID } from "@common";
+import { Card, Deck, Notification } from "@db";
 import {
 	EntityRepository,
 	FilterQuery,

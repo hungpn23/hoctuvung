@@ -1,6 +1,5 @@
-import { UUID } from "@common/types/branded.type";
-import { NullableProperty } from "@common/utils/nullable-property";
-import { User } from "@db/entities";
+import { NullableProperty, type UUID } from "@common";
+import { User } from "@db";
 import {
 	Entity,
 	OneToOne,

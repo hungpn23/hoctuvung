@@ -1,7 +1,6 @@
-import type { UUID } from "@common/types/branded.type";
-import { NullableProperty } from "@common/utils/nullable-property";
-import { Card, User } from "@db/entities";
-import { SoftDeleteBaseEntity } from "@db/entities/base.entity";
+import { Visibility } from "@api/deck/deck.enum";
+import { NullableProperty, type UUID } from "@common";
+import { Card, User } from "@db";
 import {
 	BeforeCreate,
 	BeforeUpdate,
@@ -18,7 +17,7 @@ import {
 	Unique,
 } from "@mikro-orm/core";
 import slugify from "slugify";
-import { Visibility } from "../deck.enum";
+import { SoftDeleteBaseEntity } from "./base.entity";
 
 @Filter({ name: "deletedAt", cond: { deletedAt: null }, default: true })
 @Unique({ properties: ["name", "owner"] })

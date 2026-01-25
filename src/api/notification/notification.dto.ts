@@ -1,5 +1,6 @@
 import { ActorDto } from "@api/user/user.dto";
-import type { UUID } from "@common/types/branded.type";
+import type { UUID } from "@common";
+
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 

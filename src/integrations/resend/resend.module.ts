@@ -1,4 +1,4 @@
-import { QueueName } from "@common/enums";
+import { QueueName } from "@common";
 import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
 import { ResendProcessor } from "./resend.processor";

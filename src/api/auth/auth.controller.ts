@@ -2,10 +2,10 @@ import { UserDto } from "@api/user/user.dto";
 import {
 	ApiEndpoint,
 	ApiPublicEndpoint,
-} from "@common/decorators/api-endpoint.decorator";
-import { Payload } from "@common/decorators/jwt-payload.decorator";
-import type { JwtPayload } from "@common/types/auth.type";
-import type { UUID } from "@common/types/branded.type";
+	type JwtPayload,
+	Payload,
+	type UUID,
+} from "@common";
 import { Body, Controller, Get, Post, Query, Res } from "@nestjs/common";
 import type { Response } from "express";
 import {

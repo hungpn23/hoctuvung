@@ -1,8 +1,9 @@
 import {
 	type IntegrationConfig,
 	integrationConfig,
-} from "@config/integration.config";
-import { type MailConfig, mailConfig } from "@config/mail.config";
+	type MailConfig,
+	mailConfig,
+} from "@config";
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { Resend } from "resend";
 

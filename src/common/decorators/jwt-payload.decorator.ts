@@ -1,4 +1,4 @@
-import { JwtPayload, RequestUser } from "@common/types/auth.type";
+import { JwtPayload, RequestUser } from "@common";
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 
 export const Payload = createParamDecorator(

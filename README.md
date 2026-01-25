@@ -1,8 +1,8 @@
-# Project: betterquizlet
+# Project: vocabify
 
 ## Overview
 
-**betterquizlet** is a NestJS-based backend application designed for vocabulary learning. It utilizes a robust stack including PostgreSQL (via MikroORM) for data persistence, Redis for caching and queues (via BullMQ), and ImageKit for media management.
+**vocabify** is a NestJS-based backend application designed for vocabulary learning. It utilizes a robust stack including PostgreSQL (via MikroORM) for data persistence, Redis for caching and queues (via BullMQ), and ImageKit for media management.
 
 ## Features
 

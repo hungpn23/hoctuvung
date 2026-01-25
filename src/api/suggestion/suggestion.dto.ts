@@ -1,5 +1,5 @@
 import type { LanguageCode } from "@api/deck/deck.type";
-import { StringValidator } from "@common/decorators/validators.decorator";
+import { StringValidator } from "@common";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 

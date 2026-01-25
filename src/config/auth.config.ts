@@ -1,4 +1,4 @@
-import { StringValidator } from "@common/decorators/validators.decorator";
+import { StringValidator } from "@common";
 import { ConfigType, registerAs } from "@nestjs/config";
 import ms from "ms";
 import { validateConfig } from "./validate-config";

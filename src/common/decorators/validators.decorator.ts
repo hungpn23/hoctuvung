@@ -24,6 +24,9 @@ import {
 import { ToBoolean, ToLowerCase, ToUpperCase } from "./transforms.decorator";
 
 type CommonOptions = Partial<{
+	/**
+	 * @default true
+	 */
 	required: boolean;
 	each: boolean; // if prop is an array --> validate each item in array
 }>;
@@ -255,13 +258,11 @@ function handleCommonOptions(
 	decorators: PropertyDecorator[],
 	options: CommonOptions = {},
 ) {
-	const { required, each } = options;
+	const { required = true, each } = options;
 
-	if (required === false) {
-		decorators.push(ValidateIf((_obj, value) => !!value));
-	} else {
-		decorators.push(IsNotEmpty({ each }));
-	}
+	decorators.push(
+		required ? IsNotEmpty({ each }) : ValidateIf((_obj, value) => !!value),
+	);
 
 	return decorators;
 }

@@ -1,4 +1,4 @@
-import { type MailConfig, mailConfig } from "@config/mail.config";
+import { type MailConfig, mailConfig } from "@config";
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { createTransport, Transporter } from "nodemailer";
 

@@ -1,12 +1,5 @@
 import { ApiModule } from "@api/api.module";
 import { AppController } from "@app.controller";
-import { appConfig } from "@config/app.config";
-import { authConfig } from "@config/auth.config";
-import { DatabaseConfig, databaseConfig } from "@config/database.config";
-import { googleConfig } from "@config/google.config";
-import { integrationConfig } from "@config/integration.config";
-import { mailConfig } from "@config/mail.config";
-import { RedisConfig, redisConfig } from "@config/redis.config";
 import { IntegrationModule } from "@integrations/intergration.module";
 import KeyvRedis from "@keyv/redis";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
@@ -17,6 +10,17 @@ import { CacheModule } from "@nestjs/cache-manager";
 import { Logger, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import "dotenv/config";
+import {
+	appConfig,
+	authConfig,
+	DatabaseConfig,
+	databaseConfig,
+	googleConfig,
+	integrationConfig,
+	mailConfig,
+	RedisConfig,
+	redisConfig,
+} from "@config";
 import * as entities from "./db/entities";
 
 const isProd = process.env.NODE_ENV === "prod";
@@ -45,8 +49,8 @@ const isProd = process.env.NODE_ENV === "prod";
 				const logger = new Logger("MikroORM");
 
 				return {
-					driver: PostgreSqlDriver,
 					...dbConfig,
+					driver: PostgreSqlDriver,
 					entities: Object.values(entities),
 
 					debug: !isProd,
@@ -61,20 +65,16 @@ const isProd = process.env.NODE_ENV === "prod";
 		CacheModule.registerAsync({
 			isGlobal: true,
 			inject: [redisConfig.KEY],
-			useFactory: (redisConfig: RedisConfig) => {
-				const { username, password, host, port } = redisConfig;
-
+			useFactory: (redisConf: RedisConfig) => {
 				return {
-					stores: new KeyvRedis(
-						`redis://${username}:${password}@${host}:${port}`,
-					),
+					stores: new KeyvRedis(redisConf.connectionString),
 				};
 			},
 		}),
 
 		BullModule.forRootAsync({
 			inject: [redisConfig.KEY],
-			useFactory: (redisConfig: RedisConfig) => ({ connection: redisConfig }),
+			useFactory: (redisConf: RedisConfig) => ({ connection: redisConf }),
 		}),
 
 		ApiModule,

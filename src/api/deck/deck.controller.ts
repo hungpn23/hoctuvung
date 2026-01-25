@@ -1,9 +1,4 @@
-import {
-	ApiEndpoint,
-	ApiPublicEndpoint,
-} from "@common/decorators/api-endpoint.decorator";
-import { Payload } from "@common/decorators/jwt-payload.decorator";
-import type { UUID } from "@common/types/branded.type";
+import { ApiEndpoint, ApiPublicEndpoint, Payload, type UUID } from "@common";
 import {
 	Body,
 	Controller,

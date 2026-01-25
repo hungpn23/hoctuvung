@@ -1,7 +1,4 @@
-import {
-	PasswordValidator,
-	StringValidator,
-} from "@common/decorators/validators.decorator";
+import { PasswordValidator, StringValidator } from "@common";
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 

@@ -1,4 +1,4 @@
-import { ApiPublicEndpoint } from "@common/decorators/api-endpoint.decorator";
+import { ApiPublicEndpoint } from "@common";
 import { Controller, Get } from "@nestjs/common";
 
 @Controller()

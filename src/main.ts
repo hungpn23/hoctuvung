@@ -1,8 +1,7 @@
 import { AuthService } from "@api/auth/auth.service";
 import { AppModule } from "@app.module";
-import { GlobalExceptionFilter } from "@common/filters/global-exception.filter";
-import { AuthGuard } from "@common/guards/auth.guard";
-import { getAppConfig } from "@config/app.config";
+import { AuthGuard, GlobalExceptionFilter } from "@common";
+import { getAppConfig } from "@config";
 import { MikroORM } from "@mikro-orm/core";
 import {
 	HttpStatus,

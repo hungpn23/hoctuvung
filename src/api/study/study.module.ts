@@ -1,5 +1,5 @@
-import { QueueName } from "@common/enums";
-import { Card, Deck, UserStatistic } from "@db/entities";
+import { QueueName } from "@common";
+import { Card, Deck, UserStatistic } from "@db";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";

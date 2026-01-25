@@ -3,8 +3,8 @@ import {
 	NumberValidator,
 	StringValidator,
 	StringValidatorOptional,
-} from "@common/decorators/validators.decorator";
-import type { UUID } from "@common/types/branded.type";
+	type UUID,
+} from "@common";
 import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 import { IsUUID } from "class-validator";

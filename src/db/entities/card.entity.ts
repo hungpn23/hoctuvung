@@ -1,6 +1,7 @@
-import { UUID } from "@common/types/branded.type";
-import { NullableProperty } from "@common/utils/nullable-property";
-import { Deck } from "@db/entities";
+import { CardStatus } from "@api/deck/deck.enum";
+import { type LanguageCode } from "@api/deck/deck.type";
+import { NullableProperty, type UUID } from "@common";
+import { Deck } from "@db";
 import {
 	BeforeCreate,
 	BeforeUpdate,
@@ -14,8 +15,6 @@ import {
 	t,
 } from "@mikro-orm/core";
 import { v4 } from "uuid";
-import { CardStatus } from "../deck.enum";
-import type { LanguageCode } from "../deck.type";
 
 @Entity()
 export class Card {

@@ -4,11 +4,11 @@ import {
 	ClassValidatorOptional,
 	EnumValidator,
 	EnumValidatorOptional,
+	QueryDto,
 	StringValidator,
 	StringValidatorOptional,
-} from "@common/decorators/validators.decorator";
-import { QueryDto } from "@common/dtos/offset-pagination/offset-pagination.dto";
-import type { UUID } from "@common/types/branded.type";
+	type UUID,
+} from "@common";
 import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 import { ArrayMinSize, ValidateIf } from "class-validator";

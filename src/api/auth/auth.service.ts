@@ -1,16 +1,24 @@
 import crypto from "node:crypto";
 import { UserDto } from "@api/user/user.dto";
-import { JobName, QueueName } from "@common/enums";
-import { JwtPayload, RefreshTokenPayload } from "@common/types/auth.type";
-import { Milliseconds, UUID } from "@common/types/branded.type";
 import {
 	GoogleJwtPayload,
 	GoogleTokenResponse,
-} from "@common/types/google.type";
-import { type AppConfig, appConfig } from "@config/app.config";
-import { type AuthConfig, authConfig } from "@config/auth.config";
-import { type GoogleConfig, googleConfig } from "@config/google.config";
-import { Session, User } from "@db/entities";
+	JobName,
+	JwtPayload,
+	Milliseconds,
+	QueueName,
+	RefreshTokenPayload,
+	type UUID,
+} from "@common";
+import {
+	type AppConfig,
+	type AuthConfig,
+	appConfig,
+	authConfig,
+	type GoogleConfig,
+	googleConfig,
+} from "@config";
+import { Session, User } from "@db";
 import { EntityManager, EntityRepository, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { InjectQueue } from "@nestjs/bullmq";
