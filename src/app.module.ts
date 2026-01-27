@@ -1,15 +1,5 @@
 import { ApiModule } from "@api/api.module";
 import { AppController } from "@app.controller";
-import { IntegrationModule } from "@integrations/intergration.module";
-import KeyvRedis from "@keyv/redis";
-import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { PostgreSqlDriver } from "@mikro-orm/postgresql";
-import { SqlHighlighter } from "@mikro-orm/sql-highlighter";
-import { BullModule } from "@nestjs/bullmq";
-import { CacheModule } from "@nestjs/cache-manager";
-import { Logger, Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
-import "dotenv/config";
 import {
 	appConfig,
 	authConfig,
@@ -21,6 +11,15 @@ import {
 	RedisConfig,
 	redisConfig,
 } from "@config";
+import { IntegrationModule } from "@integrations/intergration.module";
+import KeyvRedis from "@keyv/redis";
+import { MikroOrmModule } from "@mikro-orm/nestjs";
+import { PostgreSqlDriver } from "@mikro-orm/postgresql";
+import { SqlHighlighter } from "@mikro-orm/sql-highlighter";
+import { BullModule } from "@nestjs/bullmq";
+import { CacheModule } from "@nestjs/cache-manager";
+import { Logger, Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 import * as entities from "./db/entities";
 
 const isProd = process.env.NODE_ENV === "prod";

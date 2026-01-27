@@ -1,23 +1,6 @@
 name: vocabify
 
 services:
-  node:
-    build:
-      context: .
-      dockerfile: .docker/Dockerfile.local
-    extends:
-      file: .docker/compose.base.yml
-      service: node
-    ports:
-      - '${APP_PORT}:${APP_PORT}'
-    volumes:
-      - ${PWD}:/app
-    depends_on:
-      - db
-      - redis
-    networks:
-      - vocabify_network
-
   db:
     extends:
       file: .docker/compose.base.yml
@@ -27,7 +10,7 @@ services:
     volumes:
       - ${PWD}/.docker/volumes/pg_data:/var/lib/postgresql/data
     networks:
-      - vocabify_network
+      - default_network
     
   redis:
     extends:
@@ -39,11 +22,11 @@ services:
       - ${PWD}/.docker/volumes/redis_data:/data
     command: ["redis-server", "--appendonly", "yes", "--dir", "/data"]
     networks:
-      - vocabify_network
+      - default_network
 
 volumes:
   pg_data:
   redis_data:
 
 networks:
-  vocabify_network:
+  default_network:
