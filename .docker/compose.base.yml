@@ -1,8 +1,5 @@
 services:
   node:
-    build:
-      context: .
-      dockerfile: .docker/Dockerfile.local
     container_name: node
     tty: true
     working_dir: /app
