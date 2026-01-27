@@ -10,7 +10,7 @@ services:
     volumes:
       - ${PWD}/.docker/volumes/pg_data:/var/lib/postgresql/data
     networks:
-      - default_network
+      - vocabify_network
     
   redis:
     extends:
@@ -22,11 +22,11 @@ services:
       - ${PWD}/.docker/volumes/redis_data:/data
     command: ["redis-server", "--appendonly", "yes", "--dir", "/data"]
     networks:
-      - default_network
+      - vocabify_network
 
 volumes:
   pg_data:
   redis_data:
 
 networks:
-  default_network:
+  vocabify_network:

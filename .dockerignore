@@ -1,0 +1,47 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+build
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+!.env.production
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+
+# OS
+.DS_Store
+
+
+# Docker
+.docker/volumes
+Dockerfile
+Dockerfile.dev
+Dockerfile.production
+compose.yml
+compose.*.yml
+.dockerignore
+
+# Misc
+.husky
+.github
+test
+uploads
+*.md
+!README.md
+biome.json
+commitlint.config.ts
+data.json
+jest.config.js
+tsconfig*.json
